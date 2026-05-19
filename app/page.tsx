@@ -1,0 +1,557 @@
+'use client'
+
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
+import AuthModal from '@/components/AuthModal'
+
+const TONE_RESPONSES: Record<string, string> = {
+  Professionnel:
+    "Merci Laurent pour ce retour constructif. Nous prenons note de votre remarque concernant le bruit et allons y remédier. Nous espérons vous accueillir à nouveau dans de meilleures conditions.",
+  Chaleureux:
+    "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment désolés pour ce bruit en soirée, c'est loin de ce qu'on souhaite pour nos clients. On travaille là-dessus et on espère vous revoir très bientôt !",
+  Empathique:
+    "Merci Laurent d'avoir pris le temps de partager votre vécu. Nous comprenons que le bruit ait pu affecter votre confort et nous en sommes sincèrement désolés. Votre expérience méritait mieux.",
+  Décontracté:
+    "Merci Laurent ! Content que le séjour se soit bien passé dans l'ensemble. Pour le bruit, on entend votre retour et on va bosser là-dessus. À bientôt !",
+}
+
+const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> = {
+  Professionnel: { border: 'rgba(99,102,241,0.4)', text: '#818cf8', bg: 'rgba(99,102,241,0.1)' },
+  Chaleureux: { border: 'rgba(245,158,11,0.4)', text: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
+  Empathique: { border: 'rgba(167,139,250,0.4)', text: '#a78bfa', bg: 'rgba(167,139,250,0.1)' },
+  Décontracté: { border: 'rgba(6,182,212,0.4)', text: '#06b6d4', bg: 'rgba(6,182,212,0.1)' },
+}
+
+const FEATURES = [
+  { icon: '♾️', title: 'Réponses illimitées', desc: 'Répondez à tous vos avis, sans limite de volume ni de quota mensuel.', color: 'rgba(99,102,241,0.15)' },
+  { icon: '📍', title: 'Intégration Google My Business', desc: 'Connexion directe à votre fiche Google. Les avis arrivent automatiquement.', color: 'rgba(6,182,212,0.15)' },
+  { icon: '🎨', title: 'Personnalisation du ton', desc: 'Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.', color: 'rgba(167,139,250,0.15)' },
+  { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(52,211,153,0.15)' },
+  { icon: '📊', title: 'Tableau de bord unifié', desc: 'Suivez votre note moyenne, le volume d\'avis et votre taux de réponse.', color: 'rgba(245,158,11,0.15)' },
+  { icon: '🔒', title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.', color: 'rgba(244,63,94,0.15)' },
+]
+
+const TESTIMONIALS = [
+  {
+    name: 'Isabelle Moreau',
+    role: 'Directrice — Hôtel Le Clos des Vignes',
+    initials: 'IM',
+    color: '#dbeafe',
+    textColor: '#1e40af',
+    text: 'AvisAuto a transformé notre gestion des avis Google. On répond maintenant à 100% de nos avis en moins de 24h, avec un ton vraiment professionnel. Nos clients le remarquent !',
+    stars: 5,
+  },
+  {
+    name: 'Marc Lefebvre',
+    role: 'Propriétaire — Restaurant La Table du Chef',
+    initials: 'ML',
+    color: '#d1fae5',
+    textColor: '#065f46',
+    text: 'On avait des dizaines d\'avis sans réponse depuis des mois. En deux heures, tout était traité. Le mode automatique nous fait gagner un temps fou chaque semaine.',
+    stars: 5,
+  },
+  {
+    name: 'Céline Dupuis',
+    role: 'Manager — Hôtel Boutique Sainte-Claire',
+    initials: 'CD',
+    color: '#ede9fe',
+    textColor: '#5b21b6',
+    text: 'Ce qui m\'a convaincu c\'est la qualité des réponses. On les reçoit et on publie directement — aucune modification nécessaire. C\'est vraiment bluffant.',
+    stars: 5,
+  },
+]
+
+const FAQS = [
+  {
+    q: 'Comment fonctionne l\'essai gratuit ?',
+    a: 'Vous bénéficiez de 14 jours d\'accès complet à toutes les fonctionnalités, sans carte bancaire requise. À la fin de l\'essai, vous choisissez de passer au plan payant ou d\'arrêter.',
+  },
+  {
+    q: 'L\'IA peut-elle vraiment imiter le ton de mon établissement ?',
+    a: 'Oui. Vous choisissez parmi 4 tons (Professionnel, Chaleureux, Empathique, Décontracté) et l\'IA adapte chaque réponse au contenu de l\'avis et à votre signature personnalisée.',
+  },
+  {
+    q: 'Comment les avis arrivent-ils dans le dashboard ?',
+    a: 'Via Google Sheets (import manuel ou automatique), via notre webhook Zapier, ou en ajoutant des avis manuellement depuis les paramètres.',
+  },
+  {
+    q: 'Puis-je modifier les réponses avant de les publier ?',
+    a: 'Absolument. Chaque réponse IA peut être éditée en ligne avant publication. Vous pouvez aussi activer le mode automatique qui publie après un délai que vous configurez.',
+  },
+  {
+    q: 'Mes données sont-elles sécurisées ?',
+    a: 'Oui. Chaque client n\'accède qu\'à ses propres données (Row Level Security Supabase). La clé Groq n\'est jamais exposée côté client. Tout est hébergé sur infrastructure européenne.',
+  },
+  {
+    q: 'Y a-t-il un engagement ?',
+    a: 'Aucun engagement. Vous pouvez annuler à tout moment depuis votre espace client. La résiliation est immédiate, sans frais.',
+  },
+]
+
+function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+export default function LandingPage() {
+  const [modalType, setModalType] = useState<'login' | 'signup' | null>(null)
+  const [activeTone, setActiveTone] = useState('Professionnel')
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  return (
+    <div className="overflow-x-hidden max-w-[100vw]">
+      {/* ── NAV ── */}
+      <nav className="flex items-center justify-between px-6 md:px-12 h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] sticky top-0 z-[100]">
+        <div className="font-extrabold text-[1.35rem] tracking-[-0.03em]">
+          <span className="gradient-text-logo">AvisAuto</span>
+          <span style={{ color: '#34d399' }}>.</span>
+        </div>
+        <ul className="hidden md:flex items-center gap-8 list-none">
+          {[['#features', 'Fonctionnalités'], ['#pricing', 'Tarifs'], ['#faq', 'FAQ']].map(([href, label]) => (
+            <li key={href}>
+              <a href={href} className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[0.9rem] font-medium transition-colors no-underline">
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setModalType('login')}
+            className="btn-outline text-sm py-[9px] px-[18px]"
+          >
+            Se connecter
+          </button>
+          <button
+            onClick={() => setModalType('signup')}
+            className="btn-primary text-sm"
+          >
+            Essai gratuit
+          </button>
+        </div>
+      </nav>
+
+      {/* ── HERO ── */}
+      <section className="text-center px-6 pt-24 pb-20 relative">
+        {/* Background glow */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse at 40% 50%, rgba(99,102,241,0.15) 0%, transparent 55%), radial-gradient(ellipse at 70% 30%, rgba(6,182,212,0.1) 0%, transparent 50%)',
+          }}
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-[0.75rem] font-semibold px-3.5 py-1.5 rounded-full mb-8 tracking-[0.05em] uppercase"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-[pulseDot_2s_infinite]" />
+          Spécialement conçu pour les hôtels &amp; restaurants
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.05 }}
+          className="text-[clamp(2.6rem,6vw,4.5rem)] font-black tracking-[-0.04em] leading-[1.06] max-w-[820px] mx-auto mb-6"
+        >
+          Répondez à vos<br />
+          avis Google{' '}
+          <em
+            className="not-italic"
+            style={{
+              background: 'linear-gradient(135deg, #818cf8 0%, #06b6d4 50%, #34d399 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            en un clic
+          </em>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-[1.1rem] text-[#8892b0] max-w-[520px] mx-auto mb-11 leading-[1.6]"
+        >
+          Votre IA rédige une réponse personnalisée à chaque avis, avec le ton de votre marque, et la publie à votre place. Zéro effort, image parfaite.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="flex items-center justify-center gap-3.5 flex-wrap"
+        >
+          <button
+            onClick={() => setModalType('signup')}
+            className="border-2 border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-[#0b0f1e] px-8 py-3.5 rounded-[10px] font-semibold text-[1rem] transition-all"
+          >
+            Essayer gratuitement
+          </button>
+          <a
+            href="#pricing"
+            className="bg-[#34d399] text-[#0b0f1e] border-2 border-[#34d399] hover:bg-[#6ee7b7] hover:border-[#6ee7b7] px-8 py-3.5 rounded-[10px] font-bold text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(52,211,153,0.25)] no-underline inline-flex items-center gap-2"
+          >
+            Voir les tarifs <span>→</span>
+          </a>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.25 }}
+          className="mt-4 text-[0.82rem] text-[#8892b0]"
+        >
+          Essai gratuit 14 jours · Aucune carte requise
+        </motion.p>
+
+        {/* Dashboard mockup */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="max-w-[860px] mx-auto mt-16 px-6"
+          style={{ perspective: '1200px' }}
+        >
+          <div
+            style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center' }}
+            className="bg-[#111827] border border-[rgba(255,255,255,0.07)] rounded-2xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.4)]"
+          >
+            <div className="bg-[#1a2340] px-4 py-2.5 flex items-center gap-2.5 border-b border-[rgba(255,255,255,0.07)]">
+              <div className="w-[10px] h-[10px] rounded-full bg-[#ff5f57]" />
+              <div className="w-[10px] h-[10px] rounded-full bg-[#febc2e]" />
+              <div className="w-[10px] h-[10px] rounded-full bg-[#28c840]" />
+              <span className="ml-2 text-[0.78rem] text-[#8892b0]">AvisAuto · Dashboard</span>
+            </div>
+            <div className="p-6 space-y-3">
+              {[
+                { initials: 'ML', bg: '#dbeafe', color: '#1e40af', name: 'Marie L.', stars: 5, text: 'Service impeccable, équipe très professionnelle. Je reviendrai sans hésiter !', reply: 'Merci infiniment Marie pour ce témoignage ! Votre confiance nous honore et nous motive chaque jour.', tag: 'Professionnel' },
+                { initials: 'TD', bg: '#fef3c7', color: '#92400e', name: 'Thomas D.', stars: 4, text: 'Très bon restaurant, le service était un peu lent mais la cuisine était excellente.', reply: 'Merci Thomas pour ce retour sincère. Nous avons pris note de votre remarque sur le service.', tag: 'Empathique' },
+              ].map((r, i) => (
+                <div key={i} className="flex gap-3.5 p-3.5 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[10px]">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[0.85rem] flex-shrink-0" style={{ background: r.bg, color: r.color }}>{r.initials}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[0.82rem] font-semibold text-[#e8eaf6] mb-0.5">{r.name}</div>
+                    <div className="text-[0.75rem] text-[#f59e0b] mb-1">{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</div>
+                    <div className="text-[0.8rem] text-[#8892b0] mb-2">{r.text}</div>
+                    <div className="border-l-2 border-[#34d399] pl-2">
+                      <span className="inline-block text-[0.65rem] bg-[rgba(52,211,153,0.12)] text-[#34d399] px-1.5 py-0.5 rounded font-semibold mb-1">IA · {r.tag}</span>
+                      <div className="text-[0.78rem] text-[#34d399] leading-[1.4]">{r.reply}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── COMMENT ÇA MARCHE ── */}
+      <section className="max-w-[1100px] mx-auto px-6 py-24" id="how">
+        <FadeUp>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Simple comme bonjour</div>
+          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Comment ça fonctionne</h2>
+          <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Trois étapes. Aucune compétence technique requise.</p>
+        </FadeUp>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+          {[
+            { n: '1', title: 'Un avis arrive sur Google', desc: 'Un client laisse un avis sur votre fiche Google My Business — positif, négatif ou mitigé.' },
+            { n: '2', title: 'L\'IA rédige la réponse', desc: 'AvisAuto analyse l\'avis et génère une réponse adaptée avec votre ton et votre signature.' },
+            { n: '3', title: 'Vous publiez — ou l\'IA le fait', desc: 'Relisez et publiez d\'un clic — ou activez le mode automatique pour tout automatiser.' },
+          ].map((step, i) => (
+            <FadeUp key={i} delay={i * 0.1}>
+              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-7">
+                <div className="w-9 h-9 rounded-full bg-[rgba(99,102,241,0.15)] border border-[rgba(99,102,241,0.3)] flex items-center justify-center text-[0.85rem] font-black text-[#818cf8] mb-4">{step.n}</div>
+                <h3 className="text-[1rem] font-bold mb-2">{step.title}</h3>
+                <p className="text-[0.87rem] text-[#8892b0] leading-[1.65]">{step.desc}</p>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <FadeUp>
+            <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-7">
+              <div className="text-[1.3rem] mb-3.5">👁</div>
+              <h4 className="text-[1rem] font-bold mb-2">Mode validation</h4>
+              <p className="text-[0.84rem] text-[#8892b0] leading-[1.65] mb-5">L'IA rédige la réponse. Vous la relisez, modifiez si besoin, puis publiez d'un clic. Contrôle total.</p>
+              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[10px] p-3.5 text-[0.78rem]">
+                <div className="text-[#8892b0] mb-1.5">💬 Avis reçu :</div>
+                <div className="text-[#e8eaf6] italic mb-2.5">"Très bonne table, rapport qualité-prix excellent."</div>
+                <div className="text-[#8892b0] mb-1.5">🤖 Réponse générée :</div>
+                <div className="text-[#e8eaf6] mb-3">"Merci pour ce retour qui nous fait vraiment plaisir ! On vous attend avec plaisir pour une prochaine fois."</div>
+                <div className="flex gap-1.5">
+                  <span className="bg-[rgba(255,255,255,0.05)] text-[#8892b0] border border-[rgba(255,255,255,0.07)] px-2.5 py-0.5 rounded text-[0.72rem]">Publier</span>
+                  <span className="bg-[rgba(255,255,255,0.05)] text-[#8892b0] border border-[rgba(255,255,255,0.07)] px-2.5 py-0.5 rounded text-[0.72rem]">✏️ Modifier</span>
+                </div>
+              </div>
+            </div>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <div className="rounded-[16px] p-7 border border-[rgba(99,102,241,0.2)]" style={{ background: 'linear-gradient(135deg,rgba(99,102,241,0.07),rgba(6,182,212,0.04))' }}>
+              <div className="text-[1.3rem] mb-3.5">🤖</div>
+              <h4 className="text-[1rem] font-bold mb-2">Mode automatique</h4>
+              <p className="text-[0.84rem] text-[#8892b0] leading-[1.65] mb-5">L'IA rédige et publie seule après le délai que vous choisissez. Idéal si vous manquez de temps.</p>
+              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[10px] p-3.5 text-[0.78rem]">
+                <div className="text-[#8892b0] mb-1.5">💬 Avis reçu :</div>
+                <div className="text-[#e8eaf6] italic mb-2.5">"Excellent séjour, personnel aux petits soins !"</div>
+                <div className="text-[#8892b0] mb-1.5">🤖 Réponse prête :</div>
+                <div className="text-[#e8eaf6] mb-3">"Merci infiniment pour ce témoignage ! Votre satisfaction est notre plus belle récompense. À très bientôt !"</div>
+                <div className="flex items-center gap-2 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.2)] rounded-lg px-3 py-1.5 text-[#818cf8] text-[0.72rem] font-semibold">
+                  <span>⏱</span> Publication automatique dans 43min
+                </div>
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ── TONS ── */}
+      <section className="max-w-[1100px] mx-auto px-6 pb-24">
+        <FadeUp>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Votre voix, votre style</div>
+          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">L'IA parle comme vous</h2>
+          <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-10">Choisissez le ton qui correspond à l'image de votre établissement. Cliquez sur un ton pour voir la réponse changer.</p>
+        </FadeUp>
+
+        <FadeUp>
+          <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-5 mb-5">
+            <div className="text-[0.72rem] font-semibold text-[#8892b0] uppercase tracking-[0.08em] mb-2">💬 L'avis du client</div>
+            <div className="text-[0.95rem] text-[#e8eaf6] italic">"Bon séjour dans l'ensemble, mais la chambre était un peu bruyante le soir."</div>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-[#f59e0b]">★★★★☆</span>
+              <span className="text-[0.78rem] text-[#8892b0]">Laurent M.</span>
+            </div>
+          </div>
+        </FadeUp>
+
+        <FadeUp>
+          <div className="flex gap-2 mb-5 flex-wrap">
+            {Object.keys(TONE_RESPONSES).map((tone) => {
+              const col = TONE_COLORS[tone]
+              const isActive = activeTone === tone
+              return (
+                <button
+                  key={tone}
+                  onClick={() => setActiveTone(tone)}
+                  className="px-4 py-1.5 rounded-full border text-[0.8rem] font-semibold transition-all"
+                  style={{
+                    borderColor: isActive ? col.border : 'rgba(255,255,255,0.1)',
+                    color: isActive ? col.text : '#8892b0',
+                    background: isActive ? col.bg : 'transparent',
+                  }}
+                >
+                  {tone}
+                </button>
+              )
+            })}
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTone}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.22 }}
+              className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <span
+                  className="px-3 py-0.5 rounded-full text-[0.75rem] font-semibold border"
+                  style={{ background: TONE_COLORS[activeTone].bg, color: TONE_COLORS[activeTone].text, borderColor: TONE_COLORS[activeTone].border }}
+                >
+                  {activeTone}
+                </span>
+              </div>
+              <p className="text-[0.88rem] text-[#e8eaf6] leading-[1.65]">{TONE_RESPONSES[activeTone]}</p>
+            </motion.div>
+          </AnimatePresence>
+        </FadeUp>
+      </section>
+
+      {/* ── FEATURES ── */}
+      <section className="max-w-[1100px] mx-auto px-6 py-24" id="features">
+        <FadeUp>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Ce que vous gagnez</div>
+          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Tout ce qu'il faut<br />pour briller sur Google</h2>
+          <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Conçu pour les hôtels et restaurants qui veulent soigner leur réputation sans y passer des heures.</p>
+        </FadeUp>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {FEATURES.map((f, i) => (
+            <FadeUp key={i} delay={i * 0.06}>
+              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-7 hover:border-[rgba(99,102,241,0.35)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.3)] transition-all">
+                <div className="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.3rem] mb-4.5" style={{ background: f.color }}>
+                  {f.icon}
+                </div>
+                <h3 className="text-[1rem] font-semibold mb-2">{f.title}</h3>
+                <p className="text-[0.88rem] text-[#8892b0] leading-[1.6]">{f.desc}</p>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section className="max-w-[1100px] mx-auto px-6 py-16">
+        <FadeUp>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3 text-center">Ils nous font confiance</div>
+          <h2 className="text-[clamp(1.8rem,4vw,2.4rem)] font-bold tracking-[-0.025em] text-center mb-12">Ce que disent nos clients</h2>
+        </FadeUp>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {TESTIMONIALS.map((t, i) => (
+            <FadeUp key={i} delay={i * 0.1}>
+              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-6">
+                <div className="text-[#f59e0b] text-sm mb-4">{'★'.repeat(t.stars)}</div>
+                <p className="text-[0.9rem] text-[#e8eaf6] leading-[1.65] mb-5 italic">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0" style={{ background: t.color, color: t.textColor }}>{t.initials}</div>
+                  <div>
+                    <div className="text-sm font-semibold text-[#e8eaf6]">{t.name}</div>
+                    <div className="text-xs text-[#8892b0]">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </section>
+
+      {/* ── PRICING ── */}
+      <section className="text-center px-6 py-20" id="pricing">
+        <FadeUp>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Tarif simple</div>
+          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-12">Un seul plan. Tout inclus.</h2>
+          <div
+            className="max-w-[420px] mx-auto rounded-[24px] p-11 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(145deg, #111827 0%, #0b0f1e 100%)',
+              border: '1px solid rgba(99,102,241,0.35)',
+            }}
+          >
+            <div className="absolute top-[-60px] right-[-60px] w-[180px] h-[180px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.15) 0%, transparent 70%)' }} />
+            <div className="inline-block bg-[#34d399] text-[#0b0f1e] text-[0.72rem] font-bold px-2.5 py-1 rounded-md mb-4 uppercase tracking-[0.05em]">Tout inclus · Sans engagement</div>
+            <div className="text-[3.2rem] font-bold tracking-[-0.03em] leading-none">49€<span className="text-[1.1rem] font-normal text-[#8892b0]">/mois</span></div>
+            <div className="text-[#8892b0] text-[0.88rem] mt-1 mb-8">par établissement · sans engagement</div>
+            <ul className="text-left list-none mb-8 space-y-0">
+              {['Réponses illimitées', 'Intégration Google My Business', 'Personnalisation du ton', 'Tableau de bord analytics', 'Validation avant publication', 'Support prioritaire 7j/7', 'Ajout de plusieurs établissements'].map((item) => (
+                <li key={item} className="flex items-center gap-2.5 text-[0.9rem] py-2.5 border-b border-[rgba(255,255,255,0.07)] last:border-0 text-[#8892b0]">
+                  <span className="text-[#34d399] font-bold text-[1rem]">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setModalType('signup')}
+              className="w-full py-4 rounded-[10px] font-bold text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(99,102,241,0.4)]"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#0b0f1e' }}
+            >
+              Commencer maintenant
+            </button>
+            <button
+              onClick={() => setModalType('signup')}
+              className="block w-full mt-3.5 text-[0.85rem] text-[#8892b0] hover:text-[#e8eaf6] transition-colors underline cursor-pointer bg-transparent border-none font-inherit"
+            >
+              Démarrer l'essai gratuit — 14 jours
+            </button>
+          </div>
+        </FadeUp>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="max-w-[680px] mx-auto px-6 py-16" id="faq">
+        <FadeUp>
+          <h2 className="text-[clamp(1.8rem,4vw,2.4rem)] font-bold tracking-[-0.025em] text-center mb-12">Questions fréquentes</h2>
+        </FadeUp>
+        <div className="space-y-3">
+          {FAQS.map((faq, i) => (
+            <FadeUp key={i} delay={i * 0.04}>
+              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[12px] overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left text-[0.95rem] font-semibold text-[#e8eaf6] hover:text-white transition-colors bg-transparent border-none font-inherit cursor-pointer"
+                >
+                  {faq.q}
+                  <motion.div animate={{ rotate: openFaq === i ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                    <ChevronDown size={16} className="text-[#8892b0] flex-shrink-0" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <div className="px-5 pb-4 text-[0.9rem] text-[#8892b0] leading-[1.65] border-t border-[rgba(255,255,255,0.07)] pt-3">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ── */}
+      <section className="text-center px-6 py-20">
+        <FadeUp>
+          <div
+            className="max-w-[700px] mx-auto rounded-[24px] p-12 relative overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(6,182,212,0.07))', border: '1px solid rgba(99,102,241,0.2)' }}
+          >
+            <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15), transparent 60%)' }} />
+            <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-bold tracking-[-0.025em] mb-4">Prêt à répondre à tous vos avis ?</h2>
+            <p className="text-[#8892b0] mb-8 max-w-[480px] mx-auto">Rejoignez les hôtels et restaurants qui ont automatisé leurs réponses Google et amélioré leur réputation en ligne.</p>
+            <button
+              onClick={() => setModalType('signup')}
+              className="btn-primary text-[1rem] px-8 py-3.5"
+            >
+              Démarrer gratuitement — 14 jours
+            </button>
+          </div>
+        </FadeUp>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="border-t border-[rgba(255,255,255,0.06)] px-12 py-8 bg-[rgba(0,0,0,0.15)] flex justify-between items-center text-[0.82rem] text-[#8892b0] flex-wrap gap-3">
+        <div className="font-extrabold text-[1.1rem]">
+          <span className="gradient-text-logo">AvisAuto</span>
+          <span style={{ color: '#34d399' }}>.</span>
+        </div>
+        <div className="flex gap-6">
+          <a href="#" className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors no-underline">Mentions légales</a>
+          <a href="#" className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors no-underline">CGU</a>
+          <a href="#" className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors no-underline">Contact</a>
+        </div>
+        <div>© 2026 AvisAuto. Tous droits réservés.</div>
+      </footer>
+
+      {/* ── AUTH MODAL ── */}
+      <AuthModal
+        open={modalType !== null}
+        defaultMode={modalType ?? 'login'}
+        onClose={() => setModalType(null)}
+      />
+    </div>
+  )
+}
