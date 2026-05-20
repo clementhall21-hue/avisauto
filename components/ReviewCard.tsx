@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Copy, Edit2, Trash2, Check, RotateCcw, Clock, Send } from 'lucide-react'
+import { Copy, Edit2, Trash2, Check, RotateCcw, Clock, Send, BookmarkPlus, BookmarkX } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn, TONE_COLORS, formatCountdown } from '@/lib/utils'
 import { useToast } from './Toast'
@@ -15,7 +15,7 @@ export interface Review {
   stars: number
   review_text: string
   review_date: string
-  status: 'pending' | 'scheduled' | 'published'
+  status: 'pending' | 'scheduled' | 'published' | 'snoozed'
   ai_reply: string | null
   published_at?: string | null
   scheduled_at?: string | null
@@ -28,6 +28,8 @@ interface ReviewCardProps {
   onPublish: (id: string) => Promise<void>
   onRegenerate: (id: string) => Promise<void>
   onDelete: (id: string) => void
+  onSnooze: (id: string) => Promise<void>
+  onUnsnooze: (id: string) => Promise<void>
   onSaveReply: (id: string, text: string) => Promise<void>
   onCancelSchedule: (id: string) => Promise<void>
   onPublishNow: (id: string) => Promise<void>
@@ -40,6 +42,8 @@ export default function ReviewCard({
   onPublish,
   onRegenerate,
   onDelete,
+  onSnooze,
+  onUnsnooze,
   onSaveReply,
   onCancelSchedule,
   onPublishNow,
@@ -186,6 +190,12 @@ export default function ReviewCard({
               ⏳ En attente
             </span>
           )}
+          {review.status === 'snoozed' && (
+            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(148,163,184,0.12)] text-[#94a3b8] border border-[rgba(148,163,184,0.25)] flex items-center gap-1">
+              <BookmarkPlus size={10} />
+              Plus tard
+            </span>
+          )}
         </div>
       </div>
 
@@ -267,32 +277,58 @@ export default function ReviewCard({
       {/* Actions */}
       <div className="flex items-center gap-2 mt-3 flex-wrap">
         {review.status === 'pending' && (
+          <>
+            <button
+              onClick={handlePublish}
+              disabled={!!actionLoading || !review.ai_reply}
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.25)] text-[#34d399] hover:bg-[rgba(52,211,153,0.18)] transition-colors disabled:opacity-40"
+            >
+              {actionLoading === 'publish' ? <span className="animate-spin">⟳</span> : <Send size={11} />}
+              Publier
+            </button>
+            <button
+              onClick={async () => { setActionLoading('snooze'); await onSnooze(review.id); setActionLoading(null) }}
+              disabled={!!actionLoading}
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(148,163,184,0.25)] text-[#94a3b8] hover:text-[#e8eaf6] hover:border-[rgba(148,163,184,0.4)] transition-colors disabled:opacity-40"
+            >
+              <BookmarkPlus size={11} />
+              Plus tard
+            </button>
+          </>
+        )}
+
+        {review.status === 'snoozed' && (
           <button
-            onClick={handlePublish}
-            disabled={!!actionLoading || !review.ai_reply}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.25)] text-[#34d399] hover:bg-[rgba(52,211,153,0.18)] transition-colors disabled:opacity-40"
+            onClick={async () => { setActionLoading('unsnooze'); await onUnsnooze(review.id); setActionLoading(null) }}
+            disabled={!!actionLoading}
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] hover:bg-[rgba(99,102,241,0.18)] transition-colors disabled:opacity-40"
           >
-            {actionLoading === 'publish' ? (
-              <span className="animate-spin">⟳</span>
-            ) : (
-              <Send size={11} />
-            )}
-            Publier
+            <BookmarkX size={11} />
+            Remettre en attente
           </button>
         )}
 
-        <button
-          onClick={handleRegenerate}
-          disabled={!!actionLoading}
-          className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
-        >
-          {actionLoading === 'regen' ? (
-            <span className="animate-spin text-xs">⟳</span>
-          ) : (
-            <RotateCcw size={11} />
-          )}
-          Régénérer
-        </button>
+        {(review.status === 'pending' || review.status === 'snoozed') && (
+          <button
+            onClick={handleRegenerate}
+            disabled={!!actionLoading}
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+          >
+            {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
+            Régénérer
+          </button>
+        )}
+
+        {review.status === 'published' && (
+          <button
+            onClick={handleRegenerate}
+            disabled={!!actionLoading}
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+          >
+            {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
+            Régénérer
+          </button>
+        )}
 
         {isEditing ? (
           <button
@@ -323,20 +359,22 @@ export default function ReviewCard({
           Copier
         </button>
 
-        <button
-          onClick={() => setConfirmDelete(true)}
-          className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#f43f5e] hover:border-[rgba(244,63,94,0.3)] transition-colors ml-auto"
-          title="Supprimer"
-        >
-          <Trash2 size={11} />
-        </button>
+        {(review.status === 'published' || review.status === 'snoozed') && (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#f43f5e] hover:border-[rgba(244,63,94,0.3)] transition-colors ml-auto"
+            title="Supprimer"
+          >
+            <Trash2 size={11} />
+          </button>
+        )}
       </div>
 
       {/* Delete confirmation */}
       {confirmDelete && (
         <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[rgba(244,63,94,0.2)]">
           <span className="text-xs text-[#f43f5e] font-medium flex-1">
-            {review.status === 'published' ? 'Supprimer la réponse publiée ?' : 'Supprimer cet avis ?'}
+            {review.status === 'published' ? 'Supprimer la réponse publiée ?' : 'Supprimer cet avis définitivement ?'}
           </span>
           <button
             onClick={() => setConfirmDelete(false)}

@@ -226,6 +226,20 @@ export default function ReviewsPage() {
     }
   }
 
+  const handleSnooze = async (id: string) => {
+    await supabase.from('reviews').update({ status: 'snoozed' }).eq('id', id)
+    setReviews((prev) => prev.map((r) => r.id === id ? { ...r, status: 'snoozed' as const } : r))
+    setPendingCount((p) => Math.max(0, p - 1))
+    showToast('Avis mis de côté — retrouvez-le dans "Plus tard"')
+  }
+
+  const handleUnsnooze = async (id: string) => {
+    await supabase.from('reviews').update({ status: 'pending' }).eq('id', id)
+    setReviews((prev) => prev.map((r) => r.id === id ? { ...r, status: 'pending' as const } : r))
+    setPendingCount((p) => p + 1)
+    showToast('Avis remis en attente')
+  }
+
   const handleSaveReply = async (id: string, text: string) => {
     await supabase.from('reviews').update({ ai_reply: text }).eq('id', id)
     setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, ai_reply: text } : r)))
@@ -258,6 +272,8 @@ export default function ReviewsPage() {
     if (filterStars === '3' && r.stars > 3) return false
     if (filterStatus === 'pending' && r.status !== 'pending') return false
     if (filterStatus === 'published' && r.status !== 'published') return false
+    if (filterStatus === 'snoozed' && r.status !== 'snoozed') return false
+    if (filterStatus === 'all' && r.status === 'snoozed') return false
     return true
   })
 
@@ -321,6 +337,7 @@ export default function ReviewsPage() {
             <option value="all">Tous les statuts</option>
             <option value="pending">⏳ Sans réponse</option>
             <option value="published">✓ Répondus</option>
+            <option value="snoozed">🔖 Plus tard</option>
           </select>
         </div>
       </div>
@@ -425,6 +442,8 @@ export default function ReviewsPage() {
                 onPublish={handlePublish}
                 onRegenerate={handleRegenerate}
                 onDelete={handleDelete}
+                onSnooze={handleSnooze}
+                onUnsnooze={handleUnsnooze}
                 onSaveReply={handleSaveReply}
                 onCancelSchedule={handleCancelSchedule}
                 onPublishNow={handlePublishNow}
