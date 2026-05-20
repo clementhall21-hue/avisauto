@@ -363,7 +363,28 @@ export default function SettingsPage() {
   const handleAutoMode = async (v: boolean) => {
     setAutoMode(v)
     await save({ auto_mode: v })
-    showToast(v ? 'Mode automatique activé' : 'Mode automatique désactivé')
+
+    if (v && delaySec > 0) {
+      // Schedule all pending reviews that already have an AI reply
+      const { data: pendingReviews } = await supabase
+        .from('reviews')
+        .select('id')
+        .eq('status', 'pending')
+        .not('ai_reply', 'is', null)
+
+      if (pendingReviews && pendingReviews.length > 0) {
+        const scheduledAt = new Date(Date.now() + delaySec * 1000).toISOString()
+        await supabase
+          .from('reviews')
+          .update({ status: 'scheduled', scheduled_at: scheduledAt })
+          .in('id', pendingReviews.map((r) => r.id))
+        showToast(`Mode automatique activé — ${pendingReviews.length} avis programmés dans ${Math.round(delaySec / 60)} min`)
+      } else {
+        showToast('Mode automatique activé')
+      }
+    } else {
+      showToast(v ? 'Mode automatique activé' : 'Mode automatique désactivé')
+    }
   }
 
   const handleDelay = async (sec: number) => {
