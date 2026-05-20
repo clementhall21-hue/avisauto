@@ -400,7 +400,21 @@ export default function SettingsPage() {
         showToast('Mode automatique activé')
       }
     } else {
-      showToast('Mode automatique désactivé')
+      // Remettre les avis programmés en attente
+      const { data: scheduledReviews } = await supabase
+        .from('reviews')
+        .select('id')
+        .eq('status', 'scheduled')
+
+      if (scheduledReviews && scheduledReviews.length > 0) {
+        await supabase
+          .from('reviews')
+          .update({ status: 'pending', scheduled_at: null })
+          .in('id', scheduledReviews.map((r) => r.id))
+        showToast(`Mode automatique désactivé — ${scheduledReviews.length} avis remis en attente`)
+      } else {
+        showToast('Mode automatique désactivé')
+      }
     }
   }
 
