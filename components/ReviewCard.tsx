@@ -26,7 +26,7 @@ interface ReviewCardProps {
   tone: string
   isGenerating?: boolean
   onPublish: (id: string) => Promise<void>
-  onRegenerate: (id: string) => Promise<void>
+  onRegenerate: (id: string, length: 'short' | 'normal' | 'detailed') => Promise<void>
   onDelete: (id: string) => void
   onSnooze: (id: string) => Promise<void>
   onUnsnooze: (id: string) => Promise<void>
@@ -53,6 +53,7 @@ export default function ReviewCard({
   const [countdown, setCountdown] = useState('')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [replyLength, setReplyLength] = useState<'short' | 'normal' | 'detailed'>('normal')
   const editRef = useRef<HTMLDivElement>(null)
   const { showToast } = useToast()
 
@@ -111,7 +112,7 @@ export default function ReviewCard({
   const handleRegenerate = async () => {
     setActionLoading('regen')
     try {
-      await onRegenerate(review.id)
+      await onRegenerate(review.id, replyLength)
     } finally {
       setActionLoading(null)
     }
@@ -309,25 +310,59 @@ export default function ReviewCard({
         )}
 
         {(review.status === 'pending' || review.status === 'snoozed') && (
-          <button
-            onClick={handleRegenerate}
-            disabled={!!actionLoading}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
-          >
-            {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
-            Régénérer
-          </button>
+          <>
+            <div className="flex items-center gap-1 border border-[rgba(255,255,255,0.07)] rounded-[7px] p-0.5">
+              {(['short', 'normal', 'detailed'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setReplyLength(l)}
+                  className={`px-2.5 py-1 rounded-[5px] text-[0.65rem] font-semibold transition-all ${
+                    replyLength === l
+                      ? 'bg-[rgba(99,102,241,0.2)] text-[#818cf8]'
+                      : 'text-[#8892b0] hover:text-[#e8eaf6]'
+                  }`}
+                >
+                  {l === 'short' ? 'Court' : l === 'normal' ? 'Normal' : 'Développé'}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={handleRegenerate}
+              disabled={!!actionLoading}
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+            >
+              {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
+              Régénérer
+            </button>
+          </>
         )}
 
         {review.status === 'published' && (
-          <button
-            onClick={handleRegenerate}
-            disabled={!!actionLoading}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
-          >
-            {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
-            Régénérer
-          </button>
+          <>
+            <div className="flex items-center gap-1 border border-[rgba(255,255,255,0.07)] rounded-[7px] p-0.5">
+              {(['short', 'normal', 'detailed'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setReplyLength(l)}
+                  className={`px-2.5 py-1 rounded-[5px] text-[0.65rem] font-semibold transition-all ${
+                    replyLength === l
+                      ? 'bg-[rgba(99,102,241,0.2)] text-[#818cf8]'
+                      : 'text-[#8892b0] hover:text-[#e8eaf6]'
+                  }`}
+                >
+                  {l === 'short' ? 'Court' : l === 'normal' ? 'Normal' : 'Développé'}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={handleRegenerate}
+              disabled={!!actionLoading}
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+            >
+              {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
+              Régénérer
+            </button>
+          </>
         )}
 
         {isEditing ? (

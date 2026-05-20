@@ -90,7 +90,7 @@ export default function ReviewsPage() {
   const supabase = createClient()
 
   const generateReply = useCallback(
-    async (review: Review, currentTone: string): Promise<string> => {
+    async (review: Review, currentTone: string, length: 'short' | 'normal' | 'detailed' = 'normal'): Promise<string> => {
       try {
         const res = await fetch('/api/generate-reply', {
           method: 'POST',
@@ -101,6 +101,7 @@ export default function ReviewsPage() {
             tone: currentTone,
             hotelName: establishment?.name || 'notre établissement',
             signature: establishment?.signature || '',
+            length,
           }),
         })
         const data = await res.json()
@@ -246,11 +247,11 @@ export default function ReviewsPage() {
     }
   }
 
-  const handleRegenerate = async (id: string) => {
+  const handleRegenerate = async (id: string, length: 'short' | 'normal' | 'detailed' = 'normal') => {
     const review = reviews.find((r) => r.id === id)
     if (!review) return
     setGeneratingIds((prev) => new Set(prev).add(id))
-    const reply = await generateReply(review, tone)
+    const reply = await generateReply(review, tone, length)
     await supabase.from('reviews').update({ ai_reply: reply }).eq('id', id)
     setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, ai_reply: reply } : r)))
     setGeneratingIds((prev) => { const n = new Set(prev); n.delete(id); return n })
