@@ -51,6 +51,7 @@ export default function ReviewsPage() {
   const [filterStars, setFilterStars] = useState('0')
   const [filterStatus, setFilterStatus] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
   const [hasGroqKey, setHasGroqKey] = useState(false)
   const { showToast } = useToast()
 
@@ -87,6 +88,13 @@ export default function ReviewsPage() {
       setHasGroqKey(!!establishment.groq_api_key || !!process.env.NEXT_PUBLIC_SUPABASE_URL)
     }
   }, [establishment])
+
+  // Refresh quand l'utilisateur revient sur la page (ex: après avoir changé le mode auto dans Paramètres)
+  useEffect(() => {
+    const onFocus = () => setRefreshKey((k) => k + 1)
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
+  }, [])
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -143,7 +151,7 @@ export default function ReviewsPage() {
     }
 
     fetchReviews()
-  }, [establishment]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [establishment, refreshKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-generate AI replies for pending reviews with no reply
   useEffect(() => {

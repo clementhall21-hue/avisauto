@@ -324,13 +324,7 @@ export default function ReviewCard({
         </button>
 
         <button
-          onClick={() => {
-            if (review.status === 'pending') {
-              setConfirmDelete(true)
-            } else {
-              onDelete(review.id)
-            }
-          }}
+          onClick={() => setConfirmDelete(true)}
           className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#f43f5e] hover:border-[rgba(244,63,94,0.3)] transition-colors ml-auto"
           title="Supprimer"
         >
@@ -338,10 +332,12 @@ export default function ReviewCard({
         </button>
       </div>
 
-      {/* Delete confirmation (only for pending reviews) */}
+      {/* Delete confirmation */}
       {confirmDelete && (
         <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[rgba(244,63,94,0.2)]">
-          <span className="text-xs text-[#f43f5e] font-medium flex-1">Supprimer cet avis ?</span>
+          <span className="text-xs text-[#f43f5e] font-medium flex-1">
+            {review.status === 'published' ? 'Supprimer la réponse publiée ?' : 'Supprimer cet avis ?'}
+          </span>
           <button
             onClick={() => setConfirmDelete(false)}
             className="px-3 py-1 rounded-[6px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors"
