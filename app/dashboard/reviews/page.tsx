@@ -194,13 +194,27 @@ export default function ReviewsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    await supabase.from('reviews').delete().eq('id', id)
-    const removed = reviews.find((r) => r.id === id)
-    setReviews((prev) => prev.filter((r) => r.id !== id))
-    if (removed?.status === 'pending') {
-      setPendingCount((p) => Math.max(0, p - 1))
+    const target = reviews.find((r) => r.id === id)
+
+    if (target?.status === 'published') {
+      // Remettre en attente plutôt que supprimer
+      await supabase.from('reviews').update({
+        status: 'pending',
+        ai_reply: null,
+        published_at: null,
+        scheduled_at: null,
+      }).eq('id', id)
+      setReviews((prev) => prev.map((r) => r.id === id ? { ...r, status: 'pending', ai_reply: null, published_at: null, scheduled_at: null } : r))
+      setPendingCount((p) => p + 1)
+      showToast('Réponse supprimée — avis remis en attente')
+    } else {
+      await supabase.from('reviews').delete().eq('id', id)
+      setReviews((prev) => prev.filter((r) => r.id !== id))
+      if (target?.status === 'pending') {
+        setPendingCount((p) => Math.max(0, p - 1))
+      }
+      showToast('Avis supprimé')
     }
-    showToast('Avis supprimé')
   }
 
   const handleSaveReply = async (id: string, text: string) => {
