@@ -309,7 +309,18 @@ export default function ReviewCard({
           </button>
         )}
 
-        {(review.status === 'pending' || review.status === 'snoozed') && (
+        {review.status === 'scheduled' && (
+          <button
+            onClick={async () => { setActionLoading('snooze'); await onSnooze(review.id); setActionLoading(null) }}
+            disabled={!!actionLoading}
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(148,163,184,0.25)] text-[#94a3b8] hover:text-[#e8eaf6] hover:border-[rgba(148,163,184,0.4)] transition-colors disabled:opacity-40"
+          >
+            <BookmarkPlus size={11} />
+            Plus tard
+          </button>
+        )}
+
+        {(review.status === 'pending' || review.status === 'snoozed' || review.status === 'scheduled') && (
           <>
             <div className="flex items-center gap-1 border border-[rgba(255,255,255,0.07)] rounded-[7px] p-0.5">
               {(['short', 'normal', 'detailed'] as const).map((l) => (
