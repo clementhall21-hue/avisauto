@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useEstablishment } from '../layout'
+import { useEstablishment, type Establishment } from '../layout'
 import { useToast } from '@/components/Toast'
 import { TONE_COLORS, getInitials, getAvatarColor } from '@/lib/utils'
 
@@ -69,7 +69,7 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
   const [sheetId, setSheetId] = useState('1tDrvICHjclxGi2iGsYsDk9nbqV6Pm-1pMK9hiGvWrkY')
   const [sheetStatus, setSheetStatus] = useState('')
   const [zapierUrl, setZapierUrl] = useState(establishment?.zapier_webhook_url || '')
-  const [zapierTriggers, setZapierTriggers] = useState({ new_review: true, negative: true, published: false, ...establishment?.zapier_triggers })
+  const [zapierTriggers, setZapierTriggers] = useState<Record<string, boolean>>({ new_review: true, negative: true, published: false, ...establishment?.zapier_triggers })
   const [zapierLog, setZapierLog] = useState<string[]>([])
   const [zapierTestStatus, setZapierTestStatus] = useState('')
   const [saving, setSaving] = useState(false)
@@ -343,7 +343,7 @@ export default function SettingsPage() {
     }
   }, [establishment])
 
-  const save = async (updates: Partial<typeof establishment>) => {
+  const save = async (updates: Partial<Establishment>) => {
     if (!establishment) return
     const { data } = await supabase.from('establishments').update(updates).eq('id', establishment.id).select().single()
     if (data) setEstablishment(data)

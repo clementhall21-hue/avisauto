@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ToastProvider, useToast } from '@/components/Toast'
 import { cn } from '@/lib/utils'
 
-interface Establishment {
+export interface Establishment {
   id: string
   name: string
   signature: string
@@ -24,14 +24,14 @@ interface EstablishmentContextType {
   establishment: Establishment | null
   setEstablishment: (e: Establishment) => void
   pendingCount: number
-  setPendingCount: (n: number) => void
+  setPendingCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const EstablishmentContext = createContext<EstablishmentContextType>({
   establishment: null,
   setEstablishment: () => {},
   pendingCount: 0,
-  setPendingCount: () => {},
+  setPendingCount: () => { return },
 })
 
 export function useEstablishment() {

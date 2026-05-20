@@ -22,7 +22,7 @@ const SAMPLE_REVIEWS = [
     reviewer_name: 'Thomas Durand',
     stars: 4,
     review_text:
-      'Très bon restaurant, la cuisine était excellente. Le service était un peu lent en salle mais dans l'ensemble une très bonne expérience.',
+      "Très bon restaurant, la cuisine était excellente. Le service était un peu lent en salle mais dans l'ensemble une très bonne expérience.",
     review_date: 'Il y a 4 jours',
   },
   {
