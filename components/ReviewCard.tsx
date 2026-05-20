@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Copy, Edit2, Trash2, Check, RotateCcw, Clock, Send } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { cn, TONE_COLORS, formatCountdown } from '@/lib/utils'
 import { useToast } from './Toast'
 
@@ -47,6 +48,7 @@ export default function ReviewCard({
   const [editText, setEditText] = useState(review.ai_reply || '')
   const [countdown, setCountdown] = useState('')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const editRef = useRef<HTMLDivElement>(null)
   const { showToast } = useToast()
 
@@ -58,7 +60,7 @@ export default function ReviewCard({
     if (review.status !== 'scheduled' || !review.scheduled_at) return
     const update = () => setCountdown(formatCountdown(review.scheduled_at!))
     update()
-    const interval = setInterval(update, 10000)
+    const interval = setInterval(update, 1000)
     return () => clearInterval(interval)
   }, [review.status, review.scheduled_at])
 
@@ -135,7 +137,12 @@ export default function ReviewCard({
   const stars = review.stars || 5
 
   return (
-    <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 hover:border-[rgba(99,102,241,0.25)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 hover:border-[rgba(99,102,241,0.25)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all"
+    >
       {/* Header */}
       <div className="flex items-start justify-between mb-3 flex-wrap gap-2">
         <div className="flex items-center gap-2.5">
@@ -317,13 +324,38 @@ export default function ReviewCard({
         </button>
 
         <button
-          onClick={() => onDelete(review.id)}
+          onClick={() => {
+            if (review.status === 'pending') {
+              setConfirmDelete(true)
+            } else {
+              onDelete(review.id)
+            }
+          }}
           className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#f43f5e] hover:border-[rgba(244,63,94,0.3)] transition-colors ml-auto"
           title="Supprimer"
         >
           <Trash2 size={11} />
         </button>
       </div>
-    </div>
+
+      {/* Delete confirmation (only for pending reviews) */}
+      {confirmDelete && (
+        <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[rgba(244,63,94,0.2)]">
+          <span className="text-xs text-[#f43f5e] font-medium flex-1">Supprimer cet avis ?</span>
+          <button
+            onClick={() => setConfirmDelete(false)}
+            className="px-3 py-1 rounded-[6px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors"
+          >
+            Annuler
+          </button>
+          <button
+            onClick={() => { onDelete(review.id); setConfirmDelete(false) }}
+            className="px-3 py-1 rounded-[6px] text-xs font-semibold bg-[rgba(244,63,94,0.12)] border border-[rgba(244,63,94,0.35)] text-[#f43f5e] hover:bg-[rgba(244,63,94,0.22)] transition-colors"
+          >
+            Confirmer
+          </button>
+        </div>
+      )}
+    </motion.div>
   )
 }

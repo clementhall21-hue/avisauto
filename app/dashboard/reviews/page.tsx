@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Search, AlertTriangle, Zap } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useEstablishment } from '../layout'
 import ReviewCard, { type Review } from '@/components/ReviewCard'
@@ -365,8 +366,34 @@ export default function ReviewsPage() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-[180px] rounded-[14px] shimmer" />
+            <div key={i} className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-[38px] h-[38px] rounded-full shimmer" />
+                <div className="flex-1">
+                  <div className="h-3.5 w-32 rounded shimmer mb-1.5" />
+                  <div className="h-2.5 w-20 rounded shimmer" />
+                </div>
+                <div className="h-3 w-24 rounded shimmer" />
+              </div>
+              <div className="space-y-2 mb-4">
+                <div className="h-3 rounded shimmer" />
+                <div className="h-3 rounded shimmer w-4/5" />
+                <div className="h-3 rounded shimmer w-3/5" />
+              </div>
+              <div className="h-[80px] rounded-[10px] shimmer" />
+            </div>
           ))}
+        </div>
+      ) : reviews.length === 0 ? (
+        <div className="text-center py-16">
+          <div className="text-5xl mb-4">🏨</div>
+          <h3 className="text-xl font-bold text-[#e8eaf6] mb-2">Bienvenue sur AvisAuto !</h3>
+          <p className="text-[#8892b0] text-sm mb-6 max-w-[380px] mx-auto leading-relaxed">
+            Commencez par ajouter votre premier avis Google pour voir l&apos;IA générer une réponse automatiquement.
+          </p>
+          <a href="/dashboard/settings" className="btn-primary text-sm">
+            Ajouter un avis →
+          </a>
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 text-[#8892b0]">
@@ -379,22 +406,24 @@ export default function ReviewsPage() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-3.5">
-          {filtered.map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              tone={tone}
-              isGenerating={generatingIds.has(review.id)}
-              onPublish={handlePublish}
-              onRegenerate={handleRegenerate}
-              onDelete={handleDelete}
-              onSaveReply={handleSaveReply}
-              onCancelSchedule={handleCancelSchedule}
-              onPublishNow={handlePublishNow}
-            />
-          ))}
-        </div>
+        <AnimatePresence mode="popLayout">
+          <div className="flex flex-col gap-3.5">
+            {filtered.map((review) => (
+              <ReviewCard
+                key={review.id}
+                review={review}
+                tone={tone}
+                isGenerating={generatingIds.has(review.id)}
+                onPublish={handlePublish}
+                onRegenerate={handleRegenerate}
+                onDelete={handleDelete}
+                onSaveReply={handleSaveReply}
+                onCancelSchedule={handleCancelSchedule}
+                onPublishNow={handlePublishNow}
+              />
+            ))}
+          </div>
+        </AnimatePresence>
       )}
     </div>
   )
