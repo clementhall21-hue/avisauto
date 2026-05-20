@@ -323,6 +323,7 @@ export default function SettingsPage() {
   const [customH, setCustomH] = useState(0)
   const [customM, setCustomM] = useState(0)
   const [showCustom, setShowCustom] = useState(false)
+  const [showConfirmAutoImmediat, setShowConfirmAutoImmediat] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [adminPassword, setAdminPassword] = useState('')
   const [adminError, setAdminError] = useState('')
@@ -361,11 +362,18 @@ export default function SettingsPage() {
   }
 
   const handleAutoMode = async (v: boolean) => {
+    if (v && delaySec === 0) {
+      setShowConfirmAutoImmediat(true)
+      return
+    }
+    await applyAutoMode(v)
+  }
+
+  const applyAutoMode = async (v: boolean) => {
     setAutoMode(v)
     await save({ auto_mode: v })
 
-    if (v && delaySec > 0) {
-      // Schedule all pending reviews that already have an AI reply
+    if (v) {
       const { data: pendingReviews } = await supabase
         .from('reviews')
         .select('id')
@@ -373,17 +381,26 @@ export default function SettingsPage() {
         .not('ai_reply', 'is', null)
 
       if (pendingReviews && pendingReviews.length > 0) {
-        const scheduledAt = new Date(Date.now() + delaySec * 1000).toISOString()
-        await supabase
-          .from('reviews')
-          .update({ status: 'scheduled', scheduled_at: scheduledAt })
-          .in('id', pendingReviews.map((r) => r.id))
-        showToast(`Mode automatique activé — ${pendingReviews.length} avis programmés dans ${Math.round(delaySec / 60)} min`)
+        if (delaySec === 0) {
+          const publishedAt = new Date().toISOString()
+          await supabase
+            .from('reviews')
+            .update({ status: 'published', published_at: publishedAt, scheduled_at: null })
+            .in('id', pendingReviews.map((r) => r.id))
+          showToast(`Mode automatique activé — ${pendingReviews.length} avis publiés immédiatement`)
+        } else {
+          const scheduledAt = new Date(Date.now() + delaySec * 1000).toISOString()
+          await supabase
+            .from('reviews')
+            .update({ status: 'scheduled', scheduled_at: scheduledAt })
+            .in('id', pendingReviews.map((r) => r.id))
+          showToast(`Mode automatique activé — ${pendingReviews.length} avis programmés dans ${Math.round(delaySec / 60)} min`)
+        }
       } else {
         showToast('Mode automatique activé')
       }
     } else {
-      showToast(v ? 'Mode automatique activé' : 'Mode automatique désactivé')
+      showToast('Mode automatique désactivé')
     }
   }
 
@@ -474,6 +491,37 @@ export default function SettingsPage() {
 
   return (
     <div>
+      {/* Confirmation modale — mode auto immédiat */}
+      {showConfirmAutoImmediat && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
+          <div className="bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-2xl p-8 max-w-[420px] w-full shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
+            <div className="text-3xl mb-4">⚠️</div>
+            <h3 className="text-lg font-bold text-[#e8eaf6] mb-2">Publication immédiate</h3>
+            <p className="text-sm text-[#8892b0] leading-relaxed mb-6">
+              Tous les avis en attente de validation vont être <span className="text-[#f59e0b] font-semibold">publiés immédiatement</span>. Vous ne pourrez plus les vérifier avant publication.<br /><br />
+              Êtes-vous sûr de vouloir activer le mode automatique immédiat ?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirmAutoImmediat(false)}
+                className="flex-1 border border-[rgba(255,255,255,0.1)] text-[#8892b0] hover:text-[#e8eaf6] py-2.5 rounded-lg text-sm font-medium transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={async () => {
+                  setShowConfirmAutoImmediat(false)
+                  await applyAutoMode(true)
+                }}
+                className="flex-1 bg-[rgba(244,63,94,0.15)] border border-[rgba(244,63,94,0.3)] text-[#f43f5e] hover:bg-[rgba(244,63,94,0.25)] py-2.5 rounded-lg text-sm font-bold transition-colors"
+              >
+                Oui, publier tout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-start justify-between gap-3 mb-7">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Paramètres</h2>
