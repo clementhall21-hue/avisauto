@@ -15,30 +15,62 @@ const SAMPLE_REVIEWS = [
   {
     reviewer_name: 'Marie Laurent',
     stars: 5,
-    review_text:
-      'Service impeccable, équipe très professionnelle et souriante. La chambre était magnifique et très propre. Je recommande vivement cet hôtel !',
+    review_text: 'Service impeccable, équipe très professionnelle et souriante. La chambre était magnifique et très propre. Je recommande vivement cet hôtel !',
     review_date: 'Il y a 2 jours',
   },
   {
     reviewer_name: 'Thomas Durand',
     stars: 4,
-    review_text:
-      "Très bon restaurant, la cuisine était excellente. Le service était un peu lent en salle mais dans l'ensemble une très bonne expérience.",
+    review_text: "Très bon restaurant, la cuisine était excellente. Le service était un peu lent en salle mais dans l'ensemble une très bonne expérience.",
     review_date: 'Il y a 4 jours',
   },
   {
     reviewer_name: 'Sophie Martin',
     stars: 2,
-    review_text:
-      'Déçue par notre séjour. La chambre n\'était pas propre à notre arrivée et le petit-déjeuner était froid. Pour le prix, on s\'attendait à mieux.',
+    review_text: "Déçue par notre séjour. La chambre n'était pas propre à notre arrivée et le petit-déjeuner était froid. Pour le prix, on s'attendait à mieux.",
     review_date: 'Il y a 1 semaine',
   },
   {
     reviewer_name: 'Jean-Pierre Blanc',
     stars: 5,
-    review_text:
-      'Excellent séjour ! Personnel aux petits soins, cadre magnifique. Nous reviendrons certainement. Mention spéciale pour le chef dont la cuisine est divine.',
+    review_text: 'Excellent séjour ! Personnel aux petits soins, cadre magnifique. Nous reviendrons certainement. Mention spéciale pour le chef dont la cuisine est divine.',
     review_date: 'Il y a 1 semaine',
+  },
+  {
+    reviewer_name: 'Camille Rousseau',
+    stars: 3,
+    review_text: 'Hôtel correct pour le prix. Le personnel est sympa mais les équipements commencent à vieillir. La piscine était froide. Vue sur le jardin agréable.',
+    review_date: 'Il y a 2 semaines',
+  },
+  {
+    reviewer_name: 'Antoine Girard',
+    stars: 1,
+    review_text: "Très mauvaise expérience. Nous avons attendu plus d'une heure pour le check-in, la chambre n'était pas celle que nous avions réservée et le wifi ne fonctionnait pas.",
+    review_date: 'Il y a 2 semaines',
+  },
+  {
+    reviewer_name: 'Lucie Mercier',
+    stars: 5,
+    review_text: "Un week-end parfait ! Le spa est incroyable, le personnel aux petits soins. Le petit-déjeuner copieux et délicieux. On revient l'année prochaine c'est certain !",
+    review_date: 'Il y a 3 semaines',
+  },
+  {
+    reviewer_name: 'Fabrice Bonnet',
+    stars: 4,
+    review_text: "Très bonne adresse, restaurant gastronomique de qualité. Le sommelier est particulièrement compétent. Seul bémol : le parking un peu éloigné.",
+    review_date: 'Il y a 3 semaines',
+  },
+  {
+    reviewer_name: 'Nathalie Petit',
+    stars: 2,
+    review_text: "Chambre bruyante donnant sur la rue, impossible de dormir avant minuit. Le ménage n'avait pas été fait correctement à notre arrivée. Dommage car l'emplacement est top.",
+    review_date: 'Il y a 1 mois',
+  },
+  {
+    reviewer_name: 'Olivier Leroy',
+    stars: 5,
+    review_text: "Séjour magique pour notre anniversaire de mariage. La direction nous a offert une bouteille de champagne et surclassé notre chambre. Service 5 étoiles.",
+    review_date: 'Il y a 1 mois',
   },
 ]
 
@@ -113,7 +145,7 @@ export default function ReviewsPage() {
         return
       }
 
-      if (data && data.length > 0) {
+      if (data && data.length >= 4) {
         setReviews(data as Review[])
         const pending = data.filter((r) => r.status === 'pending').length
         setPendingCount(pending)
@@ -121,8 +153,10 @@ export default function ReviewsPage() {
         return
       }
 
-      // Seed with sample reviews
-      const sampleWithColors = SAMPLE_REVIEWS.map((r, i) => {
+      // Seed with sample reviews (if fewer than 4, add missing ones)
+      const existing = data?.length || 0
+      const toInsert = SAMPLE_REVIEWS.slice(existing)
+      const sampleWithColors = toInsert.map((r, i) => {
         const color = getAvatarColor(i)
         return {
           establishment_id: establishment.id,
@@ -144,8 +178,9 @@ export default function ReviewsPage() {
         .select()
 
       if (inserted) {
-        setReviews(inserted as Review[])
-        setPendingCount(inserted.length)
+        const allReviews = [...(data || []), ...inserted] as Review[]
+        setReviews(allReviews)
+        setPendingCount(allReviews.filter((r) => r.status === 'pending').length)
       }
       setLoading(false)
     }
