@@ -17,6 +17,8 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
   const [mode, setMode] = useState<'login' | 'signup'>(defaultMode)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [sentToEmail, setSentToEmail] = useState('')
   const { showToast } = useToast()
 
   // Login fields
@@ -85,26 +87,27 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
       }
 
       if (data.user) {
-        // Create establishment record
-        const colorIdx = 0
-        const color = getAvatarColor(colorIdx)
-        await supabase.from('establishments').insert({
-          user_id: data.user.id,
-          name: businessName,
-          signature: name,
-          tone: 'Professionnel',
-        })
-
-        // Create trial subscription record
-        await supabase.from('subscriptions').insert({
-          user_id: data.user.id,
-          status: 'trialing',
-          trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-        })
-
-        showToast('Compte créé ! Bienvenue sur AvisAuto 🎉')
-        onClose()
-        window.location.href = '/dashboard'
+        if (data.session) {
+          // Email confirmation disabled — user is immediately logged in
+          await supabase.from('establishments').insert({
+            user_id: data.user.id,
+            name: businessName,
+            signature: name,
+            tone: 'Professionnel',
+          })
+          await supabase.from('subscriptions').insert({
+            user_id: data.user.id,
+            status: 'trialing',
+            trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+          })
+          showToast('Compte créé ! Bienvenue sur AvisAuto')
+          onClose()
+          window.location.href = '/dashboard'
+        } else {
+          // Email confirmation required — show message
+          setSentToEmail(signupEmail)
+          setEmailSent(true)
+        }
       }
     } catch {
       setError('Une erreur est survenue. Réessayez.')
@@ -128,7 +131,29 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
             </button>
           </Dialog.Close>
 
-          {mode === 'login' ? (
+          {emailSent ? (
+            <div className="text-center py-4">
+              <div className="text-5xl mb-5">📬</div>
+              <Dialog.Title className="text-[1.3rem] font-bold mb-3 text-[#e8eaf6]">
+                Vérifiez votre boîte mail
+              </Dialog.Title>
+              <Dialog.Description className="text-[#8892b0] text-sm leading-relaxed mb-6">
+                Un lien de confirmation a été envoyé à<br />
+                <span className="text-[#e8eaf6] font-medium">{sentToEmail}</span>.<br /><br />
+                Cliquez sur le lien dans l&apos;email pour activer votre compte et accéder au tableau de bord.
+              </Dialog.Description>
+              <p className="text-xs text-[#8892b0]">
+                Pas reçu ?{' '}
+                <button
+                  type="button"
+                  onClick={() => setEmailSent(false)}
+                  className="text-[#6366f1] hover:underline"
+                >
+                  Réessayer
+                </button>
+              </p>
+            </div>
+          ) : mode === 'login' ? (
             <form onSubmit={handleLogin}>
               <Dialog.Title className="text-[1.4rem] font-bold mb-1.5 text-[#e8eaf6]">
                 Connexion
@@ -273,7 +298,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
                 </button>
               </p>
             </form>
-          )}
+          ) }
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
