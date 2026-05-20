@@ -146,8 +146,27 @@ export default function ReviewsPage() {
       }
 
       if (data && data.length >= 4) {
-        setReviews(data as Review[])
-        const pending = data.filter((r) => r.status === 'pending').length
+        let reviews = data as Review[]
+
+        // Si le mode auto est actif au chargement, programmer les avis en attente
+        if (establishment.auto_mode && establishment.publish_delay_sec > 0) {
+          const toSchedule = reviews.filter((r) => r.status === 'pending' && r.ai_reply)
+          if (toSchedule.length > 0) {
+            const scheduledAt = new Date(Date.now() + establishment.publish_delay_sec * 1000).toISOString()
+            await supabase
+              .from('reviews')
+              .update({ status: 'scheduled', scheduled_at: scheduledAt })
+              .in('id', toSchedule.map((r) => r.id))
+            reviews = reviews.map((r) =>
+              toSchedule.find((s) => s.id === r.id)
+                ? { ...r, status: 'scheduled' as const, scheduled_at: scheduledAt }
+                : r
+            )
+          }
+        }
+
+        setReviews(reviews)
+        const pending = reviews.filter((r) => r.status === 'pending').length
         setPendingCount(pending)
         setLoading(false)
         return
