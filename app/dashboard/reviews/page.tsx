@@ -91,6 +91,7 @@ export default function ReviewsPage() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
   const [upgradeFeature, setUpgradeFeature] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
+  const [publishingAll, setPublishingAll] = useState(false)
   const { showToast } = useToast()
 
   const supabase = createClient()
@@ -347,6 +348,30 @@ export default function ReviewsPage() {
     }
   }
 
+  const handlePublishAll = async () => {
+    const toPublish = reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply)
+    if (toPublish.length === 0) {
+      showToast('Aucun avis avec une réponse prête à publier.')
+      return
+    }
+    setPublishingAll(true)
+    const publishedAt = new Date().toISOString()
+    await supabase
+      .from('reviews')
+      .update({ status: 'published', published_at: publishedAt })
+      .in('id', toPublish.map((r) => r.id))
+    setReviews((prev) =>
+      prev.map((r) =>
+        toPublish.find((p) => p.id === r.id)
+          ? { ...r, status: 'published' as const, published_at: publishedAt }
+          : r
+      )
+    )
+    setPendingCount(0)
+    setPublishingAll(false)
+    showToast(`${toPublish.length} réponse${toPublish.length > 1 ? 's' : ''} publiée${toPublish.length > 1 ? 's' : ''} !`)
+  }
+
   // Filtered reviews
   const filtered = reviews.filter((r) => {
     if (search && !r.review_text.toLowerCase().includes(search.toLowerCase()) && !r.reviewer_name.toLowerCase().includes(search.toLowerCase())) return false
@@ -414,6 +439,19 @@ export default function ReviewsPage() {
                 Passer au Pro
               </a>
             </div>
+          )}
+
+          {/* Publish all button */}
+          {reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length > 0 && !establishment?.auto_mode && (
+            <button
+              onClick={handlePublishAll}
+              disabled={publishingAll}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed text-white"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)' }}
+            >
+              <Zap size={12} />
+              {publishingAll ? 'Publication…' : `Tout publier (${reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length})`}
+            </button>
           )}
 
           <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2 focus-within:border-[rgba(99,102,241,0.5)] transition-colors">
