@@ -1,11 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Groq from 'groq-sdk'
 import { STATIC_REPLIES } from '@/lib/utils'
+import { createServiceClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { reviewText, stars, tone = 'Professionnel', hotelName = 'notre établissement', signature = '', length = 'normal' } = body
+    const { reviewText, stars, tone = 'Professionnel', hotelName = 'notre établissement', signature = '', length = 'normal', userId } = body
+
+    // Plan enforcement for starter users
+    if (userId) {
+      const serviceClient = await createServiceClient()
+      const { data: sub } = await serviceClient
+        .from('subscriptions')
+        .select('plan, ai_replies_count, ai_replies_reset_at, status')
+        .eq('user_id', userId)
+        .single()
+
+      if (sub && sub.plan === 'starter' && sub.status !== 'trialing') {
+        const resetAt = sub.ai_replies_reset_at ? new Date(sub.ai_replies_reset_at) : new Date()
+        const now = new Date()
+
+        // Check if month has changed since last reset
+        const sameMonth =
+          resetAt.getFullYear() === now.getFullYear() &&
+          resetAt.getMonth() === now.getMonth()
+
+        if (!sameMonth) {
+          // Reset the counter for new month
+          await serviceClient
+            .from('subscriptions')
+            .update({ ai_replies_count: 0, ai_replies_reset_at: now.toISOString() })
+            .eq('user_id', userId)
+          sub.ai_replies_count = 0
+        } else if ((sub.ai_replies_count || 0) >= 30) {
+          return NextResponse.json({ error: 'LIMIT_REACHED', limit: 30 }, { status: 403 })
+        }
+      }
+    }
 
     const apiKey = process.env.GROQ_API_KEY
 
@@ -14,6 +46,23 @@ export async function POST(request: NextRequest) {
       const starKey = Math.min(Math.max(Math.round(stars), 1), 5) as 1 | 2 | 3 | 4 | 5
       let reply = toneReplies[starKey] || toneReplies[3]
       if (signature) reply += `\n— ${signature}`
+
+      // Increment usage counter after generating
+      if (userId) {
+        const serviceClient = await createServiceClient()
+        const { data: currentSubFallback } = await serviceClient
+          .from('subscriptions')
+          .select('ai_replies_count')
+          .eq('user_id', userId)
+          .single()
+        if (currentSubFallback) {
+          await serviceClient
+            .from('subscriptions')
+            .update({ ai_replies_count: (currentSubFallback.ai_replies_count || 0) + 1 })
+            .eq('user_id', userId)
+        }
+      }
+
       return NextResponse.json({ reply, fallback: true })
     }
 
@@ -81,6 +130,22 @@ ${signature ? `- Terminer par : "— ${signature}"` : ''}
       const starKey = Math.min(Math.max(Math.round(stars), 1), 5) as 1 | 2 | 3 | 4 | 5
       reply = toneReplies[starKey] || toneReplies[3]
       if (signature) reply += `\n— ${signature}`
+    }
+
+    // Increment ai_replies_count after successful generation
+    if (userId) {
+      const serviceClient = await createServiceClient()
+      const { data: currentSub } = await serviceClient
+        .from('subscriptions')
+        .select('ai_replies_count')
+        .eq('user_id', userId)
+        .single()
+      if (currentSub) {
+        await serviceClient
+          .from('subscriptions')
+          .update({ ai_replies_count: (currentSub.ai_replies_count || 0) + 1 })
+          .eq('user_id', userId)
+      }
     }
 
     return NextResponse.json({ reply })

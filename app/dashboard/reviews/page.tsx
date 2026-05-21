@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search, AlertTriangle, Zap } from 'lucide-react'
+import { Search, AlertTriangle, Zap, Lock } from 'lucide-react'
 import { AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { useEstablishment } from '../layout'
+import { useEstablishment, useSubscription } from '../layout'
 import ReviewCard, { type Review } from '@/components/ReviewCard'
 import { getInitials, getAvatarColor, TONE_COLORS, STATIC_REPLIES } from '@/lib/utils'
 import { useToast } from '@/components/Toast'
+import UpgradeModal from '@/components/UpgradeModal'
 
 const TONES = ['Professionnel', 'Chaleureux', 'Empathique', 'Décontracté'] as const
 
@@ -76,6 +77,8 @@ const SAMPLE_REVIEWS = [
 
 export default function ReviewsPage() {
   const { establishment, setPendingCount } = useEstablishment()
+  const subscription = useSubscription()
+  const isPro = !subscription || subscription.plan === 'pro' || subscription.status === 'trialing'
   const [reviews, setReviews] = useState<Review[]>([])
   const [generatingIds, setGeneratingIds] = useState<Set<string>>(new Set())
   const [tone, setTone] = useState<string>('Professionnel')
@@ -85,12 +88,22 @@ export default function ReviewsPage() {
   const [loading, setLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
   const [hasGroqKey, setHasGroqKey] = useState(false)
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
+  const [upgradeFeature, setUpgradeFeature] = useState('')
+  const [userId, setUserId] = useState<string | null>(null)
   const { showToast } = useToast()
 
   const supabase = createClient()
 
+  // Fetch userId on mount
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) setUserId(user.id)
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const generateReply = useCallback(
-    async (review: Review, currentTone: string, length: 'short' | 'normal' | 'detailed' = 'normal'): Promise<string> => {
+    async (review: Review, currentTone: string, length: 'short' | 'normal' | 'detailed' = 'normal'): Promise<string | null> => {
       try {
         const res = await fetch('/api/generate-reply', {
           method: 'POST',
@@ -102,8 +115,16 @@ export default function ReviewsPage() {
             hotelName: establishment?.name || 'notre établissement',
             signature: establishment?.signature || '',
             length,
+            userId: userId || undefined,
           }),
         })
+        if (res.status === 403) {
+          const data = await res.json()
+          if (data.error === 'LIMIT_REACHED') {
+            showToast('Limite de 30 réponses atteinte ce mois-ci. Passez au Pro pour des réponses illimitées.')
+            return null
+          }
+        }
         const data = await res.json()
         return data.reply || ''
       } catch {
@@ -112,7 +133,7 @@ export default function ReviewsPage() {
         return toneReplies[key] || toneReplies[3]
       }
     },
-    [establishment]
+    [establishment, userId, showToast]
   )
 
   useEffect(() => {
@@ -220,6 +241,7 @@ export default function ReviewsPage() {
           next.delete(review.id)
           return next
         })
+        if (reply === null) break // limit reached, stop generating
         // Update in DB
         await supabase
           .from('reviews')
@@ -252,9 +274,10 @@ export default function ReviewsPage() {
     if (!review) return
     setGeneratingIds((prev) => new Set(prev).add(id))
     const reply = await generateReply(review, tone, length)
+    setGeneratingIds((prev) => { const n = new Set(prev); n.delete(id); return n })
+    if (reply === null) return // limit reached, don't update
     await supabase.from('reviews').update({ ai_reply: reply }).eq('id', id)
     setReviews((prev) => prev.map((r) => (r.id === id ? { ...r, ai_reply: reply } : r)))
-    setGeneratingIds((prev) => { const n = new Set(prev); n.delete(id); return n })
   }
 
   const handleDelete = async (id: string) => {
@@ -313,6 +336,11 @@ export default function ReviewsPage() {
   }
 
   const handleToneChange = async (newTone: string) => {
+    if (!isPro && newTone !== 'Professionnel') {
+      setUpgradeFeature('Les tons IA (Chaleureux, Empathique, Décontracté)')
+      setUpgradeModalOpen(true)
+      return
+    }
     setTone(newTone)
     if (establishment) {
       await supabase.from('establishments').update({ tone: newTone }).eq('id', establishment.id)
@@ -344,6 +372,8 @@ export default function ReviewsPage() {
 
   return (
     <div>
+      <UpgradeModal open={upgradeModalOpen} onClose={() => setUpgradeModalOpen(false)} feature={upgradeFeature} />
+
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3 mb-7">
         <div>
@@ -351,6 +381,12 @@ export default function ReviewsPage() {
           <p className="text-sm text-[#8892b0] mt-1">
             Tous vos avis Google, réponses IA générées automatiquement.
           </p>
+          {/* Usage counter for Starter */}
+          {!isPro && (
+            <div className="mt-2 text-xs text-[#8892b0] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5">
+              <span className="font-semibold text-[#e8eaf6]">{subscription?.ai_replies_count || 0}/30</span> réponses utilisées ce mois
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -363,10 +399,20 @@ export default function ReviewsPage() {
               Clé Groq manquante — configurer
             </div>
           )}
-          {establishment?.auto_mode && (
+          {establishment?.auto_mode && isPro && (
             <div className="text-xs font-semibold bg-[rgba(52,211,153,0.12)] border border-[rgba(52,211,153,0.3)] text-[#34d399] px-3 py-1.5 rounded-full flex items-center gap-1">
               <Zap size={11} />
               Auto actif
+            </div>
+          )}
+          {/* Auto mode banner for Starter */}
+          {establishment?.auto_mode && !isPro && (
+            <div className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+              <AlertTriangle size={12} />
+              Le mode automatique nécessite le plan Pro —{' '}
+              <a href="/api/stripe/create-checkout?plan=pro" className="underline font-semibold hover:text-[#fbbf24]">
+                Passer au Pro
+              </a>
             </div>
           )}
 
@@ -425,18 +471,33 @@ export default function ReviewsPage() {
         {TONES.map((t) => {
           const col = TONE_COLORS[t]
           const isActive = tone === t
+          const isLocked = !isPro && t !== 'Professionnel'
           return (
             <button
               key={t}
-              onClick={() => handleToneChange(t)}
-              className="px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all"
+              onClick={() => {
+                if (isLocked) {
+                  setUpgradeFeature('Les tons IA (Chaleureux, Empathique, Décontracté)')
+                  setUpgradeModalOpen(true)
+                } else {
+                  handleToneChange(t)
+                }
+              }}
+              className="px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all flex items-center gap-1.5"
               style={{
-                borderColor: isActive ? col.border : 'rgba(255,255,255,0.07)',
-                color: isActive ? col.text : '#8892b0',
-                background: isActive ? col.bg : 'transparent',
+                borderColor: isLocked ? 'rgba(255,255,255,0.05)' : isActive ? col.border : 'rgba(255,255,255,0.07)',
+                color: isLocked ? 'rgba(136,146,176,0.4)' : isActive ? col.text : '#8892b0',
+                background: isLocked ? 'transparent' : isActive ? col.bg : 'transparent',
+                cursor: isLocked ? 'pointer' : 'pointer',
               }}
             >
+              {isLocked && <Lock size={10} />}
               {t}
+              {isLocked && (
+                <span className="bg-[rgba(99,102,241,0.2)] text-[#818cf8] text-[0.6rem] font-bold px-1 py-0.5 rounded">
+                  Pro
+                </span>
+              )}
             </button>
           )
         })}

@@ -436,40 +436,73 @@ export default function LandingPage() {
       {/* ── PRICING ── */}
       <section className="text-center px-6 py-20" id="pricing">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Tarif simple</div>
-          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-12">Un seul plan. Tout inclus.</h2>
-          <div
-            className="max-w-[420px] mx-auto rounded-[24px] p-11 relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(145deg, #111827 0%, #0b0f1e 100%)',
-              border: '1px solid rgba(99,102,241,0.35)',
-            }}
-          >
-            <div className="absolute top-[-60px] right-[-60px] w-[180px] h-[180px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.15) 0%, transparent 70%)' }} />
-            <div className="inline-block bg-[#34d399] text-[#0b0f1e] text-[0.72rem] font-bold px-2.5 py-1 rounded-md mb-4 uppercase tracking-[0.05em]">Tout inclus · Sans engagement</div>
-            <div className="text-[3.2rem] font-bold tracking-[-0.03em] leading-none">49€<span className="text-[1.1rem] font-normal text-[#8892b0]">/mois</span></div>
-            <div className="text-[#8892b0] text-[0.88rem] mt-1 mb-8">par établissement · sans engagement</div>
-            <ul className="text-left list-none mb-8 space-y-0">
-              {['Réponses illimitées', 'Intégration Google My Business', 'Personnalisation du ton', 'Tableau de bord analytics', 'Validation avant publication', 'Support prioritaire 7j/7', 'Ajout de plusieurs établissements'].map((item) => (
-                <li key={item} className="flex items-center gap-2.5 text-[0.9rem] py-2.5 border-b border-[rgba(255,255,255,0.07)] last:border-0 text-[#8892b0]">
-                  <span className="text-[#34d399] font-bold text-[1rem]">✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => setModalType('signup')}
-              className="w-full py-4 rounded-[10px] font-bold text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(99,102,241,0.4)]"
-              style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#0b0f1e' }}
-            >
-              Commencer maintenant
-            </button>
-            <button
-              onClick={() => setModalType('signup')}
-              className="block w-full mt-3.5 text-[0.85rem] text-[#8892b0] hover:text-[#e8eaf6] transition-colors underline cursor-pointer bg-transparent border-none font-inherit"
-            >
-              Démarrer l'essai gratuit — 14 jours
-            </button>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Tarifs</div>
+          <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Choisissez votre plan</h2>
+          <p className="text-[#8892b0] text-[0.95rem] mb-12">14 jours d&apos;essai gratuit · Sans carte bancaire · Sans engagement</p>
+          <div className="max-w-[860px] mx-auto grid md:grid-cols-2 gap-6 items-start">
+            {/* Starter */}
+            <div className="rounded-[24px] p-8 text-left" style={{ background: 'linear-gradient(145deg, #111827 0%, #0b0f1e 100%)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div className="text-xs font-semibold text-[#8892b0] uppercase tracking-widest mb-3">Starter</div>
+              <div className="text-[2.8rem] font-bold tracking-[-0.03em] leading-none text-[#e8eaf6]">49€<span className="text-[1rem] font-normal text-[#8892b0]">/mois</span></div>
+              <div className="text-[#8892b0] text-sm mt-1 mb-6">par établissement</div>
+              <ul className="space-y-0 mb-8">
+                {[
+                  ['30 réponses IA par mois', true],
+                  ['1 ton disponible (Professionnel)', true],
+                  ['Validation avant publication', true],
+                  ['Support email', true],
+                  ['Mode automatique', false],
+                  ['Analytiques & insights', false],
+                  ['Analyse avis négatifs IA', false],
+                  ['Tous les tons IA', false],
+                ].map(([item, included]) => (
+                  <li key={item as string} className="flex items-center gap-2.5 text-[0.88rem] py-2 border-b border-[rgba(255,255,255,0.05)] last:border-0" style={{ color: included ? '#8892b0' : 'rgba(136,146,176,0.35)' }}>
+                    <span style={{ color: included ? '#34d399' : 'rgba(136,146,176,0.3)' }} className="font-bold">{included ? '✓' : '✗'}</span>
+                    {item as string}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => setModalType('signup')} className="w-full py-3.5 rounded-[10px] font-bold text-[0.95rem] transition-all border border-[rgba(255,255,255,0.12)] text-[#e8eaf6] hover:border-[rgba(255,255,255,0.25)] hover:bg-[rgba(255,255,255,0.04)]">
+                Démarrer l&apos;essai gratuit
+              </button>
+            </div>
+
+            {/* Pro - highlighted */}
+            <div className="rounded-[24px] p-8 text-left relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #1a1f3a 0%, #0f1628 100%)', border: '2px solid rgba(99,102,241,0.5)', boxShadow: '0 0 40px rgba(99,102,241,0.15)' }}>
+              <div className="absolute top-[-60px] right-[-60px] w-[180px] h-[180px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)' }} />
+              <div className="flex items-center gap-2 mb-3">
+                <div className="text-xs font-semibold text-[#818cf8] uppercase tracking-widest">Pro</div>
+                <span className="bg-[#6366f1] text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-md uppercase tracking-wide">Recommandé</span>
+              </div>
+              <div className="text-[2.8rem] font-bold tracking-[-0.03em] leading-none text-[#e8eaf6]">79€<span className="text-[1rem] font-normal text-[#8892b0]">/mois</span></div>
+              <div className="text-[#8892b0] text-sm mt-1 mb-6">par établissement</div>
+              <ul className="space-y-0 mb-8">
+                {[
+                  'Réponses illimitées',
+                  '4 tons IA (Pro, Chaleureux, Empathique, Décontracté)',
+                  'Mode automatique avec délai configurable',
+                  'Analytiques & insights complets',
+                  'Analyse avis négatifs par IA',
+                  'Validation avant publication',
+                  'Support prioritaire 7j/7',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2.5 text-[0.88rem] py-2 border-b border-[rgba(99,102,241,0.1)] last:border-0 text-[#8892b0]">
+                    <span className="text-[#818cf8] font-bold">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => setModalType('signup')}
+                className="w-full py-3.5 rounded-[10px] font-bold text-[0.95rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(99,102,241,0.4)]"
+                style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#fff' }}
+              >
+                Commencer maintenant →
+              </button>
+              <button onClick={() => setModalType('signup')} className="block w-full mt-3 text-[0.83rem] text-[#8892b0] hover:text-[#e8eaf6] transition-colors bg-transparent border-none font-inherit cursor-pointer">
+                14 jours gratuits inclus
+              </button>
+            </div>
           </div>
         </FadeUp>
       </section>

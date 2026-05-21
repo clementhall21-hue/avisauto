@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.userId
         const customerId = session.customer as string
         const subscriptionId = session.subscription as string
+        const plan = session.metadata?.plan || 'pro'
 
         if (userId) {
           await supabaseAdmin.from('subscriptions').upsert(
@@ -44,6 +45,9 @@ export async function POST(request: NextRequest) {
               stripe_subscription_id: subscriptionId,
               status: 'active',
               current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+              plan,
+              ai_replies_count: 0,
+              ai_replies_reset_at: new Date().toISOString(),
             },
             { onConflict: 'user_id' }
           )
@@ -63,13 +67,20 @@ export async function POST(request: NextRequest) {
           .single()
 
         if (subData) {
+          const updatePayload: Record<string, unknown> = {
+            status: subscription.status,
+            stripe_subscription_id: subscription.id,
+            current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          }
+
+          // Update plan if present in subscription metadata
+          if (subscription.metadata?.plan) {
+            updatePayload.plan = subscription.metadata.plan
+          }
+
           await supabaseAdmin
             .from('subscriptions')
-            .update({
-              status: subscription.status,
-              stripe_subscription_id: subscription.id,
-              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-            })
+            .update(updatePayload)
             .eq('stripe_customer_id', customerId)
         }
         break

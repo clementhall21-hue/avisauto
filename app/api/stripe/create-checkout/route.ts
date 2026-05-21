@@ -17,6 +17,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Read plan from query param (?plan=starter or ?plan=pro)
+    const { searchParams } = new URL(request.url)
+    const plan = searchParams.get('plan') as 'starter' | 'pro' | null
+
+    let priceId: string
+    if (plan === 'starter') {
+      priceId = process.env.STRIPE_STARTER_PRICE_ID!
+    } else {
+      // Default to pro (backward compat: fall back to STRIPE_PRICE_ID)
+      priceId = process.env.STRIPE_PRO_PRICE_ID || process.env.STRIPE_PRICE_ID!
+    }
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
     const session = await stripe.checkout.sessions.create({
@@ -24,7 +36,7 @@ export async function POST(request: NextRequest) {
       mode: 'subscription',
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID!,
+          price: priceId,
           quantity: 1,
         },
       ],
@@ -32,10 +44,12 @@ export async function POST(request: NextRequest) {
         trial_period_days: 14,
         metadata: {
           userId: user.id,
+          plan: plan || 'pro',
         },
       },
       metadata: {
         userId: user.id,
+        plan: plan || 'pro',
       },
       success_url: `${appUrl}/dashboard?subscription=success`,
       cancel_url: `${appUrl}/?subscription=canceled`,

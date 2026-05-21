@@ -20,11 +20,20 @@ export interface Establishment {
   zapier_triggers: Record<string, boolean>
 }
 
+export type SubscriptionState = {
+  status: string
+  trial_ends_at: string | null
+  plan: string | null
+  ai_replies_count: number
+  ai_replies_reset_at: string | null
+}
+
 interface EstablishmentContextType {
   establishment: Establishment | null
   setEstablishment: (e: Establishment) => void
   pendingCount: number
   setPendingCount: React.Dispatch<React.SetStateAction<number>>
+  subscription: SubscriptionState | null
 }
 
 export const EstablishmentContext = createContext<EstablishmentContextType>({
@@ -32,10 +41,15 @@ export const EstablishmentContext = createContext<EstablishmentContextType>({
   setEstablishment: () => {},
   pendingCount: 0,
   setPendingCount: () => { return },
+  subscription: null,
 })
 
 export function useEstablishment() {
   return useContext(EstablishmentContext)
+}
+
+export function useSubscription() {
+  return useContext(EstablishmentContext).subscription
 }
 
 function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
@@ -44,7 +58,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [userEmail, setUserEmail] = useState('')
   const [userName, setUserName] = useState('')
-  const [subscription, setSubscription] = useState<{ status: string; trial_ends_at: string | null } | null>(null)
+  const [subscription, setSubscription] = useState<SubscriptionState | null>(null)
   const [establishment, setEstablishment] = useState<Establishment | null>(null)
   const [pendingCount, setPendingCount] = useState(0)
   const { showToast } = useToast()
@@ -72,11 +86,11 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       // Fetch subscription
       const { data: sub } = await supabase
         .from('subscriptions')
-        .select('status, trial_ends_at')
+        .select('status, trial_ends_at, plan, ai_replies_count, ai_replies_reset_at')
         .eq('user_id', user.id)
         .single()
 
-      if (sub) setSubscription(sub)
+      if (sub) setSubscription(sub as SubscriptionState)
     }
     init()
   }, [router])
@@ -151,12 +165,25 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
               Passer au plan payant →
             </Link>
           </div>
+        ) : subscription?.plan === 'starter' ? (
+          <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
+            <div className="text-[#f59e0b] font-semibold mb-1 flex items-center gap-1 text-xs">
+              <CheckCircle size={12} /> Plan Starter
+            </div>
+            <div className="text-[#8892b0] text-xs">49€/mois · {subscription.ai_replies_count || 0}/30 réponses</div>
+            <Link
+              href="/api/stripe/create-checkout?plan=pro"
+              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors"
+            >
+              Passer au Pro →
+            </Link>
+          </div>
         ) : (
           <div className="bg-[rgba(52,211,153,0.08)] border border-[rgba(52,211,153,0.2)] rounded-xl p-3.5 text-sm">
             <div className="text-[#34d399] font-semibold mb-1 flex items-center gap-1 text-xs">
-              <CheckCircle size={12} /> Plan actif
+              <CheckCircle size={12} /> Plan Pro
             </div>
-            <div className="text-[#8892b0] text-xs">49€/mois · Illimité</div>
+            <div className="text-[#8892b0] text-xs">79€/mois · Illimité</div>
           </div>
         )}
       </div>
@@ -164,7 +191,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <EstablishmentContext.Provider value={{ establishment, setEstablishment, pendingCount, setPendingCount }}>
+    <EstablishmentContext.Provider value={{ establishment, setEstablishment, pendingCount, setPendingCount, subscription }}>
       <div className="min-h-screen bg-[#0b0f1e] flex flex-col">
         {/* Top nav */}
         <nav className="flex items-center justify-between px-6 md:px-9 h-[60px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(15,30,60,0.96)] sticky top-0 z-50">

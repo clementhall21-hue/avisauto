@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { Loader2, TrendingUp, AlertCircle, Award } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { useEstablishment } from '../layout'
+import { useEstablishment, useSubscription } from '../layout'
 
 interface Review {
   id: string
@@ -48,6 +48,8 @@ function DonutChart({ percentage }: { percentage: number }) {
 
 export default function AnalyticsPage() {
   const { establishment } = useEstablishment()
+  const subscription = useSubscription()
+  const isPro = !subscription || subscription.plan === 'pro' || subscription.status === 'trialing'
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [analyzing, setAnalyzing] = useState(false)
@@ -137,6 +139,22 @@ export default function AnalyticsPage() {
     } finally {
       setAnalyzing(false)
     }
+  }
+
+  if (!isPro) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="text-5xl mb-4">📊</div>
+        <h2 className="text-2xl font-bold text-[#e8eaf6] mb-3">Analytiques Pro</h2>
+        <p className="text-[#8892b0] text-sm mb-6 max-w-[380px] leading-relaxed">
+          Les analytiques détaillées, l&apos;analyse des avis négatifs et les insights IA sont disponibles avec le plan Pro.
+        </p>
+        <a href="/api/stripe/create-checkout?plan=pro" className="btn-primary">
+          Passer au Pro — 79€/mois →
+        </a>
+        <p className="text-xs text-[#8892b0] mt-3">14 jours d&apos;essai gratuit inclus</p>
+      </div>
+    )
   }
 
   if (loading) {
