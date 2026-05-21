@@ -441,19 +441,6 @@ export default function ReviewsPage() {
             </div>
           )}
 
-          {/* Publish all button */}
-          {reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length > 0 && !establishment?.auto_mode && (
-            <button
-              onClick={handlePublishAll}
-              disabled={publishingAll}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed text-white"
-              style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)' }}
-            >
-              <Zap size={12} />
-              {publishingAll ? 'Publication…' : `Tout publier (${reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length})`}
-            </button>
-          )}
-
           <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2 focus-within:border-[rgba(99,102,241,0.5)] transition-colors">
             <Search size={14} className="text-[#8892b0]" />
             <input
@@ -539,6 +526,23 @@ export default function ReviewsPage() {
             </button>
           )
         })}
+
+        {/* Tout publier — aligné à droite */}
+        {reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length > 0 && !establishment?.auto_mode && (
+          <button
+            onClick={handlePublishAll}
+            disabled={publishingAll}
+            className="ml-auto flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{
+              borderColor: 'rgba(52,211,153,0.3)',
+              color: '#34d399',
+              background: 'rgba(52,211,153,0.08)',
+            }}
+          >
+            <Zap size={11} />
+            {publishingAll ? 'Publication…' : `Tout publier (${reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length})`}
+          </button>
+        )}
       </div>
 
       {/* Reviews list */}
