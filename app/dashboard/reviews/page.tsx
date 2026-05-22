@@ -9,6 +9,7 @@ import ReviewCard, { type Review } from '@/components/ReviewCard'
 import { getInitials, getAvatarColor, TONE_COLORS, STATIC_REPLIES } from '@/lib/utils'
 import { useToast } from '@/components/Toast'
 import UpgradeModal from '@/components/UpgradeModal'
+import CheckoutButton from '@/components/CheckoutButton'
 
 const TONES = ['Professionnel', 'Chaleureux', 'Empathique', 'Décontracté'] as const
 
@@ -435,9 +436,9 @@ export default function ReviewsPage() {
             <div className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg flex items-center gap-1.5">
               <AlertTriangle size={12} />
               Le mode automatique nécessite le plan Pro —{' '}
-              <a href="/api/stripe/create-checkout?plan=pro" className="underline font-semibold hover:text-[#fbbf24]">
+              <CheckoutButton plan="pro" className="underline font-semibold hover:text-[#fbbf24] bg-transparent border-none p-0 text-inherit">
                 Passer au Pro
-              </a>
+              </CheckoutButton>
             </div>
           )}
 

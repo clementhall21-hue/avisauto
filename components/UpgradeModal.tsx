@@ -2,6 +2,7 @@
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
+import CheckoutButton from './CheckoutButton'
 
 interface UpgradeModalProps {
   open: boolean
@@ -52,13 +53,13 @@ export default function UpgradeModal({ open, onClose, feature }: UpgradeModalPro
           </ul>
 
           <div className="flex flex-col gap-3">
-            <a
-              href="/api/stripe/create-checkout?plan=pro"
+            <CheckoutButton
+              plan="pro"
               className="w-full py-3.5 rounded-[10px] font-bold text-[0.95rem] text-center transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(99,102,241,0.4)] text-white"
               style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)' }}
             >
               Passer au Pro — 79€/mois →
-            </a>
+            </CheckoutButton>
             <button
               onClick={onClose}
               className="w-full py-3 rounded-[10px] font-medium text-[0.9rem] text-[#8892b0] hover:text-[#e8eaf6] transition-colors border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.15)] bg-transparent"

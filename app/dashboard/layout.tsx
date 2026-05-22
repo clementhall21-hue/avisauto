@@ -7,6 +7,7 @@ import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut, CheckCircle } fr
 import { createClient } from '@/lib/supabase/client'
 import { ToastProvider, useToast } from '@/components/Toast'
 import { cn } from '@/lib/utils'
+import CheckoutButton from '@/components/CheckoutButton'
 
 export interface Establishment {
   id: string
@@ -158,12 +159,12 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
             <div className="text-[#f59e0b] font-semibold mb-1 text-xs">⏳ Essai gratuit</div>
             <div className="text-[#8892b0] text-xs">{trialDaysLeft} jour{trialDaysLeft !== 1 ? 's' : ''} restant{trialDaysLeft !== 1 ? 's' : ''}</div>
-            <Link
-              href="/api/stripe/create-checkout"
-              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors"
+            <CheckoutButton
+              plan="pro"
+              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors bg-transparent border-none w-full"
             >
               Passer au plan payant →
-            </Link>
+            </CheckoutButton>
           </div>
         ) : subscription?.plan === 'starter' ? (
           <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
@@ -171,12 +172,12 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
               <CheckCircle size={12} /> Plan Starter
             </div>
             <div className="text-[#8892b0] text-xs">49€/mois · {subscription.ai_replies_count || 0}/30 réponses</div>
-            <Link
-              href="/api/stripe/create-checkout?plan=pro"
-              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors"
+            <CheckoutButton
+              plan="pro"
+              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors bg-transparent border-none w-full"
             >
               Passer au Pro →
-            </Link>
+            </CheckoutButton>
           </div>
         ) : (
           <div className="bg-[rgba(52,211,153,0.08)] border border-[rgba(52,211,153,0.2)] rounded-xl p-3.5 text-sm">

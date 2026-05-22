@@ -5,6 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import { Loader2, TrendingUp, AlertCircle, Award } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useEstablishment, useSubscription } from '../layout'
+import CheckoutButton from '@/components/CheckoutButton'
 
 interface Review {
   id: string
@@ -149,9 +150,9 @@ export default function AnalyticsPage() {
         <p className="text-[#8892b0] text-sm mb-6 max-w-[380px] leading-relaxed">
           Les analytiques détaillées, l&apos;analyse des avis négatifs et les insights IA sont disponibles avec le plan Pro.
         </p>
-        <a href="/api/stripe/create-checkout?plan=pro" className="btn-primary">
+        <CheckoutButton plan="pro" className="btn-primary">
           Passer au Pro — 79€/mois →
-        </a>
+        </CheckoutButton>
         <p className="text-xs text-[#8892b0] mt-3">14 jours d&apos;essai gratuit inclus</p>
       </div>
     )
