@@ -25,7 +25,7 @@ export default function CheckoutButton({ plan = 'pro', className, style, childre
         window.location.href = data.url
       } else {
         console.error('Stripe error:', data)
-        alert('Erreur lors de la création du paiement. Vérifiez que vous êtes connecté.')
+        alert(`Erreur : ${data.error || JSON.stringify(data)}`)
       }
     } catch (err) {
       console.error(err)
