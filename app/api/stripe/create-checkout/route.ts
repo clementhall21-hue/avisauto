@@ -58,8 +58,9 @@ export async function POST(request: NextRequest) {
     const plan = searchParams.get('plan') as 'starter' | 'pro' | null
     const session = await createSession(plan, user.email!, user.id, request.url)
     return NextResponse.json({ url: session.url })
-  } catch (error) {
-    console.error('create-checkout error:', error)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('create-checkout error:', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
