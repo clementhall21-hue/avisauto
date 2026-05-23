@@ -127,7 +127,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
     <Dialog.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-full max-w-[420px] bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-2xl p-10 shadow-[0_24px_80px_rgba(0,0,0,0.6)] mx-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-[calc(100vw-32px)] max-w-[420px] bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 md:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 overflow-y-auto max-h-[90vh]">
           <Dialog.Close asChild>
             <button className="absolute top-4 right-4 text-[#8892b0] hover:text-[#e8eaf6] transition-colors" aria-label="Fermer">
               <X size={18} />

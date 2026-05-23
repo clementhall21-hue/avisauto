@@ -24,7 +24,7 @@ export default function UpgradeModal({ open, onClose, feature }: UpgradeModalPro
     <Dialog.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-full max-w-[440px] bg-[#111827] border border-[rgba(99,102,241,0.3)] rounded-2xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] mx-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-[calc(100vw-32px)] max-w-[440px] bg-[#111827] border border-[rgba(99,102,241,0.3)] rounded-2xl p-6 md:p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 overflow-y-auto max-h-[90vh]">
           <Dialog.Close asChild>
             <button className="absolute top-4 right-4 text-[#8892b0] hover:text-[#e8eaf6] transition-colors" aria-label="Fermer">
               <X size={18} />
