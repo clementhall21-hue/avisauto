@@ -100,14 +100,10 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
             status: 'trialing',
             trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
           })
-          showToast('Compte créé ! Bienvenue sur AvisAuto')
-          onClose()
-          window.location.href = '/dashboard'
-        } else {
-          // Email confirmation required — show message
-          setSentToEmail(signupEmail)
-          setEmailSent(true)
         }
+        // Always show email confirmation screen
+        setSentToEmail(signupEmail)
+        setEmailSent(true)
       }
     } catch {
       setError('Une erreur est survenue. Réessayez.')
@@ -137,19 +133,21 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               <Dialog.Title className="text-[1.3rem] font-bold mb-3 text-[#e8eaf6]">
                 Vérifiez votre boîte mail
               </Dialog.Title>
-              <Dialog.Description className="text-[#8892b0] text-sm leading-relaxed mb-6">
-                Un lien de confirmation a été envoyé à<br />
-                <span className="text-[#e8eaf6] font-medium">{sentToEmail}</span>.<br /><br />
-                Cliquez sur le lien dans l&apos;email pour activer votre compte et accéder au tableau de bord.
+              <Dialog.Description className="text-[#8892b0] text-sm leading-relaxed mb-4">
+                Un email de confirmation a été envoyé à<br />
+                <span className="text-[#e8eaf6] font-semibold">{sentToEmail}</span>
               </Dialog.Description>
+              <div className="bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] rounded-xl px-4 py-3 text-sm text-[#8892b0] mb-6 leading-relaxed">
+                👆 <span className="text-[#e8eaf6] font-medium">Cliquez sur le lien dans cet email</span> pour activer votre compte et accéder au tableau de bord.
+              </div>
               <p className="text-xs text-[#8892b0]">
-                Pas reçu ?{' '}
+                Pas reçu ? Vérifiez vos spams ou{' '}
                 <button
                   type="button"
                   onClick={() => setEmailSent(false)}
                   className="text-[#6366f1] hover:underline"
                 >
-                  Réessayer
+                  réessayez
                 </button>
               </p>
             </div>
