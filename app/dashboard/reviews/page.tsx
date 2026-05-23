@@ -401,71 +401,76 @@ export default function ReviewsPage() {
       <UpgradeModal open={upgradeModalOpen} onClose={() => setUpgradeModalOpen(false)} feature={upgradeFeature} />
 
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-3 mb-7">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#e8eaf6]">Avis reçus</h2>
-          <p className="text-sm text-[#8892b0] mt-1">
-            Tous vos avis Google, réponses IA générées automatiquement.
-          </p>
-          {/* Usage counter for Starter */}
-          {!isPro && (
-            <div className="mt-2 text-xs text-[#8892b0] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5">
-              <span className="font-semibold text-[#e8eaf6]">{subscription?.ai_replies_count || 0}/30</span> réponses utilisées ce mois
-            </div>
-          )}
+      <div className="mb-6">
+        <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#e8eaf6]">Avis reçus</h2>
+            <p className="text-sm text-[#8892b0] mt-1">
+              Tous vos avis Google, réponses IA générées automatiquement.
+            </p>
+            {/* Usage counter for Starter */}
+            {!isPro && (
+              <div className="mt-2 text-xs text-[#8892b0] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5">
+                <span className="font-semibold text-[#e8eaf6]">{subscription?.ai_replies_count || 0}/30</span> réponses utilisées ce mois
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {!hasGroqKey && (
+              <div
+                className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-[rgba(245,158,11,0.15)] transition-colors flex items-center gap-1.5 min-h-[36px]"
+                onClick={() => (window.location.href = '/dashboard/settings')}
+              >
+                <AlertTriangle size={12} />
+                <span className="hidden sm:inline">Clé Groq manquante — </span>configurer
+              </div>
+            )}
+            {establishment?.auto_mode && isPro && (
+              <div className="text-xs font-semibold bg-[rgba(52,211,153,0.12)] border border-[rgba(52,211,153,0.3)] text-[#34d399] px-3 py-1.5 rounded-full flex items-center gap-1">
+                <Zap size={11} />
+                Auto actif
+              </div>
+            )}
+            {/* Auto mode banner for Starter */}
+            {establishment?.auto_mode && !isPro && (
+              <div className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                <AlertTriangle size={12} />
+                Mode auto Pro —{' '}
+                <CheckoutButton plan="pro" className="underline font-semibold hover:text-[#fbbf24] bg-transparent border-none p-0 text-inherit">
+                  Upgrade
+                </CheckoutButton>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          {!hasGroqKey && (
-            <div
-              className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-[rgba(245,158,11,0.15)] transition-colors flex items-center gap-1.5"
-              onClick={() => (window.location.href = '/dashboard/settings')}
-            >
-              <AlertTriangle size={12} />
-              Clé Groq manquante — configurer
-            </div>
-          )}
-          {establishment?.auto_mode && isPro && (
-            <div className="text-xs font-semibold bg-[rgba(52,211,153,0.12)] border border-[rgba(52,211,153,0.3)] text-[#34d399] px-3 py-1.5 rounded-full flex items-center gap-1">
-              <Zap size={11} />
-              Auto actif
-            </div>
-          )}
-          {/* Auto mode banner for Starter */}
-          {establishment?.auto_mode && !isPro && (
-            <div className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-              <AlertTriangle size={12} />
-              Le mode automatique nécessite le plan Pro —{' '}
-              <CheckoutButton plan="pro" className="underline font-semibold hover:text-[#fbbf24] bg-transparent border-none p-0 text-inherit">
-                Passer au Pro
-              </CheckoutButton>
-            </div>
-          )}
-
-          <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2 focus-within:border-[rgba(99,102,241,0.5)] transition-colors">
-            <Search size={14} className="text-[#8892b0]" />
+        {/* Filters row — stacks on mobile */}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2 focus-within:border-[rgba(99,102,241,0.5)] transition-colors flex-1 min-w-0">
+            <Search size={14} className="text-[#8892b0] flex-shrink-0" />
             <input
               type="text"
               placeholder="Rechercher un avis…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent border-none outline-none text-[#e8eaf6] text-sm placeholder-[#8892b0] w-[180px]"
+              className="bg-transparent border-none outline-none text-[#e8eaf6] text-sm placeholder-[#8892b0] w-full min-w-0"
             />
           </div>
-
-          <select value={filterStars} onChange={(e) => setFilterStars(e.target.value)} className={selectClass}>
-            <option value="0">Toutes les notes</option>
-            <option value="5">★★★★★</option>
-            <option value="4">★★★★</option>
-            <option value="3">★★★ et -</option>
-          </select>
-
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={selectClass}>
-            <option value="all">Tous les statuts</option>
-            <option value="pending">⏳ Sans réponse</option>
-            <option value="published">✓ Répondus</option>
-            <option value="snoozed">🔖 Plus tard</option>
-          </select>
+          <div className="flex gap-2">
+            <select value={filterStars} onChange={(e) => setFilterStars(e.target.value)} className={selectClass + ' flex-1'}>
+              <option value="0">Toutes notes</option>
+              <option value="5">★★★★★</option>
+              <option value="4">★★★★</option>
+              <option value="3">★★★ et -</option>
+            </select>
+            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className={selectClass + ' flex-1'}>
+              <option value="all">Tous statuts</option>
+              <option value="pending">⏳ Attente</option>
+              <option value="published">✓ Répondus</option>
+              <option value="snoozed">🔖 Plus tard</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -492,8 +497,8 @@ export default function ReviewsPage() {
       </div>
 
       {/* Tone selector */}
-      <div className="flex items-center gap-2 mb-6 flex-wrap">
-        <span className="text-xs text-[#8892b0] font-medium mr-1">Ton IA :</span>
+      <div className="flex items-center gap-2 mb-5 flex-wrap">
+        <span className="text-xs text-[#8892b0] font-medium">Ton IA :</span>
         {TONES.map((t) => {
           const col = TONE_COLORS[t]
           const isActive = tone === t
@@ -528,12 +533,12 @@ export default function ReviewsPage() {
           )
         })}
 
-        {/* Tout publier — aligné à droite */}
+        {/* Tout publier — aligné à droite, visible sur tous écrans */}
         {reviews.filter((r) => (r.status === 'pending' || r.status === 'snoozed') && r.ai_reply).length > 0 && !establishment?.auto_mode && (
           <button
             onClick={handlePublishAll}
             disabled={publishingAll}
-            className="ml-auto flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="sm:ml-auto flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-xs font-medium transition-all disabled:opacity-60 disabled:cursor-not-allowed min-h-[36px]"
             style={{
               borderColor: 'rgba(52,211,153,0.3)',
               color: '#34d399',

@@ -201,7 +201,7 @@ export default function ReviewCard({
       </div>
 
       {/* Review text */}
-      <p className="text-sm text-[#8892b0] leading-relaxed mb-3.5">{review.review_text}</p>
+      <p className="text-sm text-[#8892b0] leading-relaxed mb-3.5 break-words">{review.review_text}</p>
 
       {/* Scheduled countdown */}
       {review.status === 'scheduled' && review.scheduled_at && (
@@ -270,13 +270,13 @@ export default function ReviewCard({
               dangerouslySetInnerHTML={{ __html: editText }}
             />
           ) : (
-            <p className="text-sm text-[#e8eaf6] leading-relaxed whitespace-pre-wrap">{review.ai_reply}</p>
+            <p className="text-sm text-[#e8eaf6] leading-relaxed whitespace-pre-wrap break-words">{review.ai_reply}</p>
           )}
         </div>
       ) : null}
 
       {/* Actions */}
-      <div className="flex items-center gap-2 mt-3 flex-wrap">
+      <div className="flex items-center gap-1.5 md:gap-2 mt-3 flex-wrap">
         {review.status === 'pending' && (
           <>
             <button

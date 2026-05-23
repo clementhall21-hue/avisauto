@@ -154,14 +154,14 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-7">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">⚙️ Administration</h2>
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight">⚙️ Administration</h2>
           <p className="text-sm text-[#8892b0] mt-1">Accès réservé — configuration technique.</p>
         </div>
         <button
           onClick={onClose}
-          className="px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-transparent text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors text-sm font-inherit cursor-pointer"
+          className="px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-transparent text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors text-sm font-inherit cursor-pointer min-h-[40px]"
         >
           ← Retour
         </button>
@@ -169,7 +169,7 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
 
       <div className="flex flex-col gap-3.5 max-w-[520px]">
         {/* Hotel name */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">🏨 Nom de l'établissement</h3>
           <p className="text-xs text-[#8892b0] mb-3">Utilisé par l'IA dans les réponses aux avis.</p>
           <div className="flex gap-2">
@@ -178,12 +178,12 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               value={hotelName}
               onChange={(e) => setHotelName(e.target.value)}
               placeholder="Ex : Hôtel du Soleil"
-              className="flex-1 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
+              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
             />
             <button
               onClick={saveHotelName}
               disabled={saving}
-              className="px-4 py-2 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors disabled:opacity-50 cursor-pointer font-inherit"
+              className="px-4 py-2.5 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors disabled:opacity-50 cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               Sauver
             </button>
@@ -191,7 +191,7 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
         </div>
 
         {/* Groq key */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(99,102,241,0.3)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(99,102,241,0.3)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">🔑 Clé API Groq</h3>
           <p className="text-xs text-[#8892b0] mb-3">Moteur IA. Gratuit sur console.groq.com. Stockée côté serveur uniquement.</p>
           <div className="flex gap-2 mb-2">
@@ -199,12 +199,12 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               type="password"
               value={groqKey}
               onChange={(e) => setGroqKey(e.target.value)}
-              placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-              className="flex-1 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] font-mono"
+              placeholder="gsk_xxxx…"
+              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] font-mono"
             />
             <button
               onClick={testGroqKey}
-              className="px-4 py-2 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap"
+              className="px-4 py-2.5 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               Tester
             </button>
@@ -217,11 +217,11 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
         </div>
 
         {/* Google Sheets */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">📊 Google Sheets</h3>
           <p className="text-xs text-[#8892b0] mb-3">Importez vos avis depuis un Google Sheet (colonnes: ID, Nom, Étoiles, Texte, Date).</p>
-          <div className="bg-[rgba(255,255,255,0.03)] rounded-lg px-3 py-2 mb-3 text-xs text-[#8892b0] break-all font-mono">
-            ID : <span className="text-[#e8eaf6]">{sheetId}</span>
+          <div className="bg-[rgba(255,255,255,0.03)] rounded-lg px-3 py-2 mb-3 text-xs text-[#8892b0] break-all font-mono overflow-hidden">
+            ID : <span className="text-[#e8eaf6] break-all">{sheetId}</span>
           </div>
           <div className="flex gap-2">
             <input
@@ -229,11 +229,11 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               value={sheetId}
               onChange={(e) => setSheetId(e.target.value)}
               placeholder="ID du Google Sheet"
-              className="flex-1 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#34d399] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
+              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#34d399] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
             />
             <button
               onClick={syncSheets}
-              className="px-4 py-2 rounded-lg border border-[#34d399] bg-[rgba(52,211,153,0.08)] text-[#34d399] text-sm font-semibold hover:bg-[rgba(52,211,153,0.15)] transition-colors cursor-pointer font-inherit whitespace-nowrap"
+              className="px-4 py-2.5 rounded-lg border border-[#34d399] bg-[rgba(52,211,153,0.08)] text-[#34d399] text-sm font-semibold hover:bg-[rgba(52,211,153,0.15)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               ↻ Sync
             </button>
@@ -246,7 +246,7 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
         </div>
 
         {/* Zapier */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-[0.95rem] font-bold">⚡ Zapier</h3>
@@ -264,12 +264,12 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               type="text"
               value={zapierUrl}
               onChange={(e) => { setZapierUrl(e.target.value); }}
-              placeholder="https://hooks.zapier.com/hooks/catch/…"
-              className="flex-1 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-xs text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] font-mono"
+              placeholder="https://hooks.zapier.com/…"
+              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-xs text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] font-mono"
             />
             <button
               onClick={testZapier}
-              className="px-4 py-2 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap"
+              className="px-4 py-2.5 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               ▶ Tester
             </button>
@@ -536,14 +536,14 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <div className="flex flex-wrap items-start justify-between gap-3 mb-7">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Paramètres</h2>
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight">Paramètres</h2>
           <p className="text-sm text-[#8892b0] mt-1">Personnalisez votre expérience AvisAuto.</p>
         </div>
         <button
           onClick={() => setShowAdminPrompt(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-transparent text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] text-sm transition-colors cursor-pointer font-inherit"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-transparent text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] text-sm transition-colors cursor-pointer font-inherit min-h-[40px]"
         >
           🔧 Accès admin
         </button>
@@ -579,7 +579,7 @@ export default function SettingsPage() {
       <div className="flex flex-col gap-3.5 max-w-[520px]">
 
         {/* Tone */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">🎨 Ton des réponses</h3>
           <p className="text-xs text-[#8892b0] mb-3.5">Comment l'IA s'exprime dans vos réponses.</p>
           <div className="flex gap-2 flex-wrap">
@@ -605,7 +605,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Signature */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">✍️ Signature</h3>
           <p className="text-xs text-[#8892b0] mb-3">Ajoutée automatiquement à la fin de chaque réponse.</p>
           <input
@@ -623,7 +623,7 @@ export default function SettingsPage() {
 
         {/* Auto mode */}
         <div
-          className="bg-[rgba(255,255,255,0.03)] border rounded-[14px] p-6 transition-colors"
+          className="bg-[rgba(255,255,255,0.03)] border rounded-[14px] p-5 md:p-6 transition-colors"
           style={{ borderColor: autoMode ? 'rgba(52,211,153,0.25)' : 'rgba(255,255,255,0.07)' }}
         >
           <div className="flex justify-between items-start gap-4">
@@ -641,7 +641,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Delay */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(99,102,241,0.25)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(99,102,241,0.25)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">⏱ Délai de publication</h3>
           <p className="text-xs text-[#8892b0] leading-relaxed mb-4">Un délai de 30–60 min rend la réponse indiscernable d'une réponse humaine.</p>
           <div className="flex gap-2 flex-wrap mb-3 overflow-x-auto pb-1">
@@ -702,7 +702,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Add review manually */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6">
+        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">➕ Ajouter un avis manuellement</h3>
           <p className="text-xs text-[#8892b0] mb-4">L'IA générera automatiquement une réponse.</p>
           <div className="flex flex-col gap-3">

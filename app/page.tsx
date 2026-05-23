@@ -110,8 +110,8 @@ export default function LandingPage() {
   return (
     <div className="overflow-x-hidden max-w-[100vw]">
       {/* ── NAV ── */}
-      <nav className="flex items-center justify-between px-6 md:px-12 h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] sticky top-0 z-[100]">
-        <div className="font-extrabold text-[1.35rem] tracking-[-0.03em]">
+      <nav className="flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] sticky top-0 z-[100]">
+        <div className="font-extrabold text-[1.2rem] md:text-[1.35rem] tracking-[-0.03em]">
           <span className="gradient-text-logo">AvisAuto</span>
           <span style={{ color: '#34d399' }}>.</span>
         </div>
@@ -124,16 +124,16 @@ export default function LandingPage() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2">
           <button
             onClick={() => setModalType('login')}
-            className="btn-outline text-xs py-[7px] px-[12px] md:text-sm md:py-[9px] md:px-[18px]"
+            className="btn-outline text-[0.72rem] py-[6px] px-[10px] md:text-sm md:py-[9px] md:px-[18px] min-h-[36px]"
           >
-            Se connecter
+            Connexion
           </button>
           <button
             onClick={() => setModalType('signup')}
-            className="btn-primary text-xs py-[7px] px-[12px] md:text-sm md:py-[9px] md:px-[18px]"
+            className="btn-primary text-[0.72rem] py-[6px] px-[10px] md:text-sm md:py-[9px] md:px-[18px] min-h-[36px]"
           >
             Essai gratuit
           </button>
@@ -141,7 +141,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="text-center px-6 pt-24 pb-20 relative">
+      <section className="text-center px-4 md:px-6 pt-16 md:pt-24 pb-16 md:pb-20 relative">
         {/* Background glow */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
@@ -165,7 +165,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.05 }}
-          className="text-[clamp(2.6rem,6vw,4.5rem)] font-black tracking-[-0.04em] leading-[1.06] max-w-[820px] mx-auto mb-6"
+          className="text-[clamp(2rem,8vw,4.5rem)] font-black tracking-[-0.04em] leading-[1.06] max-w-[820px] mx-auto mb-6"
         >
           Répondez à vos<br />
           avis Google{' '}
@@ -186,7 +186,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-[1.1rem] text-[#8892b0] max-w-[520px] mx-auto mb-11 leading-[1.6]"
+          className="text-[0.95rem] md:text-[1.1rem] text-[#8892b0] max-w-[520px] mx-auto mb-8 md:mb-11 leading-[1.6] px-2"
         >
           Votre IA rédige une réponse personnalisée à chaque avis, avec le ton de votre marque, et la publie à votre place. Zéro effort, image parfaite.
         </motion.p>
@@ -195,17 +195,17 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="flex items-center justify-center gap-3.5 flex-wrap"
+          className="flex items-center justify-center gap-3 flex-wrap"
         >
           <button
             onClick={() => setModalType('signup')}
-            className="border-2 border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-[#0b0f1e] px-8 py-3.5 rounded-[10px] font-semibold text-[1rem] transition-all"
+            className="border-2 border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-[#0b0f1e] px-6 md:px-8 py-3 md:py-3.5 rounded-[10px] font-semibold text-[0.95rem] md:text-[1rem] transition-all min-h-[44px]"
           >
             Essayer gratuitement
           </button>
           <a
             href="#pricing"
-            className="bg-[#34d399] text-[#0b0f1e] border-2 border-[#34d399] hover:bg-[#6ee7b7] hover:border-[#6ee7b7] px-8 py-3.5 rounded-[10px] font-bold text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(52,211,153,0.25)] no-underline inline-flex items-center gap-2"
+            className="bg-[#34d399] text-[#0b0f1e] border-2 border-[#34d399] hover:bg-[#6ee7b7] hover:border-[#6ee7b7] px-6 md:px-8 py-3 md:py-3.5 rounded-[10px] font-bold text-[0.95rem] md:text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(52,211,153,0.25)] no-underline inline-flex items-center gap-2 min-h-[44px]"
           >
             Voir les tarifs <span>→</span>
           </a>
@@ -225,7 +225,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="max-w-[860px] mx-auto mt-16 px-6"
+          className="max-w-[860px] mx-auto mt-12 md:mt-16 px-0 md:px-6"
           style={{ perspective: '1200px' }}
         >
           <div
@@ -262,7 +262,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── COMMENT ÇA MARCHE ── */}
-      <section className="max-w-[1100px] mx-auto px-6 py-24" id="how">
+      <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="how">
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Simple comme bonjour</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Comment ça fonctionne</h2>
@@ -323,7 +323,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── TONS ── */}
-      <section className="max-w-[1100px] mx-auto px-6 pb-24">
+      <section className="max-w-[1100px] mx-auto px-4 md:px-6 pb-16 md:pb-24">
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Votre voix, votre style</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">L'IA parle comme vous</h2>
@@ -387,7 +387,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES ── */}
-      <section className="max-w-[1100px] mx-auto px-6 py-24" id="features">
+      <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="features">
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Ce que vous gagnez</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Tout ce qu'il faut<br />pour briller sur Google</h2>
@@ -409,7 +409,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="max-w-[1100px] mx-auto px-6 py-16">
+      <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-12 md:py-16">
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3 text-center">Ils nous font confiance</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.4rem)] font-bold tracking-[-0.025em] text-center mb-12">Ce que disent nos clients</h2>
@@ -434,14 +434,14 @@ export default function LandingPage() {
       </section>
 
       {/* ── PRICING ── */}
-      <section className="text-center px-6 py-20" id="pricing">
+      <section className="text-center px-4 md:px-6 py-14 md:py-20" id="pricing">
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Tarifs</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Choisissez votre plan</h2>
           <p className="text-[#8892b0] text-[0.95rem] mb-12">14 jours d&apos;essai gratuit · Sans carte bancaire · Sans engagement</p>
-          <div className="max-w-[860px] mx-auto grid md:grid-cols-2 gap-6 items-start">
+          <div className="max-w-[860px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 items-start">
             {/* Starter */}
-            <div className="rounded-[24px] p-8 text-left" style={{ background: 'linear-gradient(145deg, #111827 0%, #0b0f1e 100%)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div className="rounded-[20px] md:rounded-[24px] p-6 md:p-8 text-left" style={{ background: 'linear-gradient(145deg, #111827 0%, #0b0f1e 100%)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <div className="text-xs font-semibold text-[#8892b0] uppercase tracking-widest mb-3">Starter</div>
               <div className="text-[2.8rem] font-bold tracking-[-0.03em] leading-none text-[#e8eaf6]">49€<span className="text-[1rem] font-normal text-[#8892b0]">/mois</span></div>
               <div className="text-[#8892b0] text-sm mt-1 mb-6">par établissement</div>
@@ -468,7 +468,7 @@ export default function LandingPage() {
             </div>
 
             {/* Pro - highlighted */}
-            <div className="rounded-[24px] p-8 text-left relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #1a1f3a 0%, #0f1628 100%)', border: '2px solid rgba(99,102,241,0.5)', boxShadow: '0 0 40px rgba(99,102,241,0.15)' }}>
+            <div className="rounded-[20px] md:rounded-[24px] p-6 md:p-8 text-left relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #1a1f3a 0%, #0f1628 100%)', border: '2px solid rgba(99,102,241,0.5)', boxShadow: '0 0 40px rgba(99,102,241,0.15)' }}>
               <div className="absolute top-[-60px] right-[-60px] w-[180px] h-[180px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)' }} />
               <div className="flex items-center gap-2 mb-3">
                 <div className="text-xs font-semibold text-[#818cf8] uppercase tracking-widest">Pro</div>
@@ -508,7 +508,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="max-w-[680px] mx-auto px-6 py-16" id="faq">
+      <section className="max-w-[680px] mx-auto px-4 md:px-6 py-12 md:py-16" id="faq">
         <FadeUp>
           <h2 className="text-[clamp(1.8rem,4vw,2.4rem)] font-bold tracking-[-0.025em] text-center mb-12">Questions fréquentes</h2>
         </FadeUp>
@@ -546,10 +546,10 @@ export default function LandingPage() {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="text-center px-6 py-20">
+      <section className="text-center px-4 md:px-6 py-14 md:py-20">
         <FadeUp>
           <div
-            className="max-w-[700px] mx-auto rounded-[24px] p-12 relative overflow-hidden"
+            className="max-w-[700px] mx-auto rounded-[20px] md:rounded-[24px] p-7 md:p-12 relative overflow-hidden"
             style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(6,182,212,0.07))', border: '1px solid rgba(99,102,241,0.2)' }}
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15), transparent 60%)' }} />
@@ -566,7 +566,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-[rgba(255,255,255,0.06)] px-12 py-8 bg-[rgba(0,0,0,0.15)] flex justify-between items-center text-[0.82rem] text-[#8892b0] flex-wrap gap-3">
+      <footer className="border-t border-[rgba(255,255,255,0.06)] px-5 md:px-12 py-6 md:py-8 bg-[rgba(0,0,0,0.15)] flex justify-between items-center text-[0.82rem] text-[#8892b0] flex-wrap gap-3">
         <div className="font-extrabold text-[1.1rem]">
           <span className="gradient-text-logo">AvisAuto</span>
           <span style={{ color: '#34d399' }}>.</span>

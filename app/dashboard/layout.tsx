@@ -255,7 +255,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           </aside>
 
           {/* Content */}
-          <main className="flex-1 p-6 md:p-9 overflow-x-hidden">
+          <main className="flex-1 p-4 md:p-9 overflow-x-hidden min-w-0">
             {children}
           </main>
         </div>

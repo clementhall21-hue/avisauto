@@ -168,8 +168,8 @@ export default function AnalyticsPage() {
 
   return (
     <div>
-      <div className="mb-7">
-        <h2 className="text-2xl font-bold tracking-tight text-[#e8eaf6]">Analytiques</h2>
+      <div className="mb-6">
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#e8eaf6]">Analytiques</h2>
         <p className="text-sm text-[#8892b0] mt-1">Données calculées en temps réel depuis vos avis.</p>
       </div>
 
@@ -243,7 +243,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Additional stats */}
-          <div className="grid grid-cols-2 gap-3 mt-6">
+          <div className="grid grid-cols-2 gap-3 mt-4 md:mt-6">
             <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-3">
               <div className="text-xs text-[#8892b0] mb-1">Note moyenne</div>
               <div className="text-lg font-bold text-[#e8eaf6]">{avgStars}/5</div>
@@ -309,7 +309,7 @@ export default function AnalyticsPage() {
 
       {/* Negative review analysis */}
       <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(244,63,94,0.22)] rounded-[14px] p-5">
-        <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
           <div>
             <div className="text-xs font-semibold text-[#8892b0] uppercase tracking-wider flex items-center gap-2">
               <AlertCircle size={14} />
