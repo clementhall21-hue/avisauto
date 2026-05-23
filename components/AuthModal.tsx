@@ -82,7 +82,11 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
       })
 
       if (authError) {
-        setError(authError.message)
+        if (authError.message.toLowerCase().includes('already registered') || authError.message.toLowerCase().includes('user already exists')) {
+          setError('Un compte existe déjà avec cet email. Connectez-vous à la place.')
+        } else {
+          setError(authError.message)
+        }
         return
       }
 
@@ -104,6 +108,9 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
         // Always show email confirmation screen
         setSentToEmail(signupEmail)
         setEmailSent(true)
+      } else {
+        // Supabase retourne null user quand l'email existe déjà (rate limit ou compte existant)
+        setError('Un compte existe déjà avec cet email. Connectez-vous à la place.')
       }
     } catch {
       setError('Une erreur est survenue. Réessayez.')
