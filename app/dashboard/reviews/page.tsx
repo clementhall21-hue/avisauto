@@ -141,7 +141,7 @@ export default function ReviewsPage() {
   useEffect(() => {
     if (establishment) {
       setTone(establishment.tone || 'Professionnel')
-      setHasGroqKey(!!establishment.groq_api_key || !!process.env.NEXT_PUBLIC_SUPABASE_URL)
+      setHasGroqKey(true)
     }
   }, [establishment])
 
