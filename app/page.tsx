@@ -77,6 +77,9 @@ export default function LandingPage() {
   const [modalType, setModalType] = useState<'login' | 'signup' | null>(null)
   const [activeTone, setActiveTone] = useState('Professionnel')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const navLinks = [['#features', 'Fonctionnalités'], ['#pricing', 'Tarifs'], ['#faq', 'FAQ']] as const
 
   return (
     <div className="overflow-x-hidden max-w-[100vw] pt-[56px] md:pt-[64px]">
@@ -87,7 +90,7 @@ export default function LandingPage() {
           <span style={{ color: '#34d399' }}>.</span>
         </div>
         <ul className="hidden md:flex items-center gap-8 list-none">
-          {[['#features', 'Fonctionnalités'], ['#pricing', 'Tarifs'], ['#faq', 'FAQ']].map(([href, label]) => (
+          {navLinks.map(([href, label]) => (
             <li key={href}>
               <a href={href} className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[0.9rem] font-medium transition-colors no-underline">
                 {label}
@@ -108,8 +111,66 @@ export default function LandingPage() {
           >
             Essai gratuit
           </button>
+          {/* Hamburger — mobile only */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="md:hidden ml-1 p-2 text-[#8892b0] hover:text-[#e8eaf6] transition-colors"
+            aria-label="Menu"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="5" width="16" height="1.8" rx="0.9" fill="currentColor"/>
+              <rect x="2" y="9.1" width="16" height="1.8" rx="0.9" fill="currentColor"/>
+              <rect x="2" y="13.2" width="16" height="1.8" rx="0.9" fill="currentColor"/>
+            </svg>
+          </button>
         </div>
       </nav>
+
+      {/* ── MOBILE MENU OVERLAY ── */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-[200] md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            className="absolute top-0 right-0 bottom-0 w-[260px] bg-[#111827] border-l border-[rgba(255,255,255,0.07)] p-6 flex flex-col gap-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-[rgba(255,255,255,0.07)]">
+              <span className="font-extrabold text-lg gradient-text-logo">StarReviews<span style={{ color: '#34d399' }}>.</span></span>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-[#8892b0] hover:text-[#e8eaf6] p-1">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
+            </div>
+            {navLinks.map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[1rem] font-medium py-3 px-2 rounded-lg hover:bg-[rgba(255,255,255,0.04)] transition-colors no-underline"
+              >
+                {label}
+              </a>
+            ))}
+            <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.07)] flex flex-col gap-2">
+              <button
+                onClick={() => { setMobileMenuOpen(false); setModalType('login') }}
+                className="btn-outline w-full py-2.5 text-sm"
+              >
+                Connexion
+              </button>
+              <button
+                onClick={() => { setMobileMenuOpen(false); setModalType('signup') }}
+                className="btn-primary w-full py-2.5 text-sm"
+              >
+                Essai gratuit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── HERO ── */}
       <section className="text-center px-4 md:px-6 pt-16 md:pt-24 pb-16 md:pb-20 relative">
