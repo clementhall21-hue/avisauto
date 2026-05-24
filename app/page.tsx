@@ -79,9 +79,9 @@ export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <div className="overflow-x-hidden max-w-[100vw]">
+    <div className="overflow-x-hidden max-w-[100vw] pt-[56px] md:pt-[64px]">
       {/* ── NAV ── */}
-      <nav className="flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] sticky top-0 z-[100]">
+      <nav className="flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] fixed top-0 left-0 right-0 z-[100]">
         <div className="font-extrabold text-[1.2rem] md:text-[1.35rem] tracking-[-0.03em]">
           <span className="gradient-text-logo">StarReviews</span>
           <span style={{ color: '#34d399' }}>.</span>
