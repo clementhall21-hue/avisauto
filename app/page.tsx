@@ -39,7 +39,7 @@ const TESTIMONIALS = [
     initials: 'IM',
     color: '#dbeafe',
     textColor: '#1e40af',
-    text: 'AvisAuto a transformé notre gestion des avis Google. On répond maintenant à 100% de nos avis en moins de 24h, avec un ton vraiment professionnel. Nos clients le remarquent !',
+    text: 'StarReviews a transformé notre gestion des avis Google. On répond maintenant à 100% de nos avis en moins de 24h, avec un ton vraiment professionnel. Nos clients le remarquent !',
     stars: 5,
   },
   {
@@ -112,7 +112,7 @@ export default function LandingPage() {
       {/* ── NAV ── */}
       <nav className="flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] sticky top-0 z-[100]">
         <div className="font-extrabold text-[1.2rem] md:text-[1.35rem] tracking-[-0.03em]">
-          <span className="gradient-text-logo">AvisAuto</span>
+          <span className="gradient-text-logo">StarReviews</span>
           <span style={{ color: '#34d399' }}>.</span>
         </div>
         <ul className="hidden md:flex items-center gap-8 list-none">
@@ -236,7 +236,7 @@ export default function LandingPage() {
               <div className="w-[10px] h-[10px] rounded-full bg-[#ff5f57]" />
               <div className="w-[10px] h-[10px] rounded-full bg-[#febc2e]" />
               <div className="w-[10px] h-[10px] rounded-full bg-[#28c840]" />
-              <span className="ml-2 text-[0.78rem] text-[#8892b0]">AvisAuto · Dashboard</span>
+              <span className="ml-2 text-[0.78rem] text-[#8892b0]">StarReviews · Dashboard</span>
             </div>
             <div className="p-6 space-y-3">
               {[
@@ -272,7 +272,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
           {[
             { n: '1', title: 'Un avis arrive sur Google', desc: 'Un client laisse un avis sur votre fiche Google My Business — positif, négatif ou mitigé.' },
-            { n: '2', title: 'L\'IA rédige la réponse', desc: 'AvisAuto analyse l\'avis et génère une réponse adaptée avec votre ton et votre signature.' },
+            { n: '2', title: 'L\'IA rédige la réponse', desc: 'StarReviews analyse l\'avis et génère une réponse adaptée avec votre ton et votre signature.' },
             { n: '3', title: 'Vous publiez — ou l\'IA le fait', desc: 'Relisez et publiez d\'un clic — ou activez le mode automatique pour tout automatiser.' },
           ].map((step, i) => (
             <FadeUp key={i} delay={i * 0.1}>
@@ -568,7 +568,7 @@ export default function LandingPage() {
       {/* ── FOOTER ── */}
       <footer className="border-t border-[rgba(255,255,255,0.06)] px-5 md:px-12 py-6 md:py-8 bg-[rgba(0,0,0,0.15)] flex justify-between items-center text-[0.82rem] text-[#8892b0] flex-wrap gap-3">
         <div className="font-extrabold text-[1.1rem]">
-          <span className="gradient-text-logo">AvisAuto</span>
+          <span className="gradient-text-logo">StarReviews</span>
           <span style={{ color: '#34d399' }}>.</span>
         </div>
         <div className="flex gap-6">
@@ -576,7 +576,7 @@ export default function LandingPage() {
           <a href="#" className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors no-underline">CGU</a>
           <a href="#" className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors no-underline">Contact</a>
         </div>
-        <div>© 2026 AvisAuto. Tous droits réservés.</div>
+        <div>© 2026 StarReviews. Tous droits réservés.</div>
       </footer>
 
       {/* ── AUTH MODAL ── */}

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...payload,
-        source: 'AvisAuto',
+        source: 'StarReviews',
         timestamp: new Date().toISOString(),
       }),
     })

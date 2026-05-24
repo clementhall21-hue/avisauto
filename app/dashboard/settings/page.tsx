@@ -143,7 +143,7 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
       await fetch('/api/zapier/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ webhookUrl: zapierUrl, payload: { event: 'test', message: 'AvisAuto test webhook' } }),
+        body: JSON.stringify({ webhookUrl: zapierUrl, payload: { event: 'test', message: 'StarReviews test webhook' } }),
       })
       setZapierTestStatus('✅ Webhook envoyé')
       setZapierLog((prev) => [`[${new Date().toLocaleTimeString('fr-FR')}] ✅ Test envoyé`, ...prev.slice(0, 9)])
@@ -539,7 +539,7 @@ export default function SettingsPage() {
       <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl md:text-2xl font-bold tracking-tight">Paramètres</h2>
-          <p className="text-sm text-[#8892b0] mt-1">Personnalisez votre expérience AvisAuto.</p>
+          <p className="text-sm text-[#8892b0] mt-1">Personnalisez votre expérience StarReviews.</p>
         </div>
         <button
           onClick={() => setShowAdminPrompt(true)}

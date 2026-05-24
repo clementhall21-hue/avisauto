@@ -9,12 +9,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'AvisAuto — Répondez à vos avis Google en un clic',
+  title: 'StarReviews — Répondez à vos avis Google en un clic',
   description:
-    'AvisAuto génère automatiquement des réponses IA personnalisées à vos avis Google. Spécialement conçu pour les hôtels et restaurants.',
+    'StarReviews génère automatiquement des réponses IA personnalisées à vos avis Google. Spécialement conçu pour les hôtels et restaurants.',
   keywords: ['avis google', 'réponse automatique', 'hôtel', 'restaurant', 'IA', 'reputation'],
   openGraph: {
-    title: 'AvisAuto — Répondez à vos avis Google en un clic',
+    title: 'StarReviews — Répondez à vos avis Google en un clic',
     description:
       'Générez des réponses IA personnalisées à vos avis Google. Essai gratuit 14 jours.',
     type: 'website',

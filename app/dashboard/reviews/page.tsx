@@ -576,7 +576,7 @@ export default function ReviewsPage() {
       ) : reviews.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">🏨</div>
-          <h3 className="text-xl font-bold text-[#e8eaf6] mb-2">Bienvenue sur AvisAuto !</h3>
+          <h3 className="text-xl font-bold text-[#e8eaf6] mb-2">Bienvenue sur StarReviews !</h3>
           <p className="text-[#8892b0] text-sm mb-6 max-w-[380px] mx-auto leading-relaxed">
             Commencez par ajouter votre premier avis Google pour voir l&apos;IA générer une réponse automatiquement.
           </p>

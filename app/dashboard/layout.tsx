@@ -204,7 +204,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
               <Menu size={16} />
             </button>
             <Link href="/" className="font-extrabold text-[1.25rem] tracking-[-0.03em]">
-              <span className="gradient-text-logo">AvisAuto</span>
+              <span className="gradient-text-logo">StarReviews</span>
               <span style={{ color: '#34d399' }}>.</span>
             </Link>
           </div>
@@ -234,7 +234,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-5 pb-4 border-b border-[rgba(255,255,255,0.07)]">
-                <span className="font-extrabold text-lg gradient-text-logo">AvisAuto.</span>
+                <span className="font-extrabold text-lg gradient-text-logo">StarReviews.</span>
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="text-[#8892b0] hover:text-[#e8eaf6]"
