@@ -195,13 +195,13 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
     <EstablishmentContext.Provider value={{ establishment, setEstablishment, pendingCount, setPendingCount, subscription }}>
       <div className="min-h-screen bg-[#0b0f1e] flex flex-col overflow-x-hidden">
         {/* Top nav */}
-        <nav className="flex items-center justify-between px-6 md:px-9 h-[60px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(15,30,60,0.96)] sticky top-0 z-50">
+        <nav className="flex items-center justify-between pl-4 pr-6 md:px-9 h-[60px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(15,30,60,0.96)] sticky top-0 z-50">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden border border-[rgba(255,255,255,0.07)] text-[#8892b0] p-2 rounded-lg hover:text-[#e8eaf6] transition-colors"
+              className="md:hidden text-[#8892b0] hover:text-[#e8eaf6] transition-colors p-1"
             >
-              <Menu size={16} />
+              <Menu size={20} />
             </button>
             <Link href="/" className="font-extrabold text-[1.25rem] tracking-[-0.03em]">
               <span className="gradient-text-logo">StarReviews</span>
