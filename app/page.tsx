@@ -32,35 +32,6 @@ const FEATURES = [
   { icon: '🔒', title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.', color: 'rgba(244,63,94,0.15)' },
 ]
 
-const TESTIMONIALS = [
-  {
-    name: 'Isabelle Moreau',
-    role: 'Directrice — Hôtel Le Clos des Vignes',
-    initials: 'IM',
-    color: '#dbeafe',
-    textColor: '#1e40af',
-    text: 'StarReviews a transformé notre gestion des avis Google. On répond maintenant à 100% de nos avis en moins de 24h, avec un ton vraiment professionnel. Nos clients le remarquent !',
-    stars: 5,
-  },
-  {
-    name: 'Marc Lefebvre',
-    role: 'Propriétaire — Restaurant La Table du Chef',
-    initials: 'ML',
-    color: '#d1fae5',
-    textColor: '#065f46',
-    text: 'On avait des dizaines d\'avis sans réponse depuis des mois. En deux heures, tout était traité. Le mode automatique nous fait gagner un temps fou chaque semaine.',
-    stars: 5,
-  },
-  {
-    name: 'Céline Dupuis',
-    role: 'Manager — Hôtel Boutique Sainte-Claire',
-    initials: 'CD',
-    color: '#ede9fe',
-    textColor: '#5b21b6',
-    text: 'Ce qui m\'a convaincu c\'est la qualité des réponses. On les reçoit et on publie directement — aucune modification nécessaire. C\'est vraiment bluffant.',
-    stars: 5,
-  },
-]
 
 const FAQS = [
   {
@@ -408,30 +379,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-12 md:py-16">
-        <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3 text-center">Ils nous font confiance</div>
-          <h2 className="text-[clamp(1.8rem,4vw,2.4rem)] font-bold tracking-[-0.025em] text-center mb-12">Ce que disent nos clients</h2>
-        </FadeUp>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {TESTIMONIALS.map((t, i) => (
-            <FadeUp key={i} delay={i * 0.1}>
-              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-6">
-                <div className="text-[#f59e0b] text-sm mb-4">{'★'.repeat(t.stars)}</div>
-                <p className="text-[0.9rem] text-[#e8eaf6] leading-[1.65] mb-5 italic">"{t.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0" style={{ background: t.color, color: t.textColor }}>{t.initials}</div>
-                  <div>
-                    <div className="text-sm font-semibold text-[#e8eaf6]">{t.name}</div>
-                    <div className="text-xs text-[#8892b0]">{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            </FadeUp>
-          ))}
-        </div>
-      </section>
 
       {/* ── PRICING ── */}
       <section className="text-center px-4 md:px-6 py-14 md:py-20" id="pricing">
