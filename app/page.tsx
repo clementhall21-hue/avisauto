@@ -107,10 +107,10 @@ export default function LandingPage() {
           </button>
           <button
             onClick={() => setModalType('signup')}
-            className="btn-primary text-[0.75rem] py-[6px] px-[12px] rounded-lg md:text-sm md:py-[9px] md:px-[18px]"
+            className="btn-primary text-[0.68rem] py-[5px] px-[10px] rounded-lg md:text-sm md:py-[9px] md:px-[18px]"
           >
             <span className="hidden md:inline">Essai gratuit</span>
-            <span className="md:hidden">Commencer</span>
+            <span className="md:hidden">Commencer gratuitement</span>
           </button>
           {/* Hamburger — mobile only */}
           <button
