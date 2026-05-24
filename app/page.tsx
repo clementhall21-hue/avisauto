@@ -98,19 +98,18 @@ export default function LandingPage() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 md:gap-2">
           <button
             onClick={() => setModalType('login')}
-            className="hidden md:block btn-outline text-sm py-[9px] px-[18px]"
+            className="btn-outline whitespace-nowrap text-[0.65rem] py-[4px] px-[9px] md:text-sm md:py-[9px] md:px-[18px]"
           >
             Connexion
           </button>
           <button
             onClick={() => setModalType('signup')}
-            className="btn-primary text-[0.68rem] py-[5px] px-[10px] rounded-lg md:text-sm md:py-[9px] md:px-[18px]"
+            className="btn-primary whitespace-nowrap text-[0.65rem] py-[4px] px-[9px] md:text-sm md:py-[9px] md:px-[18px]"
           >
-            <span className="hidden md:inline">Essai gratuit</span>
-            <span className="md:hidden">Commencer gratuitement</span>
+            Essai gratuit
           </button>
           {/* Hamburger — mobile only */}
           <button
