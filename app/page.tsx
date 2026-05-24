@@ -107,17 +107,18 @@ export default function LandingPage() {
           </button>
           <button
             onClick={() => setModalType('signup')}
-            className="btn-primary text-[0.78rem] py-[7px] px-[13px] md:text-sm md:py-[9px] md:px-[18px]"
+            className="btn-primary text-[0.75rem] py-[6px] px-[12px] rounded-lg md:text-sm md:py-[9px] md:px-[18px]"
           >
-            Essai gratuit
+            <span className="hidden md:inline">Essai gratuit</span>
+            <span className="md:hidden">Commencer</span>
           </button>
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden ml-1 p-2 text-[#8892b0] hover:text-[#e8eaf6] transition-colors"
+            className="md:hidden p-1.5 text-[#8892b0] hover:text-[#e8eaf6] transition-colors"
             aria-label="Menu"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
               <rect x="2" y="5" width="16" height="1.8" rx="0.9" fill="currentColor"/>
               <rect x="2" y="9.1" width="16" height="1.8" rx="0.9" fill="currentColor"/>
               <rect x="2" y="13.2" width="16" height="1.8" rx="0.9" fill="currentColor"/>
