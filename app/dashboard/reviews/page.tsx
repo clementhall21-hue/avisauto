@@ -475,23 +475,23 @@ export default function ReviewsPage() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         {[
-          { label: 'Note moyenne', value: avgStars, delta: '⭐', color: 'rgba(99,102,241,0.3)' },
+          { label: 'Note moy.', value: avgStars, delta: '⭐', color: 'rgba(99,102,241,0.3)' },
           { label: 'Avis reçus', value: totalReviews || '—', delta: 'total', color: 'rgba(6,182,212,0.3)' },
-          { label: 'Taux de réponse', value: totalReviews ? `${responseRate}%` : '—', delta: `${publishedCount} répondus`, color: 'rgba(52,211,153,0.3)' },
-          { label: 'Sans réponse', value: pendingCount_ || '—', delta: 'à traiter', color: 'rgba(245,158,11,0.3)' },
+          { label: 'Réponses', value: totalReviews ? `${responseRate}%` : '—', delta: `${publishedCount} publiés`, color: 'rgba(52,211,153,0.3)' },
+          { label: 'En attente', value: pendingCount_ || '—', delta: 'à traiter', color: 'rgba(245,158,11,0.3)' },
         ].map((stat, i) => (
           <div
             key={i}
-            className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-xl p-5 hover:translate-y-[-2px] transition-transform"
+            className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-xl p-3 md:p-4 min-w-0"
             style={{ borderTopColor: stat.color, borderTopWidth: 2 }}
           >
-            <div className="text-xs text-[#8892b0] font-medium uppercase tracking-wider mb-1.5">
+            <div className="text-[0.65rem] md:text-xs text-[#8892b0] font-medium uppercase tracking-wider mb-1 truncate">
               {stat.label}
             </div>
-            <div className="text-[1.8rem] font-bold tracking-tight text-[#e8eaf6]">{stat.value}</div>
-            <div className="text-xs text-[#8892b0] mt-0.5">{stat.delta}</div>
+            <div className="text-[1.4rem] md:text-[1.8rem] font-bold tracking-tight text-[#e8eaf6]">{stat.value}</div>
+            <div className="text-[0.65rem] md:text-xs text-[#8892b0] mt-0.5 truncate">{stat.delta}</div>
           </div>
         ))}
       </div>

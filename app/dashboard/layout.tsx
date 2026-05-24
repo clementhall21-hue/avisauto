@@ -193,7 +193,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <EstablishmentContext.Provider value={{ establishment, setEstablishment, pendingCount, setPendingCount, subscription }}>
-      <div className="min-h-screen bg-[#0b0f1e] flex flex-col">
+      <div className="min-h-screen bg-[#0b0f1e] flex flex-col overflow-x-hidden">
         {/* Top nav */}
         <nav className="flex items-center justify-between px-6 md:px-9 h-[60px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(15,30,60,0.96)] sticky top-0 z-50">
           <div className="flex items-center gap-3">
