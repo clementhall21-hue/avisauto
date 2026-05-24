@@ -85,7 +85,7 @@ export default function LandingPage() {
     <div className="overflow-x-hidden max-w-[100vw] pt-[56px] md:pt-[64px]">
       {/* ── NAV ── */}
       <nav className="flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] fixed top-0 left-0 right-0 z-[100]">
-        <div className="font-extrabold text-[1.2rem] md:text-[1.35rem] tracking-[-0.03em]">
+        <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em]">
           <span className="gradient-text-logo">StarReviews</span>
           <span style={{ color: '#34d399' }}>.</span>
         </div>
@@ -98,17 +98,29 @@ export default function LandingPage() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-3 md:gap-2">
+        <div className="flex items-center gap-2">
+          {/* Mobile Connexion — texte simple */}
           <button
             onClick={() => setModalType('login')}
-            className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors text-[0.72rem] md:btn-outline md:text-sm md:py-[9px] md:px-[18px] whitespace-nowrap"
+            className="md:hidden text-[#8892b0] hover:text-[#e8eaf6] transition-colors whitespace-nowrap"
+            style={{ fontSize: '0.78rem', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px' }}
           >
             Connexion
           </button>
+          {/* Desktop Connexion */}
+          <button onClick={() => setModalType('login')} className="hidden md:inline-flex btn-outline text-sm py-[9px] px-[18px]">
+            Connexion
+          </button>
+          {/* Mobile Essai gratuit — petit bouton custom */}
           <button
             onClick={() => setModalType('signup')}
-            className="btn-primary whitespace-nowrap text-[0.68rem] py-[5px] px-[10px] md:text-sm md:py-[9px] md:px-[18px]"
+            className="md:hidden whitespace-nowrap font-bold"
+            style={{ fontSize: '0.72rem', padding: '5px 11px', borderRadius: '7px', background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#fff', border: 'none', cursor: 'pointer' }}
           >
+            Essai gratuit
+          </button>
+          {/* Desktop Essai gratuit */}
+          <button onClick={() => setModalType('signup')} className="hidden md:inline-flex btn-primary">
             Essai gratuit
           </button>
           {/* Hamburger — mobile only */}
