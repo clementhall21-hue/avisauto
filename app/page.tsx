@@ -98,16 +98,16 @@ export default function LandingPage() {
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-1.5 md:gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setModalType('login')}
-            className="btn-outline text-[0.72rem] py-[6px] px-[10px] md:text-sm md:py-[9px] md:px-[18px] min-h-[36px]"
+            className="hidden md:block btn-outline text-sm py-[9px] px-[18px]"
           >
             Connexion
           </button>
           <button
             onClick={() => setModalType('signup')}
-            className="btn-primary text-[0.72rem] py-[6px] px-[10px] md:text-sm md:py-[9px] md:px-[18px] min-h-[36px]"
+            className="btn-primary text-[0.78rem] py-[7px] px-[13px] md:text-sm md:py-[9px] md:px-[18px]"
           >
             Essai gratuit
           </button>
