@@ -99,30 +99,26 @@ export default function LandingPage() {
           ))}
         </ul>
         <div className="flex items-center gap-2">
-          {/* Mobile Connexion — texte simple */}
-          <button
-            onClick={() => setModalType('login')}
-            className="md:hidden text-[#8892b0] hover:text-[#e8eaf6] transition-colors whitespace-nowrap"
-            style={{ fontSize: '0.78rem', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px' }}
-          >
-            Connexion
-          </button>
-          {/* Desktop Connexion */}
-          <button onClick={() => setModalType('login')} className="hidden md:inline-flex btn-outline text-sm py-[9px] px-[18px]">
-            Connexion
-          </button>
-          {/* Mobile Essai gratuit — petit bouton custom */}
-          <button
-            onClick={() => setModalType('signup')}
-            className="md:hidden whitespace-nowrap font-bold"
-            style={{ fontSize: '0.72rem', padding: '5px 11px', borderRadius: '7px', background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#fff', border: 'none', cursor: 'pointer' }}
-          >
-            Essai gratuit
-          </button>
-          {/* Desktop Essai gratuit */}
-          <button onClick={() => setModalType('signup')} className="hidden md:inline-flex btn-primary">
-            Essai gratuit
-          </button>
+          {/* Desktop */}
+          <div className="hidden md:flex items-center gap-2">
+            <button onClick={() => setModalType('login')} className="btn-outline">Connexion</button>
+            <button onClick={() => setModalType('signup')} className="btn-primary">Essai gratuit</button>
+          </div>
+          {/* Mobile */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={() => setModalType('login')}
+              style={{ fontSize: '0.78rem', background: 'none', border: 'none', color: '#8892b0', cursor: 'pointer', padding: '4px 2px', whiteSpace: 'nowrap' }}
+            >
+              Connexion
+            </button>
+            <button
+              onClick={() => setModalType('signup')}
+              style={{ fontSize: '0.72rem', padding: '5px 11px', borderRadius: '7px', background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
+            >
+              Essai gratuit
+            </button>
+          </div>
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setMobileMenuOpen(true)}
