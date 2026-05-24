@@ -5,8 +5,10 @@ import { createContext, useContext, useState, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 interface ToastData {
+  id: number
   message: string
-  type?: 'success' | 'error' | 'info'
+  type: 'success' | 'error' | 'info'
+  open: boolean
 }
 
 interface ToastContextType {
@@ -16,27 +18,31 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType>({ showToast: () => {} })
 
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<(ToastData & { id: number })[]>([])
+  const [toasts, setToasts] = useState<ToastData[]>([])
   const [counter, setCounter] = useState(0)
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     const id = counter + 1
     setCounter(id)
-    setToasts((prev) => [...prev, { id, message, type }])
+    setToasts((prev) => [...prev, { id, message, type, open: true }])
+  }
+
+  const dismiss = (id: number) => {
+    setToasts((prev) => prev.map((t) => t.id === id ? { ...t, open: false } : t))
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id))
-    }, 4000)
+    }, 400)
   }
 
   return (
     <ToastContext.Provider value={{ showToast }}>
-      <ToastPrimitive.Provider swipeDirection="down">
+      <ToastPrimitive.Provider swipeDirection="down" duration={3500}>
         {children}
         {toasts.map((toast) => (
           <ToastPrimitive.Root
             key={toast.id}
-            open={true}
-            onOpenChange={() => {}}
+            open={toast.open}
+            onOpenChange={(open) => { if (!open) dismiss(toast.id) }}
             className={cn(
               'fixed bottom-7 left-1/2 -translate-x-1/2 z-[999]',
               'flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl',
@@ -53,9 +59,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   : 'bg-[#111827] border-[rgba(52,211,153,0.3)] text-[#34d399]'
             )}
           >
-            <span>
-              {toast.type === 'error' ? '✕' : toast.type === 'info' ? 'ℹ' : '✓'}
-            </span>
+            <span>{toast.type === 'error' ? '✕' : toast.type === 'info' ? 'ℹ' : '✓'}</span>
             <ToastPrimitive.Title>{toast.message}</ToastPrimitive.Title>
           </ToastPrimitive.Root>
         ))}
