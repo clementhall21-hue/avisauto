@@ -199,7 +199,7 @@ export default function LandingPage() {
           className="inline-flex items-center gap-2 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-[0.75rem] font-semibold px-3.5 py-1.5 rounded-full mb-8 tracking-[0.05em] uppercase"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-[pulseDot_2s_infinite]" />
-          Spécialement conçu pour les hôtels &amp; restaurants
+          Pour tout établissement qui reçoit des avis Google
         </motion.div>
 
         <motion.h1
@@ -472,7 +472,7 @@ export default function LandingPage() {
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Ce que vous gagnez</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Tout ce qu'il faut<br />pour briller sur Google</h2>
-          <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Conçu pour les hôtels et restaurants qui veulent soigner leur réputation sans y passer des heures.</p>
+          <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Conçu pour tout établissement avec des avis Google — hôtels, restaurants, commerces, cliniques, garages et bien d&apos;autres.</p>
         </FadeUp>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((f, i) => (
@@ -611,7 +611,7 @@ export default function LandingPage() {
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15), transparent 60%)' }} />
             <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-bold tracking-[-0.025em] mb-4">Prêt à répondre à tous vos avis ?</h2>
-            <p className="text-[#8892b0] mb-8 max-w-[480px] mx-auto">Rejoignez les hôtels et restaurants qui ont automatisé leurs réponses Google et amélioré leur réputation en ligne.</p>
+            <p className="text-[#8892b0] mb-8 max-w-[480px] mx-auto">Rejoignez les établissements qui ont automatisé leurs réponses Google et amélioré leur réputation en ligne.</p>
             <button
               onClick={() => setModalType('signup')}
               className="btn-primary text-[1rem] px-8 py-3.5"
