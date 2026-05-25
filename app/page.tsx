@@ -631,13 +631,7 @@ export default function LandingPage() {
           >
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15), transparent 60%)' }} />
             <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-bold tracking-[-0.025em] mb-4">Prêt à répondre à tous vos avis ?</h2>
-            <p className="text-[#8892b0] mb-8 max-w-[480px] mx-auto">Rejoignez les établissements qui ont automatisé leurs réponses Google et amélioré leur réputation en ligne.</p>
-            <button
-              onClick={() => setModalType('signup')}
-              className="btn-primary text-[1rem] px-8 py-3.5"
-            >
-              Démarrer gratuitement — 14 jours
-            </button>
+            <p className="text-[#8892b0] max-w-[480px] mx-auto">Rejoignez les établissements qui ont automatisé leurs réponses Google et amélioré leur réputation en ligne.</p>
           </div>
         </FadeUp>
       </section>
