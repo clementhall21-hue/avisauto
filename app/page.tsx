@@ -5,15 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import AuthModal from '@/components/AuthModal'
 
-const TONE_RESPONSES: Record<string, string> = {
-  Professionnel:
-    "Merci Laurent pour ce retour constructif. Nous sommes sincèrement désolés que le bruit en soirée ait perturbé votre repos — c'est un point sur lequel nous travaillons activement. Votre confort est notre priorité absolue et nous prenons chaque remarque de ce type très au sérieux. Des actions concrètes sont en cours pour améliorer l'isolation de nos chambres. Nous espérons avoir l'occasion de vous accueillir à nouveau et de vous offrir l'expérience que vous méritez.\n\nCordialement, Sophie — Directrice de l'Hôtel Le Clos",
-  Chaleureux:
-    "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment navrés pour ce bruit en soirée — c'est loin de l'expérience qu'on souhaite offrir à nos clients. On prend votre remarque très à cœur et on travaille activement à améliorer ça. Malgré ce point, on est vraiment contents que l'ensemble du séjour se soit bien passé. On espère de tout cœur vous revoir bientôt pour vous offrir le séjour que vous méritez ! 🙏\n\nÀ très vite, Sophie & toute l'équipe 💙",
-  Empathique:
-    "Merci Laurent d'avoir pris le temps de partager votre ressenti avec nous. Nous comprenons pleinement que le bruit en soirée ait pu affecter la qualité de votre repos, et nous en sommes sincèrement désolés — votre confort méritait bien mieux. Votre retour est précieux et nous prenons cette situation très au sérieux. Nous travaillons à trouver une solution durable pour que cela ne se reproduise plus. Nous espérons pouvoir vous offrir une expérience à la hauteur de vos attentes lors d'un prochain séjour.\n\nAvec toute notre considération, Sophie — L'Hôtel Le Clos",
-  Décontracté:
-    "Merci Laurent ! Content que le séjour se soit globalement bien passé. Pour le bruit en soirée, on t'entend complètement — c'est pas du tout ce qu'on veut pour nos clients et on bosse dessus sérieusement. Ton retour nous aide vraiment à nous améliorer, donc merci pour ça. À bientôt, et cette fois ce sera beaucoup plus calme, promis ! 👌\n\nSophie de l'Hôtel Le Clos 🙌",
+const TONE_RESPONSES: Record<string, { text: string; signature: string }> = {
+  Professionnel: {
+    text: "Merci Laurent pour ce retour constructif. Nous sommes sincèrement désolés que le bruit en soirée ait perturbé votre repos — c'est un point sur lequel nous travaillons activement. Votre confort est notre priorité absolue et nous prenons chaque remarque de ce type très au sérieux. Des actions concrètes sont en cours pour améliorer l'isolation de nos chambres. Nous espérons avoir l'occasion de vous accueillir à nouveau et de vous offrir l'expérience que vous méritez.",
+    signature: "Cordialement, Sophie — Directrice de l'Hôtel Le Clos",
+  },
+  Chaleureux: {
+    text: "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment navrés pour ce bruit en soirée — c'est loin de l'expérience qu'on souhaite offrir à nos clients. On prend votre remarque très à cœur et on travaille activement à améliorer ça. Malgré ce point, on est vraiment contents que l'ensemble du séjour se soit bien passé. On espère de tout cœur vous revoir bientôt pour vous offrir le séjour que vous méritez ! 🙏",
+    signature: "À très vite, Sophie & toute l'équipe 💙",
+  },
+  Empathique: {
+    text: "Merci Laurent d'avoir pris le temps de partager votre ressenti avec nous. Nous comprenons pleinement que le bruit en soirée ait pu affecter la qualité de votre repos, et nous en sommes sincèrement désolés — votre confort méritait bien mieux. Votre retour est précieux et nous prenons cette situation très au sérieux. Nous travaillons à trouver une solution durable pour que cela ne se reproduise plus. Nous espérons pouvoir vous offrir une expérience à la hauteur de vos attentes lors d'un prochain séjour.",
+    signature: "Avec toute notre considération, Sophie — L'Hôtel Le Clos",
+  },
+  Décontracté: {
+    text: "Merci Laurent ! Content que le séjour se soit globalement bien passé. Pour le bruit en soirée, on t'entend complètement — c'est pas du tout ce qu'on veut pour nos clients et on bosse dessus sérieusement. Ton retour nous aide vraiment à nous améliorer, donc merci pour ça. À bientôt, et cette fois ce sera beaucoup plus calme, promis ! 👌",
+    signature: "Sophie de l'Hôtel Le Clos 🙌",
+  },
 }
 
 const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> = {
@@ -456,24 +464,34 @@ export default function LandingPage() {
                   {activeLength}
                 </span>
               </div>
-              <p className="text-[0.88rem] text-[#e8eaf6] leading-[1.65]">
-                {activeLength === 'Court'
-                  ? ({
+              <div className="text-[0.88rem] text-[#e8eaf6] leading-[1.65]">
+                {activeLength === 'Court' ? (
+                  <>
+                    <p>{{
                       Professionnel: "Merci Laurent pour votre retour. Nous prenons note de votre remarque concernant le bruit et mettons tout en œuvre pour y remédier. Nous espérons vous accueillir à nouveau dans de meilleures conditions.",
                       Chaleureux: "Merci Laurent pour ce retour ! 😊 On est vraiment navrés pour le bruit en soirée et on travaille à améliorer ça. On espère vous revoir très bientôt dans de meilleures conditions !",
                       Empathique: "Merci Laurent d'avoir partagé votre ressenti. Nous comprenons que le bruit ait affecté votre confort et nous en sommes sincèrement désolés. Votre expérience méritait mieux.",
                       Décontracté: "Merci Laurent ! Pour le bruit en soirée, on t'entend et on bosse dessus. On espère te revoir bientôt avec un séjour bien plus calme ! 👌",
-                    }[activeTone])
-                  : activeLength === 'Normal'
-                  ? TONE_RESPONSES[activeTone]
-                  : TONE_RESPONSES[activeTone] + ({
-                      Professionnel: ' Nous restons à votre entière disposition pour tout échange complémentaire. Chaque retour de nos clients est une opportunité précieuse de progresser, et nous vous remercions sincèrement de nous avoir accordé ce moment. Votre satisfaction demeure notre engagement le plus profond.',
-                      Chaleureux: ' N\'hésitez pas à nous contacter directement avant votre prochain séjour — on sera ravis de tout mettre en place pour que ce soit parfait. Votre bonheur, c\'est vraiment ce qui nous motive chaque matin ! 💜☀️',
-                      Empathique: ' Sachez que vos retours, même difficiles, nous touchent profondément et nous rappellent pourquoi nous faisons ce métier. Chaque client mérite une expérience sans faille, et nous ne relâcherons pas nos efforts tant que ce ne sera pas le cas. Merci de nous accorder votre confiance malgré tout.',
-                      Décontracté: ' Vraiment, ton feedback ça compte énormément pour nous — c\'est grâce à des gens comme toi qu\'on s\'améliore. On sera au top la prochaine fois, garanti ! 🔥🙌',
-                    }[activeTone])
-                }
-              </p>
+                    }[activeTone]}</p>
+                    <p className="mt-3 text-[#8892b0] italic">{TONE_RESPONSES[activeTone].signature}</p>
+                  </>
+                ) : activeLength === 'Normal' ? (
+                  <>
+                    <p>{TONE_RESPONSES[activeTone].text}</p>
+                    <p className="mt-3 text-[#8892b0] italic">{TONE_RESPONSES[activeTone].signature}</p>
+                  </>
+                ) : (
+                  <>
+                    <p>{TONE_RESPONSES[activeTone].text + ' ' + ({
+                      Professionnel: 'Nous restons à votre entière disposition pour tout échange complémentaire. Chaque retour de nos clients est une opportunité précieuse de progresser, et nous vous remercions sincèrement de nous avoir accordé ce moment. Votre satisfaction demeure notre engagement le plus profond.',
+                      Chaleureux: 'N\'hésitez pas à nous contacter directement avant votre prochain séjour — on sera ravis de tout mettre en place pour que ce soit parfait. Votre bonheur, c\'est vraiment ce qui nous motive chaque matin ! 💜☀️',
+                      Empathique: 'Sachez que vos retours, même difficiles, nous touchent profondément et nous rappellent pourquoi nous faisons ce métier. Chaque client mérite une expérience sans faille, et nous ne relâcherons pas nos efforts tant que ce ne sera pas le cas. Merci de nous accorder votre confiance malgré tout.',
+                      Décontracté: 'Vraiment, ton feedback ça compte énormément pour nous — c\'est grâce à des gens comme toi qu\'on s\'améliore. On sera au top la prochaine fois, garanti ! 🔥🙌',
+                    }[activeTone])}</p>
+                    <p className="mt-3 text-[#8892b0] italic">{TONE_RESPONSES[activeTone].signature}</p>
+                  </>
+                )}
+              </div>
             </motion.div>
           </AnimatePresence>
         </FadeUp>
