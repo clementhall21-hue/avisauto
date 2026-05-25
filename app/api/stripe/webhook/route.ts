@@ -37,21 +37,84 @@ export async function POST(request: NextRequest) {
         const subscriptionId = session.subscription as string
         const plan = session.metadata?.plan || 'pro'
 
-        if (userId) {
-          await supabaseAdmin.from('subscriptions').upsert(
-            {
-              user_id: userId,
-              stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId,
+        if (!userId) {
+          console.error('checkout.session.completed: missing userId in metadata', session.id)
+          return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
+        }
+
+        // Fetch real subscription to get accurate current_period_end
+        let currentPeriodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        if (subscriptionId) {
+          try {
+            const sub = await stripe.subscriptions.retrieve(subscriptionId)
+            currentPeriodEnd = new Date(sub.current_period_end * 1000).toISOString()
+          } catch (e) {
+            console.error('Failed to retrieve subscription for period_end:', e)
+          }
+        }
+
+        const { error: upsertError } = await supabaseAdmin.from('subscriptions').upsert(
+          {
+            user_id: userId,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            status: 'active',
+            current_period_end: currentPeriodEnd,
+            plan,
+            ai_replies_count: 0,
+            ai_replies_reset_at: new Date().toISOString(),
+          },
+          { onConflict: 'user_id' }
+        )
+
+        if (upsertError) {
+          console.error('Failed to upsert subscription after checkout:', upsertError)
+          return NextResponse.json({ error: 'Database error' }, { status: 500 })
+        }
+        break
+      }
+
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice
+        const customerId = invoice.customer as string
+        const subscriptionId = (invoice as unknown as { subscription?: string }).subscription
+
+        if (!subscriptionId) break
+
+        const sub = await stripe.subscriptions.retrieve(subscriptionId)
+
+        const { data: subData } = await supabaseAdmin
+          .from('subscriptions')
+          .select('user_id')
+          .eq('stripe_customer_id', customerId)
+          .maybeSingle()
+
+        if (subData) {
+          const { error } = await supabaseAdmin
+            .from('subscriptions')
+            .update({
               status: 'active',
-              current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-              plan,
+              current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
               ai_replies_count: 0,
               ai_replies_reset_at: new Date().toISOString(),
-            },
-            { onConflict: 'user_id' }
-          )
+            })
+            .eq('stripe_customer_id', customerId)
+
+          if (error) console.error('Failed to update subscription on payment_succeeded:', error)
         }
+        break
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice
+        const customerId = invoice.customer as string
+
+        const { error } = await supabaseAdmin
+          .from('subscriptions')
+          .update({ status: 'past_due' })
+          .eq('stripe_customer_id', customerId)
+
+        if (error) console.error('Failed to update subscription on payment_failed:', error)
         break
       }
 
@@ -59,12 +122,11 @@ export async function POST(request: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription
         const customerId = subscription.customer as string
 
-        // Find user by stripe customer id
         const { data: subData } = await supabaseAdmin
           .from('subscriptions')
           .select('user_id')
           .eq('stripe_customer_id', customerId)
-          .single()
+          .maybeSingle()
 
         if (subData) {
           const updatePayload: Record<string, unknown> = {
@@ -73,15 +135,16 @@ export async function POST(request: NextRequest) {
             current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
           }
 
-          // Update plan if present in subscription metadata
           if (subscription.metadata?.plan) {
             updatePayload.plan = subscription.metadata.plan
           }
 
-          await supabaseAdmin
+          const { error } = await supabaseAdmin
             .from('subscriptions')
             .update(updatePayload)
             .eq('stripe_customer_id', customerId)
+
+          if (error) console.error('Failed to update subscription on subscription.updated:', error)
         }
         break
       }
@@ -90,10 +153,12 @@ export async function POST(request: NextRequest) {
         const subscription = event.data.object as Stripe.Subscription
         const customerId = subscription.customer as string
 
-        await supabaseAdmin
+        const { error } = await supabaseAdmin
           .from('subscriptions')
           .update({ status: 'canceled' })
           .eq('stripe_customer_id', customerId)
+
+        if (error) console.error('Failed to update subscription on subscription.deleted:', error)
         break
       }
 

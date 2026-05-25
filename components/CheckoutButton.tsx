@@ -21,11 +21,11 @@ export default function CheckoutButton({ plan = 'pro', className, style, childre
         method: 'POST',
       })
       const data = await res.json()
-      if (data.url) {
+      if (res.ok && data.url) {
         window.location.href = data.url
       } else {
         console.error('Stripe error:', data)
-        alert(`Erreur : ${data.error || JSON.stringify(data)}`)
+        alert('Une erreur est survenue lors du paiement. Réessayez ou contactez le support.')
       }
     } catch (err) {
       console.error(err)
