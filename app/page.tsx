@@ -7,13 +7,13 @@ import AuthModal from '@/components/AuthModal'
 
 const TONE_RESPONSES: Record<string, string> = {
   Professionnel:
-    "Merci Laurent pour ce retour constructif. Nous sommes sincèrement désolés que le bruit en soirée ait perturbé votre repos — c'est un point sur lequel nous travaillons activement. Votre confort est notre priorité et nous mettons tout en œuvre pour améliorer l'isolation de nos chambres. Nous espérons avoir l'occasion de vous accueillir à nouveau dans de meilleures conditions.",
+    "Merci Laurent pour ce retour constructif. Nous sommes sincèrement désolés que le bruit en soirée ait perturbé votre repos — c'est un point sur lequel nous travaillons activement. Votre confort est notre priorité absolue et nous prenons chaque remarque de ce type très au sérieux. Des actions concrètes sont en cours pour améliorer l'isolation de nos chambres. Nous espérons avoir l'occasion de vous accueillir à nouveau et de vous offrir l'expérience que vous méritez.",
   Chaleureux:
-    "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment navrés pour ce bruit en soirée, c'est loin de l'expérience qu'on souhaite offrir à nos clients. On prend votre remarque très à cœur et on travaille sérieusement à améliorer ça. Malgré ce point, on est contents que l'ensemble du séjour se soit bien passé. On espère vraiment vous revoir bientôt pour vous offrir le séjour que vous méritez ! 🙏",
+    "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment navrés pour ce bruit en soirée — c'est loin de l'expérience qu'on souhaite offrir à nos clients. On prend votre remarque très à cœur et on travaille activement à améliorer ça. Malgré ce point, on est vraiment contents que l'ensemble du séjour se soit bien passé. On espère de tout cœur vous revoir bientôt pour vous offrir le séjour que vous méritez ! 🙏",
   Empathique:
-    "Merci Laurent d'avoir pris le temps de partager votre ressenti avec nous. Nous comprenons pleinement que le bruit en soirée ait pu affecter la qualité de votre repos, et nous en sommes sincèrement désolés — votre confort méritait bien mieux que cela. Nous prenons votre retour très au sérieux et travaillons à trouver une solution durable. Nous espérons pouvoir vous offrir une expérience à la hauteur de vos attentes lors d'un prochain séjour.",
+    "Merci Laurent d'avoir pris le temps de partager votre ressenti avec nous. Nous comprenons pleinement que le bruit en soirée ait pu affecter la qualité de votre repos, et nous en sommes sincèrement désolés — votre confort méritait bien mieux. Votre retour est précieux et nous prenons cette situation très au sérieux. Nous travaillons à trouver une solution durable pour que cela ne se reproduise plus. Nous espérons pouvoir vous offrir une expérience à la hauteur de vos attentes lors d'un prochain séjour.",
   Décontracté:
-    "Merci Laurent ! Content que le séjour se soit globalement bien passé. Pour le bruit en soirée, on t'entend complètement — c'est clairement pas acceptable et on bosse là-dessus. Ton retour nous aide vraiment à nous améliorer. À bientôt, et cette fois ce sera beaucoup plus calme ! 👌",
+    "Merci Laurent ! Content que le séjour se soit globalement bien passé. Pour le bruit en soirée, on t'entend complètement — c'est pas du tout ce qu'on veut pour nos clients et on bosse dessus sérieusement. Ton retour nous aide vraiment à nous améliorer, donc merci pour ça. À bientôt, et cette fois ce sera beaucoup plus calme, promis ! 👌",
 }
 
 const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> = {
@@ -455,10 +455,10 @@ export default function LandingPage() {
                   : activeLength === 'Normal'
                   ? TONE_RESPONSES[activeTone]
                   : TONE_RESPONSES[activeTone] + ({
-                      Professionnel: ' Nous restons à votre entière disposition pour tout renseignement complémentaire, et demeurons attentifs à chacun de vos retours qui nous permettent d\'améliorer continuellement la qualité de nos prestations.',
-                      Chaleureux: ' N\'hésitez pas à nous contacter directement pour votre prochain séjour — ce sera un vrai plaisir de vous chouchouter comme vous le méritez ! 💜',
-                      Empathique: ' Sachez que vos retours, même difficiles, sont précieux pour nous. Ils nous rappellent pourquoi nous faisons ce métier : offrir des moments de qualité à chaque visiteur. Merci de nous faire confiance malgré tout.',
-                      Décontracté: ' On fait vraiment le max pour que la prochaine fois ce soit au top ! Stay tuned, on bosse dur. 🔥',
+                      Professionnel: ' Nous restons à votre entière disposition pour tout échange complémentaire. Chaque retour de nos clients est une opportunité précieuse de progresser, et nous vous remercions sincèrement de nous avoir accordé ce moment. Votre satisfaction demeure notre engagement le plus profond.',
+                      Chaleureux: ' N\'hésitez pas à nous contacter directement avant votre prochain séjour — on sera ravis de tout mettre en place pour que ce soit parfait. Votre bonheur, c\'est vraiment ce qui nous motive chaque matin ! 💜☀️',
+                      Empathique: ' Sachez que vos retours, même difficiles, nous touchent profondément et nous rappellent pourquoi nous faisons ce métier. Chaque client mérite une expérience sans faille, et nous ne relâcherons pas nos efforts tant que ce ne sera pas le cas. Merci de nous accorder votre confiance malgré tout.',
+                      Décontracté: ' Vraiment, ton feedback ça compte énormément pour nous — c\'est grâce à des gens comme toi qu\'on s\'améliore. On sera au top la prochaine fois, garanti ! 🔥🙌',
                     }[activeTone])
                 }
               </p>
