@@ -81,7 +81,13 @@ export async function POST(request: NextRequest) {
 
         if (!subscriptionId) break
 
-        const sub = await stripe.subscriptions.retrieve(subscriptionId)
+        let periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        try {
+          const sub = await stripe.subscriptions.retrieve(subscriptionId)
+          periodEnd = new Date(sub.current_period_end * 1000).toISOString()
+        } catch (e) {
+          console.error('Failed to retrieve subscription in payment_succeeded:', e)
+        }
 
         const { data: subData } = await supabaseAdmin
           .from('subscriptions')
@@ -89,19 +95,22 @@ export async function POST(request: NextRequest) {
           .eq('stripe_customer_id', customerId)
           .maybeSingle()
 
-        if (subData) {
-          const { error } = await supabaseAdmin
-            .from('subscriptions')
-            .update({
-              status: 'active',
-              current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
-              ai_replies_count: 0,
-              ai_replies_reset_at: new Date().toISOString(),
-            })
-            .eq('stripe_customer_id', customerId)
-
-          if (error) console.error('Failed to update subscription on payment_succeeded:', error)
+        if (!subData) {
+          console.warn('invoice.payment_succeeded: no subscription found for customer', customerId)
+          break
         }
+
+        const { error } = await supabaseAdmin
+          .from('subscriptions')
+          .update({
+            status: 'active',
+            current_period_end: periodEnd,
+            ai_replies_count: 0,
+            ai_replies_reset_at: new Date().toISOString(),
+          })
+          .eq('stripe_customer_id', customerId)
+
+        if (error) console.error('Failed to update subscription on payment_succeeded:', error)
         break
       }
 
