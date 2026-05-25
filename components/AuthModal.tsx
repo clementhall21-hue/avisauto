@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -19,6 +19,14 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
   const [error, setError] = useState('')
   const [emailSent, setEmailSent] = useState(false)
   const [sentToEmail, setSentToEmail] = useState('')
+
+  useEffect(() => {
+    if (open) {
+      setMode(defaultMode)
+      setError('')
+      setEmailSent(false)
+    }
+  }, [open, defaultMode])
   const { showToast } = useToast()
 
   // Login fields
