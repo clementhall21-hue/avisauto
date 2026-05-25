@@ -314,7 +314,7 @@ export default function LandingPage() {
           {[
             { n: '1', title: 'Un avis arrive sur Google', desc: 'Un client laisse un avis sur votre fiche Google My Business — positif, négatif ou mitigé.' },
             { n: '2', title: 'L\'IA rédige la réponse', desc: 'StarReviews analyse l\'avis et génère une réponse adaptée avec votre ton et votre signature.' },
-            { n: '3', title: 'Vous publiez — ou l\'IA publie à votre place', desc: 'Relisez et publiez d\'un clic — ou activez le mode automatique pour tout automatiser.' },
+            { n: '3', title: 'Vous publiez d\'un clic — ou l\'IA le fait pour vous', desc: 'Relisez et publiez d\'un clic — ou activez le mode automatique pour tout automatiser.' },
           ].map((step, i) => (
             <FadeUp key={i} delay={i * 0.1}>
               <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-7">
