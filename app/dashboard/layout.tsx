@@ -3,7 +3,6 @@
 import { useEffect, useState, createContext, useContext } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { AnimatePresence, motion } from 'framer-motion'
 import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut, CheckCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { ToastProvider, useToast } from '@/components/Toast'
@@ -225,38 +224,37 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* Mobile overlay */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/60 z-[200] md:hidden"
-              onClick={() => setMobileOpen(false)}
-            >
-              <motion.div
-                initial={{ x: '-100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '-100%' }}
-                transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
-                className="absolute top-0 left-0 bottom-0 w-[240px] bg-[#111827] border-r border-[rgba(255,255,255,0.07)] p-4 flex flex-col gap-1"
-                onClick={(e) => e.stopPropagation()}
+        <div
+          className="fixed inset-0 z-[200] md:hidden"
+          style={{
+            background: 'rgba(0,0,0,0.6)',
+            opacity: mobileOpen ? 1 : 0,
+            pointerEvents: mobileOpen ? 'auto' : 'none',
+            transition: 'opacity 0.22s ease',
+          }}
+          onClick={() => setMobileOpen(false)}
+        >
+          <div
+            className="absolute top-0 left-0 bottom-0 w-[240px] bg-[#111827] border-r border-[rgba(255,255,255,0.07)] p-4 flex flex-col gap-1"
+            style={{
+              transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+              transition: 'transform 0.28s cubic-bezier(0.32, 0, 0.12, 1)',
+              willChange: 'transform',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-[rgba(255,255,255,0.07)]">
+              <span className="font-extrabold text-lg gradient-text-logo">StarReviews.</span>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="text-[#8892b0] hover:text-[#e8eaf6]"
               >
-                <div className="flex items-center justify-between mb-5 pb-4 border-b border-[rgba(255,255,255,0.07)]">
-                  <span className="font-extrabold text-lg gradient-text-logo">StarReviews.</span>
-                  <button
-                    onClick={() => setMobileOpen(false)}
-                    className="text-[#8892b0] hover:text-[#e8eaf6]"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-                {sidebarContent}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <X size={18} />
+              </button>
+            </div>
+            {sidebarContent}
+          </div>
+        </div>
 
         {/* Main layout */}
         <div className="flex flex-1">

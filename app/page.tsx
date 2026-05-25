@@ -160,61 +160,59 @@ export default function LandingPage() {
       </nav>
 
       {/* ── MOBILE MENU OVERLAY ── */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            className="fixed inset-0 z-[200] md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{ background: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <motion.div
-              className="absolute top-0 right-0 bottom-0 w-[260px] bg-[#111827] border-l border-[rgba(255,255,255,0.07)] p-6 flex flex-col gap-1"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.28, ease: [0.32, 0, 0.12, 1] }}
-              onClick={(e) => e.stopPropagation()}
+      <div
+        className="fixed inset-0 z-[200] md:hidden"
+        style={{
+          background: 'rgba(0,0,0,0.5)',
+          opacity: mobileMenuOpen ? 1 : 0,
+          pointerEvents: mobileMenuOpen ? 'auto' : 'none',
+          transition: 'opacity 0.22s ease',
+        }}
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <div
+          className="absolute top-0 right-0 bottom-0 w-[260px] bg-[#111827] border-l border-[rgba(255,255,255,0.07)] p-6 flex flex-col gap-1"
+          style={{
+            transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+            transition: 'transform 0.28s cubic-bezier(0.32, 0, 0.12, 1)',
+            willChange: 'transform',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-[rgba(255,255,255,0.07)]">
+            <span className="font-extrabold text-lg gradient-text-logo">StarReviews<span style={{ color: '#34d399' }}>.</span></span>
+            <button onClick={() => setMobileMenuOpen(false)} className="text-[#8892b0] hover:text-[#e8eaf6] p-1">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
+          </div>
+          {navLinks.map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[1rem] font-medium py-3 px-2 rounded-lg hover:bg-[rgba(255,255,255,0.04)] transition-colors no-underline"
             >
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-[rgba(255,255,255,0.07)]">
-                <span className="font-extrabold text-lg gradient-text-logo">StarReviews<span style={{ color: '#34d399' }}>.</span></span>
-                <button onClick={() => setMobileMenuOpen(false)} className="text-[#8892b0] hover:text-[#e8eaf6] p-1">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              </div>
-              {navLinks.map(([href, label]) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[1rem] font-medium py-3 px-2 rounded-lg hover:bg-[rgba(255,255,255,0.04)] transition-colors no-underline"
-                >
-                  {label}
-                </a>
-              ))}
-              <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.07)] flex flex-col gap-2">
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setModalType('login') }}
-                  className="btn-outline w-full py-2.5 text-sm"
-                >
-                  Connexion
-                </button>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setModalType('signup') }}
-                  className="btn-primary w-full py-2.5 text-sm"
-                >
-                  Essai gratuit
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {label}
+            </a>
+          ))}
+          <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.07)] flex flex-col gap-2">
+            <button
+              onClick={() => { setMobileMenuOpen(false); setModalType('login') }}
+              className="btn-outline w-full py-2.5 text-sm"
+            >
+              Connexion
+            </button>
+            <button
+              onClick={() => { setMobileMenuOpen(false); setModalType('signup') }}
+              className="btn-primary w-full py-2.5 text-sm"
+            >
+              Essai gratuit
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* ── HERO ── */}
       <section className="text-center px-4 md:px-6 pt-16 md:pt-24 pb-16 md:pb-20 relative">
