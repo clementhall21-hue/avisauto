@@ -24,7 +24,7 @@ const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> 
 }
 
 const FEATURES = [
-  { icon: '♾️', title: 'Réponses illimitées', desc: 'Répondez à tous vos avis, sans limite de volume ni de quota mensuel.', color: 'rgba(99,102,241,0.15)' },
+  { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)' },
   { icon: '📍', title: 'Intégration Google My Business', desc: 'Connexion directe à votre fiche Google. Les avis arrivent automatiquement.', color: 'rgba(6,182,212,0.15)' },
   { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)' },
   { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(52,211,153,0.15)' },
@@ -446,17 +446,20 @@ export default function LandingPage() {
               </div>
               <p className="text-[0.88rem] text-[#e8eaf6] leading-[1.65]">
                 {activeLength === 'Court'
-                  ? TONE_RESPONSES[activeTone].split('.')[0] + '.'
+                  ? ({
+                      Professionnel: "Merci Laurent pour votre retour. Nous prenons note de votre remarque concernant le bruit et mettons tout en œuvre pour y remédier. Nous espérons vous accueillir à nouveau dans de meilleures conditions.",
+                      Chaleureux: "Merci Laurent pour ce retour ! 😊 On est vraiment navrés pour le bruit en soirée et on travaille à améliorer ça. On espère vous revoir très bientôt dans de meilleures conditions !",
+                      Empathique: "Merci Laurent d'avoir partagé votre ressenti. Nous comprenons que le bruit ait affecté votre confort et nous en sommes sincèrement désolés. Votre expérience méritait mieux.",
+                      Décontracté: "Merci Laurent ! Pour le bruit en soirée, on t'entend et on bosse dessus. On espère te revoir bientôt avec un séjour bien plus calme ! 👌",
+                    }[activeTone])
                   : activeLength === 'Normal'
                   ? TONE_RESPONSES[activeTone]
-                  : TONE_RESPONSES[activeTone] + (activeTone === 'Professionnel'
-                      ? ' Nous restons à votre disposition pour tout renseignement complémentaire et demeurons attentifs à chacun de vos retours, qui nous permettent d\'améliorer continuellement la qualité de nos services.'
-                      : activeTone === 'Chaleureux'
-                      ? ' N\'hésitez pas à nous contacter directement si vous souhaitez que nous prenions des dispositions particulières pour votre prochain séjour — ce sera un plaisir de vous chouchouter comme vous le méritez ! 💜'
-                      : activeTone === 'Empathique'
-                      ? ' Sachez que vos retours, même difficiles, sont précieux pour nous. Ils nous rappellent pourquoi nous faisons ce métier : offrir des moments de qualité à chacun de nos visiteurs. Merci de nous faire confiance malgré tout.'
-                      : ' Bref, on fait le max pour que la prochaine fois ce soit au top du top. Stay tuned, on bosse dur ! 🔥'
-                    )
+                  : TONE_RESPONSES[activeTone] + ({
+                      Professionnel: ' Nous restons à votre entière disposition pour tout renseignement complémentaire, et demeurons attentifs à chacun de vos retours qui nous permettent d\'améliorer continuellement la qualité de nos prestations.',
+                      Chaleureux: ' N\'hésitez pas à nous contacter directement pour votre prochain séjour — ce sera un vrai plaisir de vous chouchouter comme vous le méritez ! 💜',
+                      Empathique: ' Sachez que vos retours, même difficiles, sont précieux pour nous. Ils nous rappellent pourquoi nous faisons ce métier : offrir des moments de qualité à chaque visiteur. Merci de nous faire confiance malgré tout.',
+                      Décontracté: ' On fait vraiment le max pour que la prochaine fois ce soit au top ! Stay tuned, on bosse dur. 🔥',
+                    }[activeTone])
                 }
               </p>
             </motion.div>
