@@ -169,7 +169,7 @@ export default function ReviewsPage() {
         return
       }
 
-      if (data && data.length >= 4) {
+      if (data && data.length >= 1) {
         let reviews = data as Review[]
 
         // Si le mode auto est actif au chargement, programmer les avis en attente
@@ -196,35 +196,9 @@ export default function ReviewsPage() {
         return
       }
 
-      // Seed with sample reviews (if fewer than 4, add missing ones)
-      const existing = data?.length || 0
-      const toInsert = SAMPLE_REVIEWS.slice(existing)
-      const sampleWithColors = toInsert.map((r, i) => {
-        const color = getAvatarColor(i)
-        return {
-          establishment_id: establishment.id,
-          reviewer_name: r.reviewer_name,
-          reviewer_initials: getInitials(r.reviewer_name),
-          reviewer_color: color.bg,
-          reviewer_text_color: color.text,
-          stars: r.stars,
-          review_text: r.review_text,
-          review_date: r.review_date,
-          status: 'pending' as const,
-          source: 'sample',
-        }
-      })
-
-      const { data: inserted } = await supabase
-        .from('reviews')
-        .insert(sampleWithColors)
-        .select()
-
-      if (inserted) {
-        const allReviews = [...(data || []), ...inserted] as Review[]
-        setReviews(allReviews)
-        setPendingCount(allReviews.filter((r) => r.status === 'pending').length)
-      }
+      // Aucun avis — afficher l'état vide sans seed
+      setReviews([])
+      setPendingCount(0)
       setLoading(false)
     }
 

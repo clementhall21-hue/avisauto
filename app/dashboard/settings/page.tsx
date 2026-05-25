@@ -125,6 +125,43 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
     }
   }
 
+  const [seedStatus, setSeedStatus] = useState('')
+  const seedTestReviews = async () => {
+    setSeedStatus('⏳ Chargement…')
+    const SAMPLE = [
+      { reviewer_name: 'Marie Laurent', stars: 5, review_text: 'Service impeccable, équipe très professionnelle et souriante. La chambre était magnifique et très propre. Je recommande vivement !', review_date: 'Il y a 2 jours' },
+      { reviewer_name: 'Thomas Durand', stars: 4, review_text: "Très bon restaurant, la cuisine était excellente. Le service était un peu lent en salle mais dans l'ensemble une très bonne expérience.", review_date: 'Il y a 4 jours' },
+      { reviewer_name: 'Sophie Martin', stars: 2, review_text: "Déçue par notre séjour. La chambre n'était pas propre à notre arrivée et le petit-déjeuner était froid. Pour le prix, on s'attendait à mieux.", review_date: 'Il y a 1 semaine' },
+      { reviewer_name: 'Jean-Pierre Blanc', stars: 5, review_text: 'Excellent séjour ! Personnel aux petits soins, cadre magnifique. Mention spéciale pour le chef dont la cuisine est divine.', review_date: 'Il y a 1 semaine' },
+      { reviewer_name: 'Antoine Girard', stars: 1, review_text: "Très mauvaise expérience. Nous avons attendu plus d'une heure pour le check-in, la chambre n'était pas celle réservée et le wifi ne fonctionnait pas.", review_date: 'Il y a 2 semaines' },
+    ]
+    const colors = ['#dbeafe|#1e40af', '#fef3c7|#92400e', '#fce7f3|#9d174d', '#d1fae5|#065f46', '#ede9fe|#5b21b6']
+    const rows = SAMPLE.map((r, i) => {
+      const [bg, text] = colors[i % colors.length].split('|')
+      return {
+        establishment_id: establishment.id,
+        reviewer_name: r.reviewer_name,
+        reviewer_initials: r.reviewer_name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase(),
+        reviewer_color: bg,
+        reviewer_text_color: text,
+        stars: r.stars,
+        review_text: r.review_text,
+        review_date: r.review_date,
+        status: 'pending',
+        source: 'sample',
+      }
+    })
+    const { error } = await supabase.from('reviews').insert(rows)
+    if (error) { setSeedStatus('❌ Erreur : ' + error.message) }
+    else { setSeedStatus('✅ 5 avis de test chargés — actualisez la page Avis') }
+  }
+
+  const clearTestReviews = async () => {
+    const { error } = await supabase.from('reviews').delete().eq('establishment_id', establishment.id).eq('source', 'sample')
+    if (error) { setSeedStatus('❌ Erreur suppression') }
+    else { setSeedStatus('✅ Avis de test supprimés') }
+  }
+
   const saveZapierConfig = async () => {
     await supabase.from('establishments').update({
       zapier_webhook_url: zapierUrl,
@@ -165,6 +202,21 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
         >
           ← Retour
         </button>
+      </div>
+
+      {/* Avis de test */}
+      <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-xl p-5 mb-5">
+        <h3 className="font-semibold text-sm mb-1">🧪 Avis de test</h3>
+        <p className="text-xs text-[#8892b0] mb-3">Charger ou supprimer des avis fictifs pour tester l'interface.</p>
+        <div className="flex gap-2 flex-wrap">
+          <button onClick={seedTestReviews} className="px-3 py-1.5 rounded-lg bg-[rgba(99,102,241,0.12)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-xs font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer">
+            Charger 5 avis de test
+          </button>
+          <button onClick={clearTestReviews} className="px-3 py-1.5 rounded-lg bg-[rgba(244,63,94,0.08)] border border-[rgba(244,63,94,0.2)] text-[#f43f5e] text-xs font-semibold hover:bg-[rgba(244,63,94,0.15)] transition-colors cursor-pointer">
+            Supprimer les avis de test
+          </button>
+        </div>
+        {seedStatus && <p className="text-xs mt-2 text-[#8892b0]">{seedStatus}</p>}
       </div>
 
       <div className="flex flex-col gap-3.5 max-w-[520px]">
