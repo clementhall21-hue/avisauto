@@ -120,7 +120,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
   }
 
   const inputClass =
-    'w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] rounded-lg px-4 py-[11px] text-[#e8eaf6] text-sm outline-none transition-colors placeholder-[#8892b0] focus:border-[#6366f1]'
+    'w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] rounded-lg px-4 py-[11px] text-[#e8eaf6] text-base outline-none transition-colors placeholder-[#8892b0] focus:border-[#6366f1]'
   const labelClass = 'block text-xs font-semibold text-[#8892b0] mb-1.5'
 
   return (
