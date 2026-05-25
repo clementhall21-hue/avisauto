@@ -76,6 +76,7 @@ function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 export default function LandingPage() {
   const [modalType, setModalType] = useState<'login' | 'signup' | null>(null)
   const [activeTone, setActiveTone] = useState('Professionnel')
+  const [activeLength, setActiveLength] = useState('Normal')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -367,7 +368,7 @@ export default function LandingPage() {
         <FadeUp>
           <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Votre voix, votre style</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">L'IA parle comme vous</h2>
-          <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-10">Choisissez le ton qui correspond à l'image de votre établissement. Cliquez sur un ton pour voir la réponse changer.</p>
+          <p className="text-[#8892b0] text-[1rem] max-w-[520px] leading-[1.6] mb-10">Choisissez le ton et la longueur qui correspondent à l'image de votre établissement. Cliquez pour voir la réponse s'adapter en temps réel.</p>
         </FadeUp>
 
         <FadeUp>
@@ -382,7 +383,8 @@ export default function LandingPage() {
         </FadeUp>
 
         <FadeUp>
-          <div className="flex gap-2 mb-5 flex-wrap">
+          {/* Tone selector */}
+          <div className="flex gap-2 mb-3 flex-wrap">
             {Object.keys(TONE_RESPONSES).map((tone) => {
               const col = TONE_COLORS[tone]
               const isActive = activeTone === tone
@@ -403,24 +405,60 @@ export default function LandingPage() {
             })}
           </div>
 
+          {/* Length selector */}
+          <div className="flex items-center gap-2 mb-5 flex-wrap">
+            <span className="text-[0.72rem] text-[#8892b0] font-medium">Longueur :</span>
+            {['Court', 'Normal', 'Développé'].map((len) => (
+              <button
+                key={len}
+                onClick={() => setActiveLength(len)}
+                className="px-3 py-1 rounded-full border text-[0.75rem] font-medium transition-all"
+                style={{
+                  borderColor: activeLength === len ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.1)',
+                  color: activeLength === len ? '#34d399' : '#8892b0',
+                  background: activeLength === len ? 'rgba(52,211,153,0.08)' : 'transparent',
+                }}
+              >
+                {len}
+              </button>
+            ))}
+          </div>
+
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeTone}
+              key={activeTone + activeLength}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.22 }}
               className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-6"
             >
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
                 <span
                   className="px-3 py-0.5 rounded-full text-[0.75rem] font-semibold border"
                   style={{ background: TONE_COLORS[activeTone].bg, color: TONE_COLORS[activeTone].text, borderColor: TONE_COLORS[activeTone].border }}
                 >
                   {activeTone}
                 </span>
+                <span className="px-3 py-0.5 rounded-full text-[0.75rem] font-semibold border border-[rgba(52,211,153,0.3)] bg-[rgba(52,211,153,0.07)] text-[#34d399]">
+                  {activeLength}
+                </span>
               </div>
-              <p className="text-[0.88rem] text-[#e8eaf6] leading-[1.65]">{TONE_RESPONSES[activeTone]}</p>
+              <p className="text-[0.88rem] text-[#e8eaf6] leading-[1.65]">
+                {activeLength === 'Court'
+                  ? TONE_RESPONSES[activeTone].split('.')[0] + '.'
+                  : activeLength === 'Normal'
+                  ? TONE_RESPONSES[activeTone]
+                  : TONE_RESPONSES[activeTone] + (activeTone === 'Professionnel'
+                      ? ' Nous restons à votre disposition pour tout renseignement complémentaire et demeurons attentifs à chacun de vos retours, qui nous permettent d\'améliorer continuellement la qualité de nos services.'
+                      : activeTone === 'Chaleureux'
+                      ? ' N\'hésitez pas à nous contacter directement si vous souhaitez que nous prenions des dispositions particulières pour votre prochain séjour — ce sera un plaisir de vous chouchouter comme vous le méritez ! 💜'
+                      : activeTone === 'Empathique'
+                      ? ' Sachez que vos retours, même difficiles, sont précieux pour nous. Ils nous rappellent pourquoi nous faisons ce métier : offrir des moments de qualité à chacun de nos visiteurs. Merci de nous faire confiance malgré tout.'
+                      : ' Bref, on fait le max pour que la prochaine fois ce soit au top du top. Stay tuned, on bosse dur ! 🔥'
+                    )
+                }
+              </p>
             </motion.div>
           </AnimatePresence>
         </FadeUp>
