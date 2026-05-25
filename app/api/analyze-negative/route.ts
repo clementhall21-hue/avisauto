@@ -35,7 +35,8 @@ Analyse les avis négatifs d'un établissement et fournis :
 1. Les 3 problèmes les plus récurrents (avec exemples)
 2. L'impact sur la réputation
 3. 3 actions concrètes et prioritaires pour s'améliorer
-Sois précis, concret et actionnable. Réponds en français.`,
+Sois précis, concret et actionnable. Réponds en français.
+IMPORTANT : N'utilise aucune mise en forme markdown. Pas d'astérisques, pas de gras, pas de titres avec #. Écris en texte brut uniquement, avec des chiffres et des retours à la ligne.`,
         },
         {
           role: 'user',
