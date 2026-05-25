@@ -113,12 +113,13 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
             trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
           })
         }
-        // Always show email confirmation screen
         setSentToEmail(signupEmail)
         setEmailSent(true)
       } else {
-        // Supabase retourne null user quand l'email existe déjà (rate limit ou compte existant)
-        setError('Un compte existe déjà avec cet email. Connectez-vous à la place.')
+        // Supabase retourne null user silencieusement pour les emails déjà confirmés
+        // On affiche quand même l'écran email pour ne pas révéler si un compte existe
+        setSentToEmail(signupEmail)
+        setEmailSent(true)
       }
     } catch {
       setError('Une erreur est survenue. Réessayez.')
