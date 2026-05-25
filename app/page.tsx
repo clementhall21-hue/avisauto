@@ -7,13 +7,13 @@ import AuthModal from '@/components/AuthModal'
 
 const TONE_RESPONSES: Record<string, string> = {
   Professionnel:
-    "Merci Laurent pour ce retour constructif. Nous prenons note de votre remarque concernant le bruit et allons y remédier. Nous espérons vous accueillir à nouveau dans de meilleures conditions.",
+    "Merci Laurent pour ce retour constructif. Nous sommes sincèrement désolés que le bruit en soirée ait perturbé votre repos — c'est un point sur lequel nous travaillons activement. Votre confort est notre priorité et nous mettons tout en œuvre pour améliorer l'isolation de nos chambres. Nous espérons avoir l'occasion de vous accueillir à nouveau dans de meilleures conditions.",
   Chaleureux:
-    "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment désolés pour ce bruit en soirée, c'est loin de ce qu'on souhaite pour nos clients. On travaille là-dessus et on espère vous revoir très bientôt !",
+    "Merci beaucoup Laurent pour votre retour ! 😊 On est vraiment navrés pour ce bruit en soirée, c'est loin de l'expérience qu'on souhaite offrir à nos clients. On prend votre remarque très à cœur et on travaille sérieusement à améliorer ça. Malgré ce point, on est contents que l'ensemble du séjour se soit bien passé. On espère vraiment vous revoir bientôt pour vous offrir le séjour que vous méritez ! 🙏",
   Empathique:
-    "Merci Laurent d'avoir pris le temps de partager votre vécu. Nous comprenons que le bruit ait pu affecter votre confort et nous en sommes sincèrement désolés. Votre expérience méritait mieux.",
+    "Merci Laurent d'avoir pris le temps de partager votre ressenti avec nous. Nous comprenons pleinement que le bruit en soirée ait pu affecter la qualité de votre repos, et nous en sommes sincèrement désolés — votre confort méritait bien mieux que cela. Nous prenons votre retour très au sérieux et travaillons à trouver une solution durable. Nous espérons pouvoir vous offrir une expérience à la hauteur de vos attentes lors d'un prochain séjour.",
   Décontracté:
-    "Merci Laurent ! Content que le séjour se soit bien passé dans l'ensemble. Pour le bruit, on entend votre retour et on va bosser là-dessus. À bientôt !",
+    "Merci Laurent ! Content que le séjour se soit globalement bien passé. Pour le bruit en soirée, on t'entend complètement — c'est clairement pas acceptable et on bosse là-dessus. Ton retour nous aide vraiment à nous améliorer. À bientôt, et cette fois ce sera beaucoup plus calme ! 👌",
 }
 
 const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> = {
@@ -280,8 +280,8 @@ export default function LandingPage() {
             </div>
             <div className="p-6 space-y-3">
               {[
-                { initials: 'ML', bg: '#dbeafe', color: '#1e40af', name: 'Marie L.', stars: 5, text: 'Service impeccable, équipe très professionnelle. Je reviendrai sans hésiter !', reply: 'Merci infiniment Marie pour ce témoignage ! Votre confiance nous honore et nous motive chaque jour.', tag: 'Professionnel' },
-                { initials: 'TD', bg: '#fef3c7', color: '#92400e', name: 'Thomas D.', stars: 4, text: 'Très bon restaurant, le service était un peu lent mais la cuisine était excellente.', reply: 'Merci Thomas pour ce retour sincère. Nous avons pris note de votre remarque sur le service.', tag: 'Empathique' },
+                { initials: 'ML', bg: '#dbeafe', color: '#1e40af', name: 'Marie L.', stars: 5, text: 'Service impeccable, équipe très professionnelle. Je reviendrai sans hésiter !', reply: 'Merci infiniment Marie pour ce témoignage chaleureux ! Toute l\'équipe est ravie de vous avoir accueillie et votre satisfaction est notre plus belle récompense. Nous serons ravis de vous retrouver très bientôt.', tag: 'Professionnel' },
+                { initials: 'TD', bg: '#fef3c7', color: '#92400e', name: 'Thomas D.', stars: 4, text: 'Très bon restaurant, le service était un peu lent mais la cuisine était excellente.', reply: 'Merci Thomas pour ce retour sincère et bienveillant. Nous sommes ravis que la cuisine vous ait séduit ! Votre remarque sur les délais de service est notée — nous travaillons à fluidifier le rythme de salle. Au plaisir de vous accueillir à nouveau.', tag: 'Empathique' },
               ].map((r, i) => (
                 <div key={i} className="flex gap-3.5 p-3.5 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[10px]">
                   <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[0.85rem] flex-shrink-0" style={{ background: r.bg, color: r.color }}>{r.initials}</div>
@@ -335,7 +335,7 @@ export default function LandingPage() {
                 <div className="text-[#8892b0] mb-1.5">💬 Avis reçu :</div>
                 <div className="text-[#e8eaf6] italic mb-2.5">"Très bonne table, rapport qualité-prix excellent."</div>
                 <div className="text-[#8892b0] mb-1.5">🤖 Réponse générée :</div>
-                <div className="text-[#e8eaf6] mb-3">"Merci pour ce retour qui nous fait vraiment plaisir ! On vous attend avec plaisir pour une prochaine fois."</div>
+                <div className="text-[#e8eaf6] mb-3">"Merci pour ce retour qui nous fait vraiment plaisir ! C'est exactement ce genre d'expérience que nous cherchons à offrir à chacun de nos clients. Nous transmettrons votre message à toute l'équipe. On vous attend avec impatience pour une prochaine fois !"</div>
                 <div className="flex gap-1.5">
                   <span className="bg-[rgba(255,255,255,0.05)] text-[#8892b0] border border-[rgba(255,255,255,0.07)] px-2.5 py-0.5 rounded text-[0.72rem]">Publier</span>
                   <span className="bg-[rgba(255,255,255,0.05)] text-[#8892b0] border border-[rgba(255,255,255,0.07)] px-2.5 py-0.5 rounded text-[0.72rem]">✏️ Modifier</span>
@@ -352,7 +352,7 @@ export default function LandingPage() {
                 <div className="text-[#8892b0] mb-1.5">💬 Avis reçu :</div>
                 <div className="text-[#e8eaf6] italic mb-2.5">"Excellent séjour, personnel aux petits soins !"</div>
                 <div className="text-[#8892b0] mb-1.5">🤖 Réponse prête :</div>
-                <div className="text-[#e8eaf6] mb-3">"Merci infiniment pour ce témoignage ! Votre satisfaction est notre plus belle récompense. À très bientôt !"</div>
+                <div className="text-[#e8eaf6] mb-3">"Merci infiniment pour ce témoignage ! Toute l'équipe est touchée par vos mots. Votre satisfaction est notre plus belle récompense et nous donne envie de nous surpasser chaque jour. Nous vous souhaitons une excellente continuation et espérons vous revoir très bientôt !"</div>
                 <div className="flex items-center gap-2 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.2)] rounded-lg px-3 py-1.5 text-[#818cf8] text-[0.72rem] font-semibold">
                   <span>⏱</span> Publication automatique dans 43min
                 </div>
