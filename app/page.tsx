@@ -25,7 +25,7 @@ const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> 
 
 const FEATURES = [
   { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)' },
-  { icon: '📍', title: 'Intégration Google My Business', desc: 'Connexion directe à votre fiche Google. Les avis arrivent automatiquement.', color: 'rgba(6,182,212,0.15)' },
+  { icon: '✍️', title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble.", color: 'rgba(6,182,212,0.15)' },
   { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)' },
   { icon: '⚡', title: 'Rapport IA sur vos points faibles', desc: "En un clic, l'IA analyse tous vos avis négatifs et vous génère un rapport clair : ce que vos clients reprochent, les problèmes récurrents, et les actions concrètes à mener pour améliorer votre réputation.", color: 'rgba(244,63,94,0.15)' },
   { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(52,211,153,0.15)' },
@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: 'Comment les avis arrivent-ils dans le dashboard ?',
-    a: 'Via Google Sheets (import manuel ou automatique), via notre webhook Zapier, ou en ajoutant des avis manuellement depuis les paramètres.',
+    a: 'Via Google Sheets (import manuel ou automatique), via notre webhook Zapier, ou en ajoutant des avis manuellement depuis les paramètres. Pour la publication automatique sur Google, une fiche Google My Business active est nécessaire.',
   },
   {
     q: 'Puis-je modifier les réponses avant de les publier ?',
