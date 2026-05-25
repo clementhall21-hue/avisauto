@@ -310,11 +310,8 @@ export default function LandingPage() {
             style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center' }}
             className="bg-[#111827] border border-[rgba(255,255,255,0.07)] rounded-2xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.4)]"
           >
-            <div className="bg-[#1a2340] px-4 py-2.5 flex items-center gap-2.5 border-b border-[rgba(255,255,255,0.07)]">
-              <div className="w-[10px] h-[10px] rounded-full bg-[#ff5f57]" />
-              <div className="w-[10px] h-[10px] rounded-full bg-[#febc2e]" />
-              <div className="w-[10px] h-[10px] rounded-full bg-[#28c840]" />
-              <span className="ml-2 text-[0.78rem] text-[#8892b0]">StarReviews · Dashboard</span>
+            <div className="bg-[#1a2340] px-4 py-2.5 flex items-center border-b border-[rgba(255,255,255,0.07)]">
+              <span className="text-[0.78rem] text-[#8892b0]">StarReviews · Dashboard</span>
             </div>
             <div className="p-6 space-y-3">
               {[
