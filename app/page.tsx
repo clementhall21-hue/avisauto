@@ -132,7 +132,7 @@ export default function LandingPage() {
             </button>
             <button
               onClick={() => setModalType('signup')}
-              style={{ fontSize: '0.72rem', padding: '5px 11px', borderRadius: '0', background: '#6d28d9', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
+              style={{ fontSize: '0.72rem', padding: '5px 11px', borderRadius: '0', background: '#312e81', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
             >
               Essai gratuit
             </button>
