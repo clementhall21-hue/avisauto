@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import AuthModal from '@/components/AuthModal'
@@ -40,13 +40,13 @@ const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> 
 }
 
 const FEATURES = [
-  { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)' },
-  { icon: '✍️', title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble.", color: 'rgba(6,182,212,0.15)' },
-  { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)' },
-  { icon: '⚡', title: 'Rapport IA sur vos points faibles', desc: "En un clic, l'IA analyse tous vos avis négatifs et vous génère un rapport clair : ce que vos clients reprochent, les problèmes récurrents, et les actions concrètes à mener pour améliorer votre réputation.", color: 'rgba(244,63,94,0.15)' },
-  { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(52,211,153,0.15)' },
-  { icon: '📊', title: 'Tableau de bord unifié', desc: 'Suivez votre note moyenne, le volume d\'avis et votre taux de réponse.', color: 'rgba(245,158,11,0.15)' },
-  { icon: '🔒', title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.', color: 'rgba(244,63,94,0.15)' },
+  { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)', glow: '99,102,241' },
+  { icon: '✍️', title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble.", color: 'rgba(6,182,212,0.15)', glow: '6,182,212' },
+  { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)', glow: '167,139,250' },
+  { icon: '⚡', title: 'Rapport IA sur vos points faibles', desc: "En un clic, l'IA analyse tous vos avis négatifs et vous génère un rapport clair : ce que vos clients reprochent, les problèmes récurrents, et les actions concrètes à mener pour améliorer votre réputation.", color: 'rgba(244,63,94,0.15)', glow: '244,63,94' },
+  { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(52,211,153,0.15)', glow: '52,211,153' },
+  { icon: '📊', title: 'Tableau de bord unifié', desc: 'Suivez votre note moyenne, le volume d\'avis et votre taux de réponse.', color: 'rgba(245,158,11,0.15)', glow: '245,158,11' },
+  { icon: '🔒', title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.', color: 'rgba(244,63,94,0.15)', glow: '244,63,94' },
 ]
 
 
@@ -96,13 +96,20 @@ export default function LandingPage() {
   const [activeLength, setActiveLength] = useState('Normal')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const navLinks = [['#features', 'Fonctionnalités'], ['#pricing', 'Tarifs'], ['#faq', 'FAQ']] as const
 
   return (
     <div className="overflow-x-hidden max-w-[100vw] pt-[56px] md:pt-[64px]">
       {/* ── NAV ── */}
-      <nav className="flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] fixed top-0 left-0 right-0 z-[100]">
+      <nav className={`flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] fixed top-0 left-0 right-0 z-[100] transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_24px_rgba(0,0,0,0.5)]' : ''}`}>
         <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em]">
           <span className="gradient-text-logo">StarReviews</span>
           <span style={{ color: '#34d399' }}>.</span>
@@ -297,6 +304,10 @@ export default function LandingPage() {
           className="max-w-[860px] mx-auto mt-12 md:mt-16 px-0 md:px-6"
           style={{ perspective: '1200px' }}
         >
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
+          >
           <div
             style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center' }}
             className="bg-[#111827] border border-[rgba(255,255,255,0.07)] rounded-2xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.4)]"
@@ -327,6 +338,7 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+          </motion.div>
         </motion.div>
       </section>
 
@@ -497,13 +509,21 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((f, i) => (
             <FadeUp key={i} delay={i * 0.06}>
-              <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-7 hover:border-[rgba(99,102,241,0.35)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.3)] transition-all">
+              <motion.div
+                className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-7"
+                whileHover={{
+                  y: -5,
+                  borderColor: `rgba(${f.glow},0.45)`,
+                  boxShadow: `0 12px 32px rgba(0,0,0,0.3), 0 0 28px rgba(${f.glow},0.12)`,
+                }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.3rem] mb-4.5" style={{ background: f.color }}>
                   {f.icon}
                 </div>
                 <h3 className="text-[1rem] font-semibold mb-2">{f.title}</h3>
                 <p className="text-[0.88rem] text-[#8892b0] leading-[1.6]">{f.desc}</p>
-              </div>
+              </motion.div>
             </FadeUp>
           ))}
         </div>
