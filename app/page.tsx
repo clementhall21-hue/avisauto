@@ -112,7 +112,6 @@ export default function LandingPage() {
       <nav className={`flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(8,11,22,0.95)] backdrop-blur-[24px] fixed top-0 left-0 right-0 z-[100] transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_24px_rgba(0,0,0,0.5)]' : ''}`}>
         <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em]">
           <span className="gradient-text-logo">StarReviews</span>
-          <span style={{ color: '#34d399' }}>.</span>
         </div>
         <ul className="hidden md:flex items-center gap-8 list-none">
           {navLinks.map(([href, label]) => (
