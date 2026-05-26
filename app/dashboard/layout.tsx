@@ -205,7 +205,6 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
             </button>
             <Link href="/" className="font-extrabold text-[1.25rem] tracking-[-0.03em]">
               <span className="gradient-text-logo">StarReviews</span>
-              <span style={{ color: '#34d399' }}>.</span>
             </Link>
           </div>
 
