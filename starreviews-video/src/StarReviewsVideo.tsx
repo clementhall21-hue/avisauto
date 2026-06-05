@@ -17,7 +17,7 @@ const RED = '#f43f5e';
 const WHITE = '#e8eaf6';
 const MUTED = '#8892b0';
 
-function useFadeUp(frame: number, delay = 0, duration = 18) {
+function useFadeUp(frame: number, delay = 0, duration = 36) {
   const opacity = interpolate(frame - delay, [0, duration], [0, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
   });
@@ -32,11 +32,11 @@ function useFadeUp(frame: number, delay = 0, duration = 18) {
 // VOIX OFF : "Répondre à vos avis Google... ça vous prend combien de temps ?"
 const Scene1: React.FC = () => {
   const frame = useCurrentFrame();
-  const badge = useFadeUp(frame, 5);
-  const big = useFadeUp(frame, 15);
-  const sub = useFadeUp(frame, 30);
+  const badge = useFadeUp(frame, 10);
+  const big = useFadeUp(frame, 30);
+  const sub = useFadeUp(frame, 60);
 
-  const pulse = interpolate(frame % 20, [0, 10, 20], [1, 1.04, 1], {
+  const pulse = interpolate(frame % 40, [0, 20, 40], [1, 1.04, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
   });
 
@@ -94,7 +94,7 @@ const Scene1: React.FC = () => {
 const NotifPile: React.FC<{ name: string; stars: number; text: string; delay: number; index: number }> = ({ name, stars, text, delay, index }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - delay, fps, config: { damping: 12, stiffness: 70 }, durationInFrames: 35 });
+  const s = spring({ frame: frame - delay, fps, config: { damping: 12, stiffness: 70 }, durationInFrames: 70 });
   const ty = interpolate(s, [0, 1], [-80, 0]);
   const opacity = interpolate(s, [0, 0.3, 1], [0, 1, 1]);
   const rotate = interpolate(index, [0, 1, 2, 3], [-3, 1, -2, 2]);
@@ -143,10 +143,10 @@ const Scene2: React.FC = () => {
   const title = useFadeUp(frame, 5);
 
   const notifs = [
-    { name: 'Marie L.', stars: 5, text: 'Super !', delay: 5 },
-    { name: 'Thomas D.', stars: 2, text: 'Décevant...', delay: 20 },
-    { name: 'Sophie M.', stars: 1, text: 'Jamais je reviendrai', delay: 35 },
-    { name: 'Antoine G.', stars: 4, text: 'Bien dans l\'ensemble', delay: 50 },
+    { name: 'Marie L.', stars: 5, text: 'Super !', delay: 10 },
+    { name: 'Thomas D.', stars: 2, text: 'Décevant...', delay: 40 },
+    { name: 'Sophie M.', stars: 1, text: 'Jamais je reviendrai', delay: 70 },
+    { name: 'Antoine G.', stars: 4, text: 'Bien dans l\'ensemble', delay: 100 },
   ];
 
   return (
@@ -174,13 +174,13 @@ const Scene2: React.FC = () => {
 const Scene3: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - 5, fps, config: { damping: 12, stiffness: 60 }, durationInFrames: 50 });
+  const s = spring({ frame: frame - 10, fps, config: { damping: 12, stiffness: 60 }, durationInFrames: 100 });
 
   const scale = interpolate(s, [0, 1], [0.7, 1]);
   const opacity = interpolate(s, [0, 1], [0, 1]);
-  const glow = interpolate(frame, [0, 45], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const glow = interpolate(frame, [0, 90], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  const sub = useFadeUp(frame, 35);
+  const sub = useFadeUp(frame, 70);
 
   return (
     <AbsoluteFill style={{
@@ -223,9 +223,9 @@ const Scene4: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const card = useFadeUp(frame, 5);
+  const card = useFadeUp(frame, 10);
 
-  const typingProgress = interpolate(frame, [40, 120], [0, 1], {
+  const typingProgress = interpolate(frame, [80, 240], [0, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
   });
@@ -233,11 +233,11 @@ const Scene4: React.FC = () => {
   const fullReply = "Merci infiniment Marie pour ce retour chaleureux ! Toute notre équipe est ravie de vous avoir accueillie dans les meilleures conditions. Nous espérons vous revoir très bientôt !";
   const visibleReply = fullReply.slice(0, Math.floor(typingProgress * fullReply.length));
 
-  const badge = spring({ frame: frame - 130, fps, config: { damping: 12, stiffness: 80 }, durationInFrames: 30 });
+  const badge = spring({ frame: frame - 260, fps, config: { damping: 12, stiffness: 80 }, durationInFrames: 60 });
   const badgeScale = interpolate(badge, [0, 1], [0.5, 1]);
   const badgeOpacity = interpolate(badge, [0, 1], [0, 1]);
 
-  const pulse = interpolate(frame % 25, [0, 12, 25], [1, 1.03, 1], {
+  const pulse = interpolate(frame % 50, [0, 25, 50], [1, 1.03, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
   });
 
@@ -335,7 +335,7 @@ const Scene4: React.FC = () => {
 const Pill: React.FC<{ icon: string; text: string; delay: number; color: string }> = ({ icon, text, delay, color }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - delay, fps, config: { damping: 14, stiffness: 90 }, durationInFrames: 30 });
+  const s = spring({ frame: frame - delay, fps, config: { damping: 14, stiffness: 90 }, durationInFrames: 60 });
   const scale = interpolate(s, [0, 1], [0.6, 1]);
   const opacity = interpolate(s, [0, 1], [0, 1]);
 
@@ -364,10 +364,10 @@ const Scene5: React.FC = () => {
   const title = useFadeUp(frame, 0);
 
   const pills = [
-    { icon: '🎨', text: '4 tons IA différents', delay: 15, color: '99,102,241' },
-    { icon: '📏', text: 'Court / Normal / Développé', delay: 30, color: '52,211,153' },
-    { icon: '✍️', text: 'Votre signature personnalisée', delay: 45, color: '6,182,212' },
-    { icon: '🤖', text: 'Mode 100% automatique', delay: 60, color: '245,158,11' },
+    { icon: '🎨', text: '4 tons IA différents', delay: 30, color: '99,102,241' },
+    { icon: '📏', text: 'Court / Normal / Développé', delay: 60, color: '52,211,153' },
+    { icon: '✍️', text: 'Votre signature personnalisée', delay: 90, color: '6,182,212' },
+    { icon: '🤖', text: 'Mode 100% automatique', delay: 120, color: '245,158,11' },
   ];
 
   return (
@@ -401,15 +401,15 @@ const Scene5: React.FC = () => {
 const Scene6: React.FC = () => {
   const frame = useCurrentFrame();
 
-  const logo = useFadeUp(frame, 5);
-  const title = useFadeUp(frame, 20);
-  const free = useFadeUp(frame, 50);
-  const arrow = useFadeUp(frame, 80);
-  const dm = useFadeUp(frame, 100);
+  const logo = useFadeUp(frame, 10);
+  const title = useFadeUp(frame, 40);
+  const free = useFadeUp(frame, 100);
+  const arrow = useFadeUp(frame, 160);
+  const dm = useFadeUp(frame, 200);
 
   const stars = [0, 1, 2, 3, 4, 5, 6];
 
-  const bounce = interpolate(frame % 40, [0, 20, 40], [0, 10, 0], {
+  const bounce = interpolate(frame % 80, [0, 40, 80], [0, 10, 0], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
     easing: Easing.inOut(Easing.sine),
   });
@@ -495,17 +495,17 @@ export const StarReviewsVideo: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: NAVY }}>
       {/* Scène 1 : Le problème — 0 à 3s */}
-      <Sequence from={0} durationInFrames={90}><Scene1 /></Sequence>
+      <Sequence from={0} durationInFrames={180}><Scene1 /></Sequence>
       {/* Scène 2 : Le chaos — 3s à 7s */}
-      <Sequence from={90} durationInFrames={120}><Scene2 /></Sequence>
+      <Sequence from={180} durationInFrames={240}><Scene2 /></Sequence>
       {/* Scène 3 : La révélation — 7s à 10s */}
-      <Sequence from={210} durationInFrames={90}><Scene3 /></Sequence>
+      <Sequence from={420} durationInFrames={180}><Scene3 /></Sequence>
       {/* Scène 4 : La démo — 10s à 18s */}
-      <Sequence from={300} durationInFrames={240}><Scene4 /></Sequence>
+      <Sequence from={600} durationInFrames={480}><Scene4 /></Sequence>
       {/* Scène 5 : Les avantages — 18s à 22s */}
-      <Sequence from={540} durationInFrames={120}><Scene5 /></Sequence>
+      <Sequence from={1080} durationInFrames={240}><Scene5 /></Sequence>
       {/* Scène 6 : CTA final — 22s à 30s */}
-      <Sequence from={660} durationInFrames={240}><Scene6 /></Sequence>
+      <Sequence from={1320} durationInFrames={480}><Scene6 /></Sequence>
     </AbsoluteFill>
   );
 };
