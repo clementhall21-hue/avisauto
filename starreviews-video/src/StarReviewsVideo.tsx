@@ -486,7 +486,6 @@ const Scene6: React.FC = () => {
         Plus d'infos ?<br />
         <span style={{ color: '#818cf8' }}>Contacte-moi en DM</span>
       </div>
-      </div>
     </AbsoluteFill>
   );
 };
