@@ -1,0 +1,22 @@
+{
+  "name": "starreviews-video",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render StarReviewsVideo out/video.mp4 --codec=h264"
+  },
+  "remotion": {
+    "entryPoint": "src/index.ts"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.472",
+    "@remotion/cli": "^4.0.472",
+    "@remotion/renderer": "^4.0.472",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "remotion": "^4.0.472",
+    "typescript": "^6.0.3"
+  }
+}
