@@ -397,25 +397,22 @@ const Scene5: React.FC = () => {
 };
 
 // ── SCÈNE 6 : CTA final (22–30s = 660–900fr) ─────────────────────────────────
-// VOIX OFF : "14 jours gratuits, sans carte bancaire. Rejoignez StarReviews maintenant."
+// VOIX OFF : "14 jours gratuits, sans carte bancaire. DM si vous voulez en savoir plus."
 const Scene6: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const logo = useFadeUp(frame, 5);
   const title = useFadeUp(frame, 20);
-  const free = useFadeUp(frame, 40);
-
-  const btnSpring = spring({ frame: frame - 55, fps, config: { damping: 10, stiffness: 80 }, durationInFrames: 35 });
-  const btnScale = interpolate(btnSpring, [0, 1], [0.7, 1]);
-  const btnOpacity = interpolate(btnSpring, [0, 1], [0, 1]);
-  const pulse = interpolate(frame % 30, [0, 15, 30], [1, 1.04, 1], {
-    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-  });
-
-  const url = useFadeUp(frame, 100);
+  const free = useFadeUp(frame, 50);
+  const arrow = useFadeUp(frame, 80);
+  const dm = useFadeUp(frame, 100);
 
   const stars = [0, 1, 2, 3, 4, 5, 6];
+
+  const bounce = interpolate(frame % 40, [0, 20, 40], [0, 10, 0], {
+    extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
+    easing: Easing.inOut(Easing.sine),
+  });
 
   return (
     <AbsoluteFill style={{
@@ -427,21 +424,21 @@ const Scene6: React.FC = () => {
       <div style={{
         position: 'absolute', top: '35%', left: '50%', transform: 'translate(-50%,-50%)',
         width: 1000, height: 1000, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 60%)',
+        background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 60%)',
       }} />
 
       {stars.map(i => (
         <div key={i} style={{
           position: 'absolute',
           top: `${8 + i * 12}%`, left: `${8 + (i % 3) * 36}%`,
-          color: 'rgba(245,158,11,0.12)', fontSize: 44 + (i % 3) * 16,
+          color: 'rgba(245,158,11,0.1)', fontSize: 44 + (i % 3) * 16,
           transform: `rotate(${i * 15}deg)`,
         }}>★</div>
       ))}
 
-      <div style={{ opacity: logo.opacity, transform: `translateY(${logo.y}px)`, marginBottom: 30 }}>
+      <div style={{ opacity: logo.opacity, transform: `translateY(${logo.y}px)`, marginBottom: 40 }}>
         <div style={{
-          fontSize: 56, fontWeight: 900,
+          fontSize: 52, fontWeight: 900,
           background: 'linear-gradient(135deg, #818cf8, #06b6d4)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>
@@ -451,56 +448,44 @@ const Scene6: React.FC = () => {
 
       <div style={{
         opacity: title.opacity, transform: `translateY(${title.y}px)`,
-        textAlign: 'center', padding: '0 50px', marginBottom: 40,
-        fontSize: 76, fontWeight: 900, color: WHITE, lineHeight: 1.0, letterSpacing: -2,
+        textAlign: 'center', padding: '0 60px', marginBottom: 50,
+        fontSize: 70, fontWeight: 900, color: WHITE, lineHeight: 1.05, letterSpacing: -2,
       }}>
-        Arrêtez de<br />perdre du temps.<br />
+        1 à 3h par semaine<br />
+        <span style={{ color: MUTED, fontSize: 52, fontWeight: 700 }}>c'est épuisant.</span><br />
         <span style={{
           background: 'linear-gradient(135deg, #34d399, #06b6d4)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-        }}>Automatisez.</span>
+        }}>On a la solution.</span>
       </div>
 
       <div style={{
         opacity: free.opacity, transform: `translateY(${free.y}px)`,
-        marginBottom: 40, textAlign: 'center',
+        textAlign: 'center', marginBottom: 40,
+        fontSize: 46, fontWeight: 900, color: GREEN,
       }}>
-        <div style={{
-          background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.3)',
-          borderRadius: 50, padding: '14px 40px',
-          color: GREEN, fontSize: 30, fontWeight: 700,
-        }}>
-          ✨ 14 jours gratuits · Sans carte bancaire
+        ✨ 14 jours gratuits
+        <div style={{ fontSize: 28, color: MUTED, fontWeight: 500, marginTop: 8 }}>
+          sans carte bancaire
         </div>
       </div>
 
       <div style={{
-        opacity: btnOpacity,
-        transform: `scale(${btnScale * pulse})`,
-        marginBottom: 30,
+        opacity: arrow.opacity,
+        transform: `translateY(${arrow.y + bounce}px)`,
+        fontSize: 60, textAlign: 'center', marginBottom: 20,
       }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
-          borderRadius: 22, padding: '34px 90px',
-          color: WHITE, fontSize: 44, fontWeight: 900,
-          boxShadow: '0 0 80px rgba(99,102,241,0.45)',
-          textAlign: 'center',
-        }}>
-          Essayer gratuitement →
-        </div>
+        👇
       </div>
 
       <div style={{
-        opacity: url.opacity, transform: `translateY(${url.y}px)`,
-        textAlign: 'center', marginTop: 10,
+        opacity: dm.opacity, transform: `translateY(${dm.y}px)`,
+        textAlign: 'center',
+        fontSize: 34, color: WHITE, fontWeight: 700, lineHeight: 1.4,
       }}>
-        <div style={{
-          background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)',
-          borderRadius: 50, padding: '12px 32px',
-          color: '#818cf8', fontSize: 28, fontWeight: 700,
-        }}>
-          💬 Contactez-moi en DM pour plus d'infos
-        </div>
+        Plus d'infos ?<br />
+        <span style={{ color: '#818cf8' }}>Contacte-moi en DM</span>
+      </div>
       </div>
     </AbsoluteFill>
   );
