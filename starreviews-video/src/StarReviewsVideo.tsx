@@ -69,11 +69,11 @@ const Scene1: React.FC = () => {
         textAlign: 'center',
       }}>
         <div style={{
-          fontSize: 160, fontWeight: 900, lineHeight: 0.9, letterSpacing: -6,
+          fontSize: 130, fontWeight: 900, lineHeight: 0.9, letterSpacing: -4,
           background: 'linear-gradient(135deg, #f43f5e, #fb923c)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>
-          45<span style={{ fontSize: 80 }}>min</span>
+          1 à 3<span style={{ fontSize: 80 }}>h</span>
         </div>
       </div>
 
@@ -492,9 +492,15 @@ const Scene6: React.FC = () => {
 
       <div style={{
         opacity: url.opacity, transform: `translateY(${url.y}px)`,
-        color: MUTED, fontSize: 28, marginTop: 10,
+        textAlign: 'center', marginTop: 10,
       }}>
-        avisauto.vercel.app
+        <div style={{
+          background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)',
+          borderRadius: 50, padding: '12px 32px',
+          color: '#818cf8', fontSize: 28, fontWeight: 700,
+        }}>
+          💬 Contactez-moi en DM pour plus d'infos
+        </div>
       </div>
     </AbsoluteFill>
   );
