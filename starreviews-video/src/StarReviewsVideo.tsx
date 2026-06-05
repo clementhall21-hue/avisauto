@@ -411,7 +411,6 @@ const Scene6: React.FC = () => {
 
   const bounce = interpolate(frame % 80, [0, 40, 80], [0, 10, 0], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp',
-    easing: Easing.inOut(Easing.sine),
   });
 
   return (
