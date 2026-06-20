@@ -14,15 +14,13 @@ import os
 import re
 import csv
 import time
-import smtplib
 import argparse
 import requests
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 # ─── Config ───────────────────────────────────────────────────────────────────
-GMAIL_USER         = 'starreviewsapp@gmail.com'
-GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD', '')
+SENDER_EMAIL   = 'starreviewsapp@gmail.com'
+SENDER_NAME    = 'Clément — StarReviews'
+BREVO_API_KEY  = os.environ.get('BREVO_API_KEY', '')
 
 # Zones et types de lieux à chercher (OpenStreetMap)
 SEARCHES = [
@@ -209,9 +207,24 @@ def run_search(output_file: str = 'prospects.csv'):
 
 
 # ─── Send mode ─────────────────────────────────────────────────────────────────
+def send_via_brevo(to_email: str, to_name: str, subject: str, body: str) -> bool:
+    resp = requests.post(
+        'https://api.brevo.com/v3/smtp/email',
+        headers={'api-key': BREVO_API_KEY, 'Content-Type': 'application/json'},
+        json={
+            'sender':      {'name': SENDER_NAME, 'email': SENDER_EMAIL},
+            'to':          [{'email': to_email, 'name': to_name}],
+            'subject':     subject,
+            'textContent': body,
+        },
+        timeout=15,
+    )
+    return resp.status_code in (200, 201)
+
+
 def run_send(prospects_file: str = 'prospects.csv', dry_run: bool = False, limit: int = 50):
-    if not GMAIL_APP_PASSWORD and not dry_run:
-        print('❌  GMAIL_APP_PASSWORD manquant dans le fichier .env')
+    if not BREVO_API_KEY and not dry_run:
+        print('❌  BREVO_API_KEY manquant dans le fichier .env')
         return
 
     with open(prospects_file, 'r', encoding='utf-8') as f:
@@ -220,37 +233,23 @@ def run_send(prospects_file: str = 'prospects.csv', dry_run: bool = False, limit
     to_send = [r for r in rows if r['email'] and r['sent'] == 'non'][:limit]
     print(f'📧  {len(to_send)} emails à envoyer{"  (DRY RUN — rien ne sera envoyé)" if dry_run else ""}')
 
-    smtp = None
-    if not dry_run:
-        smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        smtp.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-
     sent_count = 0
     for row in to_send:
         name  = row['name']
         email = row['email']
         body  = EMAIL_BODY.format(name=name)
 
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = EMAIL_SUBJECT
-        msg['From']    = f'Clément — StarReviews <{GMAIL_USER}>'
-        msg['To']      = email
-        msg.attach(MIMEText(body, 'plain', 'utf-8'))
-
         if dry_run:
             print(f'  [DRY RUN]  → {name} <{email}>')
         else:
-            try:
-                smtp.sendmail(GMAIL_USER, email, msg.as_string())
+            ok = send_via_brevo(email, name, EMAIL_SUBJECT, body)
+            if ok:
                 row['sent'] = 'oui'
                 sent_count += 1
                 print(f'  ✅  Envoyé → {name} <{email}>')
-                time.sleep(3)
-            except Exception as e:
-                print(f'  ❌  Erreur → {name}: {e}')
-
-    if smtp:
-        smtp.quit()
+            else:
+                print(f'  ❌  Erreur → {name} <{email}>')
+            time.sleep(1)
 
     if not dry_run:
         with open(prospects_file, 'w', newline='', encoding='utf-8') as f:
