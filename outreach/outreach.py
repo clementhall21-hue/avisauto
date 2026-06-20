@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 StarReviews — Prospection automatique par email
-Trouve restaurants/hôtels dans la région Aix-Marseille et envoie des cold emails.
+Trouve restaurants/hôtels dans la région Aix-Marseille via OpenStreetMap (100% gratuit).
 
 Usage:
   python outreach.py search          # Trouve les prospects et les sauvegarde dans prospects.csv
@@ -21,24 +21,25 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # ─── Config ───────────────────────────────────────────────────────────────────
-GOOGLE_API_KEY    = os.environ.get('GOOGLE_API_KEY', '')
-GMAIL_USER        = 'starreviewsapp@gmail.com'
+GMAIL_USER         = 'starreviewsapp@gmail.com'
 GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD', '')
 
-SEARCH_QUERIES = [
-    'restaurant Marseille',
-    'restaurant Aix-en-Provence',
-    'restaurant Aubagne',
-    'restaurant Cassis',
-    'restaurant La Ciotat',
-    'restaurant Martigues',
-    'restaurant Salon-de-Provence',
-    'hôtel Marseille',
-    'hôtel Aix-en-Provence',
-    'hôtel Aubagne',
-    'hôtel Cassis',
-    'spa Marseille',
-    'spa Aix-en-Provence',
+# Zones et types de lieux à chercher (OpenStreetMap)
+SEARCHES = [
+    # (type OSM, ville, rayon en mètres)
+    ('restaurant',  'Marseille',         15000),
+    ('restaurant',  'Aix-en-Provence',    8000),
+    ('restaurant',  'Aubagne',            5000),
+    ('restaurant',  'Cassis',             3000),
+    ('restaurant',  'La Ciotat',          4000),
+    ('restaurant',  'Martigues',          5000),
+    ('restaurant',  'Salon-de-Provence',  5000),
+    ('hotel',       'Marseille',         15000),
+    ('hotel',       'Aix-en-Provence',    8000),
+    ('hotel',       'Aubagne',            5000),
+    ('hotel',       'Cassis',             3000),
+    ('spa',         'Marseille',         15000),
+    ('spa',         'Aix-en-Provence',    8000),
 ]
 
 EMAIL_SUBJECT = "Vos avis Google — j'ai quelque chose pour vous"
@@ -60,43 +61,81 @@ Clément — StarReviews
 starreviewsapp@gmail.com
 """
 
-# Domaines à ignorer lors de l'extraction d'emails
 BLOCKED_EMAIL_DOMAINS = {
     'example.com', 'wordpress.com', 'sentry.io', 'jquery.com',
     'schema.org', 'w3.org', 'wixpress.com', 'squarespace.com',
     'cloudflare.com', 'google.com', 'facebook.com', 'instagram.com',
+    'wix.com', 'jimdo.com',
 }
 
-# ─── Google Places ─────────────────────────────────────────────────────────────
-def search_places(query: str) -> list:
-    places = []
-    url = 'https://maps.googleapis.com/maps/api/place/textsearch/json'
-    params = {'query': query, 'key': GOOGLE_API_KEY, 'language': 'fr'}
-
-    while True:
-        resp = requests.get(url, params=params, timeout=10)
-        data = resp.json()
-        places.extend(data.get('results', []))
-
-        next_token = data.get('next_page_token')
-        if not next_token:
-            break
-        time.sleep(2)
-        params = {'pagetoken': next_token, 'key': GOOGLE_API_KEY}
-
-    return places
+# ─── OpenStreetMap (Overpass API) — 100% gratuit ──────────────────────────────
+def geocode_city(city: str) -> tuple[float, float] | None:
+    """Retourne (lat, lon) d'une ville via Nominatim."""
+    url = 'https://nominatim.openstreetmap.org/search'
+    params = {'q': city + ', France', 'format': 'json', 'limit': 1}
+    headers = {'User-Agent': 'StarReviews-outreach/1.0 (starreviewsapp@gmail.com)'}
+    resp = requests.get(url, params=params, headers=headers, timeout=10)
+    results = resp.json()
+    if results:
+        return float(results[0]['lat']), float(results[0]['lon'])
+    return None
 
 
-def get_place_details(place_id: str) -> dict:
-    url = 'https://maps.googleapis.com/maps/api/place/details/json'
-    params = {
-        'place_id': place_id,
-        'fields': 'name,website,formatted_phone_number,formatted_address',
-        'key': GOOGLE_API_KEY,
-        'language': 'fr',
-    }
-    resp = requests.get(url, params=params, timeout=10)
-    return resp.json().get('result', {})
+def search_osm(amenity: str, lat: float, lon: float, radius: int) -> list[dict]:
+    """Cherche des lieux via Overpass API (OpenStreetMap)."""
+    query = f"""
+    [out:json][timeout:25];
+    (
+      node["amenity"="{amenity}"](around:{radius},{lat},{lon});
+      way["amenity"="{amenity}"](around:{radius},{lat},{lon});
+      node["tourism"="hotel"](around:{radius},{lat},{lon});
+      way["tourism"="hotel"](around:{radius},{lat},{lon});
+    );
+    out tags center;
+    """
+    # Pour les hôtels et spas on utilise tourism=hotel / leisure=spa
+    if amenity == 'hotel':
+        query = f"""
+        [out:json][timeout:25];
+        (
+          node["tourism"="hotel"](around:{radius},{lat},{lon});
+          way["tourism"="hotel"](around:{radius},{lat},{lon});
+          node["tourism"="motel"](around:{radius},{lat},{lon});
+        );
+        out tags center;
+        """
+    elif amenity == 'spa':
+        query = f"""
+        [out:json][timeout:25];
+        (
+          node["leisure"="spa"](around:{radius},{lat},{lon});
+          way["leisure"="spa"](around:{radius},{lat},{lon});
+          node["amenity"="spa"](around:{radius},{lat},{lon});
+        );
+        out tags center;
+        """
+
+    resp = requests.post(
+        'https://overpass-api.de/api/interpreter',
+        data={'data': query},
+        timeout=30,
+    )
+    elements = resp.json().get('elements', [])
+
+    results = []
+    for el in elements:
+        tags = el.get('tags', {})
+        name = tags.get('name', '')
+        if not name:
+            continue
+        results.append({
+            'name':    name,
+            'website': tags.get('website', tags.get('contact:website', '')),
+            'email':   tags.get('email', tags.get('contact:email', '')),
+            'phone':   tags.get('phone', tags.get('contact:phone', '')),
+            'address': f"{tags.get('addr:housenumber', '')} {tags.get('addr:street', '')} {tags.get('addr:city', '')}".strip(),
+        })
+    return results
 
 
 # ─── Email extraction ──────────────────────────────────────────────────────────
@@ -116,46 +155,48 @@ def extract_email_from_website(url: str) -> str | None:
 
 # ─── Search mode ───────────────────────────────────────────────────────────────
 def run_search(output_file: str = 'prospects.csv'):
-    if not GOOGLE_API_KEY:
-        print('❌  GOOGLE_API_KEY manquant. Ajoute-le dans le fichier .env')
-        return
-
-    seen_ids: set = set()
+    seen: set = set()
     rows: list = []
 
-    for query in SEARCH_QUERIES:
-        print(f'\n🔍  {query}')
-        places = search_places(query)
+    city_cache: dict = {}
+
+    for (amenity, city, radius) in SEARCHES:
+        print(f'\n🔍  {amenity} — {city}')
+
+        if city not in city_cache:
+            coords = geocode_city(city)
+            if not coords:
+                print(f'  ⚠️  Ville introuvable: {city}')
+                continue
+            city_cache[city] = coords
+            time.sleep(1)
+
+        lat, lon = city_cache[city]
+        places = search_osm(amenity, lat, lon, radius)
+        time.sleep(1)
 
         for place in places:
-            place_id = place['place_id']
-            if place_id in seen_ids:
+            key = place['name'].lower().strip()
+            if key in seen:
                 continue
-            seen_ids.add(place_id)
+            seen.add(key)
 
-            details = get_place_details(place_id)
-            name    = details.get('name', place.get('name', ''))
-            website = details.get('website', '')
-            phone   = details.get('formatted_phone_number', '')
-            address = details.get('formatted_address', '')
+            email = place['email']
 
-            email = None
-            if website:
-                email = extract_email_from_website(website)
+            if not email and place['website']:
+                email = extract_email_from_website(place['website'])
                 time.sleep(0.5)
 
             rows.append({
-                'name': name,
-                'email': email or '',
-                'website': website,
-                'phone': phone,
-                'address': address,
-                'sent': 'non',
+                'name':    place['name'],
+                'email':   email or '',
+                'website': place['website'],
+                'phone':   place['phone'],
+                'address': place['address'],
+                'sent':    'non',
             })
             status = '✅' if email else '❌'
-            print(f'  {status}  {name} — {email or "pas d\'email"}')
-
-        time.sleep(1)
+            print(f"  {status}  {place['name']} — {email or 'pas d\\'email'}")
 
     with open(output_file, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=['name', 'email', 'website', 'phone', 'address', 'sent'])
@@ -170,7 +211,7 @@ def run_search(output_file: str = 'prospects.csv'):
 # ─── Send mode ─────────────────────────────────────────────────────────────────
 def run_send(prospects_file: str = 'prospects.csv', dry_run: bool = False, limit: int = 50):
     if not GMAIL_APP_PASSWORD and not dry_run:
-        print('❌  GMAIL_APP_PASSWORD manquant. Ajoute-le dans le fichier .env')
+        print('❌  GMAIL_APP_PASSWORD manquant dans le fichier .env')
         return
 
     with open(prospects_file, 'r', encoding='utf-8') as f:
@@ -222,10 +263,10 @@ def run_send(prospects_file: str = 'prospects.csv', dry_run: bool = False, limit
 # ─── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='StarReviews Outreach')
-    parser.add_argument('mode', choices=['search', 'send'], help='search: trouve les prospects | send: envoie les emails')
-    parser.add_argument('--dry-run', action='store_true', help='Simuler sans envoyer')
-    parser.add_argument('--limit',   type=int, default=50, help='Nombre max d\'emails par session (défaut: 50)')
-    parser.add_argument('--file',    default='prospects.csv', help='Fichier CSV des prospects')
+    parser.add_argument('mode', choices=['search', 'send'])
+    parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--limit',   type=int, default=50)
+    parser.add_argument('--file',    default='prospects.csv')
     args = parser.parse_args()
 
     if args.mode == 'search':
