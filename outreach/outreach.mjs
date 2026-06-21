@@ -16,12 +16,14 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-// Charge le fichier .env manuellement
-const envPath = path.join(__dirname, '.env')
-if (fs.existsSync(envPath)) {
-  for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
-    const [k, ...v] = line.split('=')
-    if (k && v.length) process.env[k.trim()] = v.join('=').trim()
+// Charge .env ou .env.local
+for (const name of ['.env', '.env.local']) {
+  const envPath = path.join(__dirname, name)
+  if (fs.existsSync(envPath)) {
+    for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
+      const [k, ...v] = line.split('=')
+      if (k && v.length) process.env[k.trim()] = v.join('=').trim()
+    }
   }
 }
 
@@ -70,13 +72,14 @@ const BLOCKED_DOMAINS = ['example.com','wordpress.com','sentry.io','schema.org',
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
 
 async function fetchJson(url, opts = {}) {
-  const res = await fetch(url, { headers: { 'User-Agent': 'StarReviews-outreach/1.0' }, ...opts })
-  return res.json()
+  const res = await fetch(url, { headers: { 'User-Agent': 'StarReviews-outreach/1.0 (starreviewsapp@gmail.com)' }, ...opts })
+  const text = await res.text()
+  try { return JSON.parse(text) } catch { return null }
 }
 
 async function geocodeCity(city) {
   const data = await fetchJson(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city + ', France')}&format=json&limit=1`)
-  if (data[0]) return [parseFloat(data[0].lat), parseFloat(data[0].lon)]
+  if (Array.isArray(data) && data[0]) return [parseFloat(data[0].lat), parseFloat(data[0].lon)]
   return null
 }
 
@@ -92,7 +95,9 @@ async function searchOSM(amenity, lat, lon, radius) {
   const res = await fetch('https://overpass-api.de/api/interpreter', {
     method: 'POST', body: new URLSearchParams({ data: query })
   })
-  const data = await res.json()
+  const text = await res.text()
+  let data
+  try { data = JSON.parse(text) } catch { return [] }
   return (data.elements || []).map(el => {
     const t = el.tags || {}
     return {
