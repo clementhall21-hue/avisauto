@@ -107,7 +107,15 @@ async function searchOSM(amenity, lat, lon, radius, retry = 0) {
   const url = servers[retry % servers.length]
   let text
   try {
-    const res = await fetch(url, { method: 'POST', body: new URLSearchParams({ data: query }), signal: AbortSignal.timeout(30000) })
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'StarReviews-outreach/1.0 (starreviewsapp@gmail.com)',
+      },
+      body: new URLSearchParams({ data: query }),
+      signal: AbortSignal.timeout(30000),
+    })
     text = await res.text()
   } catch {
     if (retry < 2) { await sleep(3000); return searchOSM(amenity, lat, lon, radius, retry + 1) }
