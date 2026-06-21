@@ -115,9 +115,11 @@ async function searchOSM(amenity, lat, lon, radius, retry = 0) {
   }
   let data
   try { data = JSON.parse(text) } catch {
+    console.log('  ⚠️  Réponse API non-JSON:', text.slice(0, 200))
     if (retry < 2) { await sleep(3000); return searchOSM(amenity, lat, lon, radius, retry + 1) }
     return []
   }
+  console.log(`  ℹ️  ${data.elements?.length ?? 0} éléments bruts reçus`)
   return (data.elements || []).map(el => {
     const t = el.tags || {}
     return {
