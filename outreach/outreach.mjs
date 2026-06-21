@@ -31,6 +31,17 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY || ''
 const SENDER_EMAIL  = 'starreviewsapp@gmail.com'
 const SENDER_NAME   = 'Clément — StarReviews'
 
+// Coordonnées hardcodées pour éviter les rate limits de Nominatim
+const CITY_COORDS = {
+  'Marseille':         [43.2965, 5.3698],
+  'Aix-en-Provence':  [43.5297, 5.4474],
+  'Aubagne':           [43.2967, 5.5709],
+  'Cassis':            [43.2140, 5.5389],
+  'La Ciotat':         [43.1742, 5.6083],
+  'Martigues':         [43.4054, 5.0471],
+  'Salon-de-Provence': [43.6408, 5.0979],
+}
+
 const SEARCHES = [
   ['restaurant', 'Marseille',        15000],
   ['restaurant', 'Aix-en-Provence',   8000],
@@ -83,7 +94,7 @@ async function geocodeCity(city) {
   return null
 }
 
-async function searchOSM(amenity, lat, lon, radius) {
+async function searchOSM(amenity, lat, lon, radius, retry = 0) {
   let query
   if (amenity === 'hotel') {
     query = `[out:json][timeout:25];(node["tourism"="hotel"](around:${radius},${lat},${lon});way["tourism"="hotel"](around:${radius},${lat},${lon}););out tags center;`
@@ -92,12 +103,21 @@ async function searchOSM(amenity, lat, lon, radius) {
   } else {
     query = `[out:json][timeout:25];(node["amenity"="${amenity}"](around:${radius},${lat},${lon});way["amenity"="${amenity}"](around:${radius},${lat},${lon}););out tags center;`
   }
-  const res = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST', body: new URLSearchParams({ data: query })
-  })
-  const text = await res.text()
+  const servers = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter']
+  const url = servers[retry % servers.length]
+  let text
+  try {
+    const res = await fetch(url, { method: 'POST', body: new URLSearchParams({ data: query }), signal: AbortSignal.timeout(30000) })
+    text = await res.text()
+  } catch {
+    if (retry < 2) { await sleep(3000); return searchOSM(amenity, lat, lon, radius, retry + 1) }
+    return []
+  }
   let data
-  try { data = JSON.parse(text) } catch { return [] }
+  try { data = JSON.parse(text) } catch {
+    if (retry < 2) { await sleep(3000); return searchOSM(amenity, lat, lon, radius, retry + 1) }
+    return []
+  }
   return (data.elements || []).map(el => {
     const t = el.tags || {}
     return {
@@ -152,10 +172,15 @@ async function runSearch(outputFile = 'prospects.csv') {
     console.log(`\n🔍  ${amenity} — ${city}`)
 
     if (!cityCache[city]) {
-      const coords = await geocodeCity(city)
-      if (!coords) { console.log(`  ⚠️  Ville introuvable: ${city}`); continue }
-      cityCache[city] = coords
-      await sleep(1000)
+      // Utilise les coordonnées hardcodées, sinon Nominatim
+      if (CITY_COORDS[city]) {
+        cityCache[city] = CITY_COORDS[city]
+      } else {
+        const coords = await geocodeCity(city)
+        if (!coords) { console.log(`  ⚠️  Ville introuvable: ${city}`); continue }
+        cityCache[city] = coords
+        await sleep(1000)
+      }
     }
 
     const [lat, lon] = cityCache[city]
