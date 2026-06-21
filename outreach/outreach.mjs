@@ -60,21 +60,27 @@ const SEARCHES = [
 
 const EMAIL_SUBJECT = "Vos avis Google — j'ai quelque chose pour vous"
 
-const EMAIL_BODY = (name) => `Bonjour ${name},
+const EMAIL_BODY = (name, type = 'restaurant') => {
+  const typeLabel = type === 'hotel' ? 'votre hôtel' : type === 'spa' ? 'votre établissement' : 'votre restaurant'
+  return `Bonjour,
 
-Je m'appelle Clément, j'ai créé StarReviews — un outil qui répond automatiquement à vos avis Google avec l'IA.
+Je m'appelle Thibault, j'ai 17 ans et j'ai développé StarReviews, un outil qui répond automatiquement à vos avis Google grâce à l'IA.
 
-Plus besoin de passer du temps chaque semaine à rédiger des réponses. StarReviews s'en charge pour vous, dans le ton que vous choisissez, en quelques secondes.
+En tant que gérant de ${typeLabel} "${name}", vous savez sûrement à quel point répondre aux avis prend du temps — et pourtant c'est essentiel pour votre référencement et votre image.
 
-→ 14 jours gratuits, sans carte bancaire
+StarReviews le fait pour vous, en quelques secondes, dans le ton que vous choisissez.
+
+→ 14 jours d'essai gratuit, sans carte bancaire
 → starreviews.vercel.app
 
-Ça vous intéresse ? Je peux vous faire une démo rapide.
+Pour plus d'informations ou une démo rapide, vous pouvez me contacter directement au 07 84 73 74 10.
 
 Bonne journée,
-Clément — StarReviews
+Thibault — StarReviews
+07 84 73 74 10
 starreviewsapp@gmail.com
 `
+}
 
 const BLOCKED_DOMAINS = ['example.com','wordpress.com','sentry.io','schema.org',
   'w3.org','cloudflare.com','google.com','facebook.com','instagram.com','wix.com']
@@ -169,7 +175,7 @@ function readCsv(file) {
 }
 
 function writeCsv(file, rows) {
-  const headers = ['name','email','website','phone','address','sent']
+  const headers = ['name','email','website','phone','address','type','sent']
   const lines = [headers.join(','), ...rows.map(r => headers.map(h => (r[h] || '').replace(/,/g, ' ')).join(','))]
   fs.writeFileSync(file, lines.join('\n'), 'utf8')
 }
@@ -210,7 +216,7 @@ async function runSearch(outputFile = 'prospects.csv') {
         await sleep(500)
       }
 
-      rows.push({ ...place, email: email || '', sent: 'non' })
+      rows.push({ ...place, email: email || '', type: amenity, sent: 'non' })
       console.log(`  ${email ? '✅' : '❌'}  ${place.name} — ${email || 'pas d\'email'}`)
     }
   }
@@ -245,7 +251,7 @@ async function runSend(prospectsFile = 'prospects.csv', dryRun = false, limit = 
         sender:      { name: SENDER_NAME, email: SENDER_EMAIL },
         to:          [{ email: row.email, name: row.name }],
         subject:     EMAIL_SUBJECT,
-        textContent: EMAIL_BODY(row.name),
+        textContent: EMAIL_BODY(row.name, row.type || 'restaurant'),
       }),
     })
     if (res.ok) {
