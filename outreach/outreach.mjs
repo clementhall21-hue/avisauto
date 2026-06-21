@@ -140,19 +140,21 @@ async function searchOSM(amenity, lat, lon, radius, retry = 0) {
   }).filter(p => p.name)
 }
 
-async function extractEmailFromWebsite(url) {
-  try {
-    const res = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      signal: AbortSignal.timeout(8000),
-    })
-    const html = await res.text()
-    const matches = html.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g) || []
-    const filtered = matches.filter(e => !BLOCKED_DOMAINS.some(d => e.toLowerCase().includes(d)))
-    return filtered[0]?.toLowerCase() || null
-  } catch {
-    return null
+async function extractEmailFromWebsite(siteUrl) {
+  const pagesToTry = [siteUrl, siteUrl.replace(/\/?$/, '/contact'), siteUrl.replace(/\/?$/, '/nous-contacter')]
+  for (const url of pagesToTry) {
+    try {
+      const res = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+        signal: AbortSignal.timeout(6000),
+      })
+      const html = await res.text()
+      const matches = html.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g) || []
+      const filtered = matches.filter(e => !BLOCKED_DOMAINS.some(d => e.toLowerCase().includes(d)))
+      if (filtered[0]) return filtered[0].toLowerCase()
+    } catch { /* continue */ }
   }
+  return null
 }
 
 // ─── CSV ──────────────────────────────────────────────────────────────────────
@@ -260,11 +262,30 @@ async function runSend(prospectsFile = 'prospects.csv', dryRun = false, limit = 
   console.log(`\n✅  ${sentCount} emails envoyés`)
 }
 
+// ─── Auto mode (search + send en boucle toutes les 23h) ──────────────────────
+async function runAuto(prospectsFile = 'prospects.csv', dailyLimit = 10) {
+  let round = 1
+  while (true) {
+    console.log(`\n${'─'.repeat(50)}`)
+    console.log(`🔄  Tour ${round} — ${new Date().toLocaleString('fr-FR')}`)
+    console.log('─'.repeat(50))
+
+    await runSearch(prospectsFile)
+    await runSend(prospectsFile, false, dailyLimit)
+
+    const nextRun = new Date(Date.now() + 23 * 60 * 60 * 1000)
+    console.log(`\n⏰  Prochain envoi dans 23h (${nextRun.toLocaleString('fr-FR')})`)
+    console.log('   Laisse cette fenêtre ouverte.')
+    round++
+    await sleep(23 * 60 * 60 * 1000)
+  }
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 const [,, mode, ...flags] = process.argv
 const dryRun = flags.includes('--dry-run')
 const limitIdx = flags.indexOf('--limit')
-const limit = limitIdx >= 0 ? parseInt(flags[limitIdx + 1]) : 50
+const limit = limitIdx >= 0 ? parseInt(flags[limitIdx + 1]) : 10
 const fileIdx = flags.indexOf('--file')
 const file = fileIdx >= 0 ? flags[fileIdx + 1] : 'prospects.csv'
 
@@ -272,6 +293,9 @@ if (mode === 'search') {
   runSearch(file)
 } else if (mode === 'send') {
   runSend(file, dryRun, limit)
+} else if (mode === 'auto') {
+  runAuto(file, limit)
 } else {
-  console.log('Usage: node outreach.mjs search | send [--dry-run] [--limit N]')
+  console.log('Usage: node outreach.mjs search | send | auto [--limit N]')
+  console.log('  auto  → cherche + envoie automatiquement toutes les 23h')
 }
