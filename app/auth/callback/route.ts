@@ -23,11 +23,22 @@ export async function GET(request: NextRequest) {
         .maybeSingle()
 
       if (!existing) {
+        const baseSlug = businessName
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+        const slug = baseSlug
+          ? `${baseSlug}-${userId.slice(0, 4)}`
+          : `etablissement-${userId.slice(0, 8)}`
+
         await supabase.from('establishments').insert({
           user_id: userId,
           name: businessName,
           signature: fullName,
           tone: 'Professionnel',
+          slug,
         })
       }
 

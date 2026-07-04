@@ -3,7 +3,7 @@
 import { useEffect, useState, createContext, useContext } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut, CheckCircle } from 'lucide-react'
+import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut, CheckCircle, QrCode } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { ToastProvider, useToast } from '@/components/Toast'
 import { cn } from '@/lib/utils'
@@ -19,6 +19,9 @@ export interface Establishment {
   groq_api_key: string | null
   zapier_webhook_url: string | null
   zapier_triggers: Record<string, boolean>
+  slug: string | null
+  google_review_url: string | null
+  logo_url: string | null
 }
 
 export type SubscriptionState = {
@@ -110,8 +113,9 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       icon: LayoutDashboard,
       badge: pendingCount > 0 ? pendingCount : null,
     },
-    { href: '/dashboard/analytics', label: 'Analytiques', icon: BarChart2 },
-    { href: '/dashboard/settings', label: 'Paramètres', icon: Settings },
+    { href: '/dashboard/collect', label: 'Collecter des avis', icon: QrCode, badge: null },
+    { href: '/dashboard/analytics', label: 'Analytiques', icon: BarChart2, badge: null },
+    { href: '/dashboard/settings', label: 'Paramètres', icon: Settings, badge: null },
   ]
 
   const trialDaysLeft = subscription?.trial_ends_at
@@ -144,7 +148,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           >
             <item.icon size={16} />
             {item.label}
-            {item.badge !== null && (
+            {item.badge != null && (
               <span className="ml-auto bg-[#f43f5e] text-white text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-none">
                 {item.badge}
               </span>
