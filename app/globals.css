@@ -18,8 +18,8 @@
   --amber: #f59e0b;
   --rose: #f43f5e;
   --text-muted: #8892b0;
-  --border: rgba(255, 255, 255, 0.07);
-  --card-bg: rgba(255, 255, 255, 0.03);
+  --border: #ECECEA;
+  --card-bg: #FFFFFF;
 }
 
 * {
@@ -34,8 +34,8 @@ html {
 
 body {
   font-family: 'Inter', 'DM Sans', sans-serif;
-  background: var(--navy);
-  color: var(--white);
+  background: #FAFAF8;
+  color: #17181C;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -49,27 +49,27 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--navy-mid);
+  background: #F0F0EE;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.18);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* Selection */
 ::selection {
-  background: rgba(99, 102, 241, 0.3);
-  color: var(--white);
+  background: rgba(228, 87, 46, 0.2);
+  color: #17181C;
 }
 
 /* Focus ring */
 *:focus-visible {
-  outline: 2px solid var(--indigo);
+  outline: 2px solid #E4572E;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -134,8 +134,8 @@ body {
 
 .btn-outline {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: var(--white);
+  border: 1px solid #D9D9D7;
+  color: #17181C;
   padding: 9px 20px;
   border-radius: 8px;
   font-family: inherit;
@@ -150,7 +150,7 @@ body {
 
 .btn-outline:hover {
   border-color: #E4572E;
-  color: #FF8A62;
+  color: #C2481F;
   background: rgba(228, 87, 46, 0.06);
 }
 
@@ -163,9 +163,9 @@ body {
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 100%
+    rgba(0, 0, 0, 0.03) 0%,
+    rgba(0, 0, 0, 0.07) 50%,
+    rgba(0, 0, 0, 0.03) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;

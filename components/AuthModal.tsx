@@ -144,16 +144,16 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
   }
 
   const inputClass =
-    'w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] rounded-lg px-4 py-[11px] text-[#e8eaf6] text-base outline-none transition-colors placeholder-[#8892b0] focus:border-[#6366f1]'
-  const labelClass = 'block text-xs font-semibold text-[#8892b0] mb-1.5'
+    'w-full bg-[#FAFAF8] border border-[#ECECEA] rounded-lg px-4 py-[11px] text-[#17181C] text-base outline-none transition-colors placeholder-[#666A72] focus:border-[#6366f1]'
+  const labelClass = 'block text-xs font-semibold text-[#666A72] mb-1.5'
 
   return (
     <Dialog.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-[calc(100vw-32px)] max-w-[420px] bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-2xl p-6 md:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.6)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 overflow-y-auto max-h-[90vh]">
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-[calc(100vw-32px)] max-w-[420px] bg-white border border-[#E3E3E1] rounded-2xl p-6 md:p-10 shadow-[0_24px_80px_rgba(0,0,0,0.14)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 overflow-y-auto max-h-[90vh]">
           <Dialog.Close asChild>
-            <button className="absolute top-4 right-4 text-[#8892b0] hover:text-[#e8eaf6] transition-colors" aria-label="Fermer">
+            <button className="absolute top-4 right-4 text-[#666A72] hover:text-[#17181C] transition-colors" aria-label="Fermer">
               <X size={18} />
             </button>
           </Dialog.Close>
@@ -161,17 +161,17 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
           {emailSent ? (
             <div className="text-center py-4">
               <div className="text-5xl mb-5">📬</div>
-              <Dialog.Title className="text-[1.3rem] font-bold mb-3 text-[#e8eaf6]">
+              <Dialog.Title className="text-[1.3rem] font-bold mb-3 text-[#17181C]">
                 Vérifiez votre boîte mail
               </Dialog.Title>
-              <Dialog.Description className="text-[#8892b0] text-sm leading-relaxed mb-4">
+              <Dialog.Description className="text-[#666A72] text-sm leading-relaxed mb-4">
                 Un email de confirmation a été envoyé à<br />
-                <span className="text-[#e8eaf6] font-semibold">{sentToEmail}</span>
+                <span className="text-[#17181C] font-semibold">{sentToEmail}</span>
               </Dialog.Description>
-              <div className="bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] rounded-xl px-4 py-3 text-sm text-[#8892b0] mb-6 leading-relaxed">
-                👆 <span className="text-[#e8eaf6] font-medium">Cliquez sur le lien dans cet email</span> pour activer votre compte et accéder au tableau de bord.
+              <div className="bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] rounded-xl px-4 py-3 text-sm text-[#666A72] mb-6 leading-relaxed">
+                👆 <span className="text-[#17181C] font-medium">Cliquez sur le lien dans cet email</span> pour activer votre compte et accéder au tableau de bord.
               </div>
-              <p className="text-xs text-[#8892b0]">
+              <p className="text-xs text-[#666A72]">
                 Pas reçu ? Vérifiez vos spams ou{' '}
                 <button
                   type="button"
@@ -184,10 +184,10 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
             </div>
           ) : mode === 'login' ? (
             <form onSubmit={handleLogin}>
-              <Dialog.Title className="text-[1.4rem] font-bold mb-1.5 text-[#e8eaf6]">
+              <Dialog.Title className="text-[1.4rem] font-bold mb-1.5 text-[#17181C]">
                 Connexion
               </Dialog.Title>
-              <Dialog.Description className="text-[#8892b0] text-sm mb-7">
+              <Dialog.Description className="text-[#666A72] text-sm mb-7">
                 Accédez à votre tableau de bord
               </Dialog.Description>
 
@@ -232,9 +232,9 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               </button>
 
               <div className="flex items-center gap-3 my-4">
-                <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
-                <span className="text-xs text-[#8892b0]">ou</span>
-                <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+                <div className="flex-1 h-px bg-[#ECECEA]" />
+                <span className="text-xs text-[#666A72]">ou</span>
+                <div className="flex-1 h-px bg-[#ECECEA]" />
               </div>
 
               <button
@@ -247,12 +247,12 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
                 Continuer avec Google
               </button>
 
-              <p className="text-center mt-4 text-sm text-[#8892b0]">
+              <p className="text-center mt-4 text-sm text-[#666A72]">
                 Pas encore de compte ?{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('signup'); setError('') }}
-                  className="text-[#FF8A62] hover:underline"
+                  className="text-[#C2481F] hover:underline"
                 >
                   Créer un compte
                 </button>
@@ -260,10 +260,10 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
             </form>
           ) : (
             <form onSubmit={handleSignup}>
-              <Dialog.Title className="text-[1.4rem] font-bold mb-1.5 text-[#e8eaf6]">
+              <Dialog.Title className="text-[1.4rem] font-bold mb-1.5 text-[#17181C]">
                 Démarrer l&apos;essai
               </Dialog.Title>
-              <Dialog.Description className="text-[#8892b0] text-sm mb-7 leading-relaxed">
+              <Dialog.Description className="text-[#666A72] text-sm mb-7 leading-relaxed">
                 14 jours gratuits · Sans carte bancaire · Annulation en 1 clic
               </Dialog.Description>
 
@@ -333,9 +333,9 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               </button>
 
               <div className="flex items-center gap-3 my-4">
-                <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
-                <span className="text-xs text-[#8892b0]">ou</span>
-                <div className="flex-1 h-px bg-[rgba(255,255,255,0.07)]" />
+                <div className="flex-1 h-px bg-[#ECECEA]" />
+                <span className="text-xs text-[#666A72]">ou</span>
+                <div className="flex-1 h-px bg-[#ECECEA]" />
               </div>
 
               <button
@@ -348,12 +348,12 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
                 Continuer avec Google
               </button>
 
-              <p className="text-center mt-4 text-sm text-[#8892b0]">
+              <p className="text-center mt-4 text-sm text-[#666A72]">
                 Déjà un compte ?{' '}
                 <button
                   type="button"
                   onClick={() => { setMode('login'); setError('') }}
-                  className="text-[#FF8A62] hover:underline"
+                  className="text-[#C2481F] hover:underline"
                 >
                   Se connecter
                 </button>
