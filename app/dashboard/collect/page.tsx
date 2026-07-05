@@ -152,6 +152,9 @@ export default function CollectPage() {
     setFeedbacks((prev) => prev.map((f) => (f.id === id ? { ...f, status } : f)))
   }
 
+  const commented = feedbacks.filter((f) => f.comment.trim().length > 0)
+  const ratingOnly = feedbacks.filter((f) => f.comment.trim().length === 0)
+
   if (!est) return null
 
   return (
@@ -237,26 +240,34 @@ export default function CollectPage() {
         </div>
       </div>
 
-      {/* Feedbacks privés */}
+      {/* Feedbacks privés — seuls ceux avec un commentaire sont listés,
+          les notes seules (4-5★ sans message) sont résumées en statistique */}
       <h2 className="text-base font-bold mb-3 flex items-center gap-2">
         <MessageSquare size={16} className="text-[#818cf8]" />
         Retours privés
-        {feedbacks.filter((f) => f.status === 'nouveau').length > 0 && (
+        {commented.filter((f) => f.status === 'nouveau').length > 0 && (
           <span className="bg-[#f43f5e] text-white text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full leading-none">
-            {feedbacks.filter((f) => f.status === 'nouveau').length}
+            {commented.filter((f) => f.status === 'nouveau').length}
           </span>
         )}
       </h2>
 
+      {ratingOnly.length > 0 && (
+        <p className="text-xs text-[#8892b0] mb-3">
+          ⭐ {ratingOnly.length} note{ratingOnly.length > 1 ? 's' : ''} laissée{ratingOnly.length > 1 ? 's' : ''} via le QR code sans commentaire
+          (moyenne {(ratingOnly.reduce((s, f) => s + f.rating, 0) / ratingOnly.length).toFixed(1)}/5)
+        </p>
+      )}
+
       {loadingFeedbacks ? (
         <p className="text-sm text-[#8892b0]">Chargement…</p>
-      ) : feedbacks.length === 0 ? (
+      ) : commented.length === 0 ? (
         <div className="bg-[rgba(15,30,60,0.5)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-8 text-center text-sm text-[#8892b0]">
           Aucun retour pour le moment. Ils apparaîtront ici dès qu&apos;un client scannera votre QR code.
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {feedbacks.map((f) => (
+          {commented.map((f) => (
             <div
               key={f.id}
               className="bg-[rgba(15,30,60,0.5)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4 flex flex-col gap-2"
