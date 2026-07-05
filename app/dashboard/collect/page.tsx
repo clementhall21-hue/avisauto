@@ -28,6 +28,7 @@ export default function CollectPage() {
 
   const [slug, setSlug] = useState('')
   const [googleUrl, setGoogleUrl] = useState('')
+  const [accent, setAccent] = useState('#E4572E')
   const [saving, setSaving] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([])
@@ -38,12 +39,14 @@ export default function CollectPage() {
     slug?: string | null
     google_review_url?: string | null
     logo_url?: string | null
+    accent_color?: string | null
   }) | null
 
   useEffect(() => {
     if (!est) return
     setSlug(est.slug || '')
     setGoogleUrl(est.google_review_url || '')
+    setAccent(est.accent_color || '#E4572E')
   }, [est])
 
   // Génère le QR (affichage écran, 512px)
@@ -85,7 +88,7 @@ export default function CollectPage() {
     setSaving(true)
     const { data, error } = await supabase
       .from('establishments')
-      .update({ slug: cleanSlug, google_review_url: googleUrl.trim() || null })
+      .update({ slug: cleanSlug, google_review_url: googleUrl.trim() || null, accent_color: accent })
       .eq('id', est.id)
       .select()
       .single()
@@ -228,6 +231,20 @@ export default function CollectPage() {
             <p className="text-[0.7rem] text-[#8892b0] mt-1.5 leading-relaxed">
               Sur Google Maps : votre fiche → « Demander des avis » → copiez le lien.
             </p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#8892b0] mb-1.5">Couleur de votre page</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={accent}
+                onChange={(e) => setAccent(e.target.value)}
+                className="w-10 h-10 rounded-lg border border-[rgba(255,255,255,0.1)] bg-transparent cursor-pointer p-0.5"
+              />
+              <span className="text-sm text-[#e8eaf6] font-mono">{accent}</span>
+            </div>
+            <p className="text-[0.7rem] text-[#8892b0] mt-1.5">Utilisée sur la page que vos clients scannent (logo, boutons).</p>
           </div>
 
           <button

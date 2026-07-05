@@ -13,7 +13,7 @@ async function getEstablishment(slug: string) {
   const supabase = await createServiceClient()
   const { data } = await supabase
     .from('establishments')
-    .select('id, name, logo_url, google_review_url')
+    .select('id, name, logo_url, google_review_url, accent_color')
     .eq('slug', slug)
     .maybeSingle()
   return data
@@ -37,6 +37,7 @@ export default async function PublicReviewPage({ params }: { params: { slug: str
       name={est.name}
       logoUrl={est.logo_url}
       googleReviewUrl={est.google_review_url}
+      accentColor={est.accent_color || '#E4572E'}
     />
   )
 }
