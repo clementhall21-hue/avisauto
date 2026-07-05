@@ -7,6 +7,9 @@ alter table public.establishments
   add column if not exists google_review_url text,
   add column if not exists logo_url text;
 
+-- unaccent est nécessaire pour slugify (doit exister avant la fonction)
+create extension if not exists unaccent;
+
 -- Génère un slug à partir d'un nom (minuscules, sans accents, tirets)
 create or replace function public.slugify(input text)
 returns text
@@ -18,9 +21,6 @@ as $$
     '[^a-z0-9]+', '-', 'g'
   ));
 $$;
-
--- unaccent est nécessaire pour slugify
-create extension if not exists unaccent;
 
 -- Backfill: slug pour les établissements existants (suffixe court si collision)
 update public.establishments e
@@ -61,6 +61,7 @@ alter table public.feedbacks enable row level security;
 -- Seul le gérant propriétaire lit / met à jour ses feedbacks.
 -- L'insertion publique passe par l'API server-side (service role),
 -- donc aucune policy anon nécessaire.
+drop policy if exists "Owners can read their feedbacks" on public.feedbacks;
 create policy "Owners can read their feedbacks"
   on public.feedbacks for select
   using (
@@ -69,6 +70,7 @@ create policy "Owners can read their feedbacks"
     )
   );
 
+drop policy if exists "Owners can update their feedbacks" on public.feedbacks;
 create policy "Owners can update their feedbacks"
   on public.feedbacks for update
   using (
@@ -77,6 +79,7 @@ create policy "Owners can update their feedbacks"
     )
   );
 
+drop policy if exists "Owners can delete their feedbacks" on public.feedbacks;
 create policy "Owners can delete their feedbacks"
   on public.feedbacks for delete
   using (
