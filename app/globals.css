@@ -97,22 +97,22 @@ body {
 
 /* Utility classes */
 .gradient-text {
-  background: linear-gradient(135deg, #818cf8 0%, #06b6d4 50%, #34d399 100%);
+  background: linear-gradient(135deg, #FFB020 0%, #FF7A50 50%, #E4572E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-logo {
-  background: linear-gradient(135deg, #818cf8, #06b6d4);
+  background: linear-gradient(135deg, #FFB020, #E4572E);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .btn-primary {
-  background: #34d399;
-  color: #0b0f1e;
+  background: #E4572E;
+  color: #ffffff;
   border: none;
   padding: 10px 22px;
   border-radius: 10px;
@@ -127,9 +127,9 @@ body {
 }
 
 .btn-primary:hover {
-  background: #6ee7b7;
+  background: #FF7A50;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.35);
+  box-shadow: 0 6px 20px rgba(228, 87, 46, 0.35);
 }
 
 .btn-outline {
@@ -149,9 +149,9 @@ body {
 }
 
 .btn-outline:hover {
-  border-color: var(--green);
-  color: var(--green);
-  background: rgba(52, 211, 153, 0.05);
+  border-color: #E4572E;
+  color: #FF8A62;
+  background: rgba(228, 87, 46, 0.06);
 }
 
 .card {

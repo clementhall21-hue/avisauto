@@ -40,12 +40,12 @@ const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> 
 }
 
 const FEATURES = [
-  { icon: '📱', title: 'Collecte d\'avis par QR code', desc: 'Un QR code à poser sur vos tables : les clients satisfaits publient sur Google, les mécontents vous parlent en privé. PDF prêt à imprimer inclus.', color: 'rgba(52,211,153,0.15)', glow: '52,211,153' },
+  { icon: '📱', title: 'Collecte d\'avis par QR code', desc: 'Un QR code à poser sur vos tables : les clients satisfaits publient sur Google, les mécontents vous parlent en privé. PDF prêt à imprimer inclus.', color: 'rgba(228,87,46,0.15)', glow: '52,211,153' },
   { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)', glow: '99,102,241' },
   { icon: '✍️', title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble.", color: 'rgba(6,182,212,0.15)', glow: '6,182,212' },
   { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)', glow: '167,139,250' },
   { icon: '⚡', title: 'Rapport IA sur vos points faibles', desc: "En un clic, l'IA analyse tous vos avis négatifs et vous génère un rapport clair : ce que vos clients reprochent, les problèmes récurrents, et les actions concrètes à mener pour améliorer votre réputation.", color: 'rgba(244,63,94,0.15)', glow: '244,63,94' },
-  { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(52,211,153,0.15)', glow: '52,211,153' },
+  { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(228,87,46,0.15)', glow: '52,211,153' },
   { icon: '📊', title: 'Tableau de bord unifié', desc: 'Suivez votre note moyenne, le volume d\'avis et votre taux de réponse.', color: 'rgba(245,158,11,0.15)', glow: '245,158,11' },
   { icon: '🔒', title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.', color: 'rgba(244,63,94,0.15)', glow: '244,63,94' },
 ]
@@ -117,7 +117,7 @@ export default function LandingPage() {
         <ul className="hidden md:flex items-center gap-8 list-none">
           {navLinks.map(([href, label]) => (
             <li key={href}>
-              <a href={href} className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[0.9rem] font-medium transition-colors no-underline">
+              <a href={href} className="text-[rgba(255,255,255,0.88)] hover:text-[#FF8A62] text-[0.9rem] font-medium transition-colors no-underline">
                 {label}
               </a>
             </li>
@@ -139,7 +139,7 @@ export default function LandingPage() {
             </button>
             <button
               onClick={() => setModalType('signup')}
-              style={{ fontSize: '0.72rem', padding: '6px 12px', borderRadius: '8px', background: '#34d399', color: '#0b0f1e', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
+              style={{ fontSize: '0.72rem', padding: '6px 12px', borderRadius: '8px', background: '#E4572E', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
             >
               Essai gratuit
             </button>
@@ -180,7 +180,7 @@ export default function LandingPage() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-[rgba(255,255,255,0.07)]">
-            <span className="font-extrabold text-lg gradient-text-logo">StarReviews<span style={{ color: '#34d399' }}>.</span></span>
+            <span className="font-extrabold text-lg gradient-text-logo">StarReviews<span style={{ color: '#E4572E' }}>.</span></span>
             <button onClick={() => setMobileMenuOpen(false)} className="text-[#8892b0] hover:text-[#e8eaf6] p-1">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                 <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -192,7 +192,7 @@ export default function LandingPage() {
               key={href}
               href={href}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-[rgba(255,255,255,0.88)] hover:text-[#34d399] text-[1rem] font-medium py-3 px-2 rounded-lg hover:bg-[rgba(255,255,255,0.04)] transition-colors no-underline"
+              className="text-[rgba(255,255,255,0.88)] hover:text-[#FF8A62] text-[1rem] font-medium py-3 px-2 rounded-lg hover:bg-[rgba(255,255,255,0.04)] transition-colors no-underline"
             >
               {label}
             </a>
@@ -231,7 +231,7 @@ export default function LandingPage() {
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-[0.75rem] font-semibold px-3.5 py-1.5 rounded-full mb-8 tracking-[0.05em] uppercase"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-[pulseDot_2s_infinite]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E4572E] animate-[pulseDot_2s_infinite]" />
           Pour les restaurants et hôtels
         </motion.div>
 
@@ -245,7 +245,7 @@ export default function LandingPage() {
           <em
             className="not-italic"
             style={{
-              background: 'linear-gradient(135deg, #818cf8 0%, #06b6d4 50%, #34d399 100%)',
+              background: 'linear-gradient(135deg, #FFB020 0%, #FF7A50 50%, #E4572E 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -274,13 +274,13 @@ export default function LandingPage() {
         >
           <button
             onClick={() => setModalType('signup')}
-            className="border-2 border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-[#0b0f1e] px-6 md:px-8 py-3 md:py-3.5 rounded-[10px] font-semibold text-[0.95rem] md:text-[1rem] transition-all min-h-[44px]"
+            className="border-2 border-[#E4572E] text-[#FF8A62] hover:bg-[#E4572E] hover:text-white px-6 md:px-8 py-3 md:py-3.5 rounded-[10px] font-semibold text-[0.95rem] md:text-[1rem] transition-all min-h-[44px]"
           >
             Essayer gratuitement
           </button>
           <a
             href="#pricing"
-            className="bg-[#34d399] text-[#0b0f1e] border-2 border-[#34d399] hover:bg-[#6ee7b7] hover:border-[#6ee7b7] px-6 md:px-8 py-3 md:py-3.5 rounded-[10px] font-bold text-[0.95rem] md:text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(52,211,153,0.25)] no-underline inline-flex items-center gap-2 min-h-[44px]"
+            className="bg-[#E4572E] text-white border-2 border-[#E4572E] hover:bg-[#FF7A50] hover:border-[#FF7A50] px-6 md:px-8 py-3 md:py-3.5 rounded-[10px] font-bold text-[0.95rem] md:text-[1rem] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(228,87,46,0.25)] no-underline inline-flex items-center gap-2 min-h-[44px]"
           >
             Voir les tarifs <span>→</span>
           </a>
@@ -325,9 +325,9 @@ export default function LandingPage() {
                     <div className="text-[0.82rem] font-semibold text-[#e8eaf6] mb-0.5">{r.name}</div>
                     <div className="text-[0.75rem] text-[#f59e0b] mb-1">{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</div>
                     <div className="text-[0.8rem] text-[#8892b0] mb-2">{r.text}</div>
-                    <div className="border-l-2 border-[#34d399] pl-2">
-                      <span className="inline-block text-[0.65rem] bg-[rgba(52,211,153,0.12)] text-[#34d399] px-1.5 py-0.5 rounded font-semibold mb-1">IA · {r.tag}</span>
-                      <div className="text-[0.78rem] text-[#34d399] leading-[1.4]">{r.reply}</div>
+                    <div className="border-l-2 border-[#E4572E] pl-2">
+                      <span className="inline-block text-[0.65rem] bg-[rgba(228,87,46,0.12)] text-[#FF8A62] px-1.5 py-0.5 rounded font-semibold mb-1">IA · {r.tag}</span>
+                      <div className="text-[0.78rem] text-[#FF8A62] leading-[1.4]">{r.reply}</div>
                     </div>
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export default function LandingPage() {
       {/* ── COMMENT ÇA MARCHE ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="how">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Simple comme bonjour</div>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#FF8A62] mb-3">Simple comme bonjour</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Comment ça fonctionne</h2>
           <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Trois étapes. Aucune compétence technique requise.</p>
         </FadeUp>
@@ -402,7 +402,7 @@ export default function LandingPage() {
       {/* ── TONS ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 pb-16 md:pb-24">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Votre voix, votre style</div>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#FF8A62] mb-3">Votre voix, votre style</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">L'IA parle comme vous</h2>
           <p className="text-[#8892b0] text-[1rem] max-w-[520px] leading-[1.6] mb-10">Choisissez le ton et la longueur qui correspondent à l'image de votre établissement. Cliquez pour voir la réponse s'adapter en temps réel.</p>
         </FadeUp>
@@ -450,9 +450,9 @@ export default function LandingPage() {
                 onClick={() => setActiveLength(len)}
                 className="px-3 py-1 rounded-full border text-[0.75rem] font-medium transition-all"
                 style={{
-                  borderColor: activeLength === len ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.1)',
-                  color: activeLength === len ? '#34d399' : '#8892b0',
-                  background: activeLength === len ? 'rgba(52,211,153,0.08)' : 'transparent',
+                  borderColor: activeLength === len ? 'rgba(228,87,46,0.4)' : 'rgba(255,255,255,0.1)',
+                  color: activeLength === len ? '#E4572E' : '#8892b0',
+                  background: activeLength === len ? 'rgba(228,87,46,0.08)' : 'transparent',
                 }}
               >
                 {len}
@@ -476,7 +476,7 @@ export default function LandingPage() {
                 >
                   {activeTone}
                 </span>
-                <span className="px-3 py-0.5 rounded-full text-[0.75rem] font-semibold border border-[rgba(52,211,153,0.3)] bg-[rgba(52,211,153,0.07)] text-[#34d399]">
+                <span className="px-3 py-0.5 rounded-full text-[0.75rem] font-semibold border border-[rgba(228,87,46,0.3)] bg-[rgba(228,87,46,0.07)] text-[#FF8A62]">
                   {activeLength}
                 </span>
               </div>
@@ -498,7 +498,7 @@ export default function LandingPage() {
       {/* ── FEATURES ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="features">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Ce que vous gagnez</div>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#FF8A62] mb-3">Ce que vous gagnez</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Tout ce qu'il faut<br />pour briller sur Google</h2>
           <p className="text-[#8892b0] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Conçu pour tout établissement avec des avis Google — hôtels, restaurants, commerces, cliniques, garages et bien d&apos;autres.</p>
         </FadeUp>
@@ -529,7 +529,7 @@ export default function LandingPage() {
       {/* ── PRICING ── */}
       <section className="text-center px-4 md:px-6 py-14 md:py-20" id="pricing">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#34d399] mb-3">Tarifs</div>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#FF8A62] mb-3">Tarifs</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Choisissez votre plan</h2>
           <p className="text-[#8892b0] text-[0.95rem] mb-12">14 jours d&apos;essai gratuit · Sans carte bancaire · Sans engagement</p>
           <div className="max-w-[860px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 items-start">
@@ -550,7 +550,7 @@ export default function LandingPage() {
                   ['Tous les tons IA', false],
                 ].map(([item, included]) => (
                   <li key={item as string} className="flex items-center gap-2.5 text-[0.88rem] py-2 border-b border-[rgba(255,255,255,0.05)] last:border-0" style={{ color: included ? '#8892b0' : 'rgba(136,146,176,0.35)' }}>
-                    <span style={{ color: included ? '#34d399' : 'rgba(136,146,176,0.3)' }} className="font-bold">{included ? '✓' : '✗'}</span>
+                    <span style={{ color: included ? '#E4572E' : 'rgba(136,146,176,0.3)' }} className="font-bold">{included ? '✓' : '✗'}</span>
                     {item as string}
                   </li>
                 ))}
@@ -656,7 +656,7 @@ export default function LandingPage() {
       <footer className="border-t border-[rgba(255,255,255,0.06)] px-5 md:px-12 py-6 md:py-8 bg-[rgba(0,0,0,0.15)] flex justify-between items-center text-[0.82rem] text-[#8892b0] flex-wrap gap-3">
         <div className="font-extrabold text-[1.1rem]">
           <span className="gradient-text-logo">StarReviews</span>
-          <span style={{ color: '#34d399' }}>.</span>
+          <span style={{ color: '#E4572E' }}>.</span>
         </div>
         <div className="flex gap-6">
           <a href="#" className="text-[#8892b0] hover:text-[#e8eaf6] transition-colors no-underline">Mentions légales</a>

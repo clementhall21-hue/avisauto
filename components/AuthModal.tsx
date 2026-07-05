@@ -225,7 +225,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#34d399] text-[#0b0f1e] font-bold py-[13px] rounded-[10px] text-[0.95rem] mt-2 hover:bg-[#6ee7b7] hover:shadow-[0_6px_20px_rgba(52,211,153,0.35)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full bg-[#E4572E] text-white font-bold py-[13px] rounded-[10px] text-[0.95rem] mt-2 hover:bg-[#FF7A50] hover:shadow-[0_6px_20px_rgba(228,87,46,0.35)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : null}
                 Se connecter
@@ -252,7 +252,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
                 <button
                   type="button"
                   onClick={() => { setMode('signup'); setError('') }}
-                  className="text-[#34d399] hover:underline"
+                  className="text-[#FF8A62] hover:underline"
                 >
                   Créer un compte
                 </button>
@@ -326,7 +326,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#34d399] text-[#0b0f1e] font-bold py-[13px] rounded-[10px] text-[0.95rem] mt-2 hover:bg-[#6ee7b7] hover:shadow-[0_6px_20px_rgba(52,211,153,0.35)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full bg-[#E4572E] text-white font-bold py-[13px] rounded-[10px] text-[0.95rem] mt-2 hover:bg-[#FF7A50] hover:shadow-[0_6px_20px_rgba(228,87,46,0.35)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : null}
                 Démarrer gratuitement →
@@ -353,7 +353,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
                 <button
                   type="button"
                   onClick={() => { setMode('login'); setError('') }}
-                  className="text-[#34d399] hover:underline"
+                  className="text-[#FF8A62] hover:underline"
                 >
                   Se connecter
                 </button>
