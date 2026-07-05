@@ -1,0 +1,41 @@
+# Applique automatiquement les migrations Supabase à chaque push sur main
+# qui touche supabase/migrations/.
+#
+# Secrets à configurer une seule fois dans GitHub
+# (repo → Settings → Secrets and variables → Actions) :
+#   SUPABASE_ACCESS_TOKEN  → https://supabase.com/dashboard/account/tokens
+#   SUPABASE_DB_PASSWORD   → mot de passe base de données du projet
+#                            (Project Settings → Database → Reset password si oublié)
+
+name: Migrations Supabase
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+  workflow_dispatch: {}
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      PROJECT_REF: rohoafammquzppbhxcbe
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Lier le projet Supabase
+        run: supabase link --project-ref "$PROJECT_REF"
+
+      - name: Marquer les migrations déjà appliquées à la main (no-op ensuite)
+        run: supabase migration repair --status applied 001 002 003 || true
+
+      - name: Appliquer les nouvelles migrations
+        run: supabase db push
