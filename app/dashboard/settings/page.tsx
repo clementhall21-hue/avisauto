@@ -22,15 +22,15 @@ function ToggleSwitch({ checked, onChange }: { checked: boolean; onChange: (v: b
       onClick={() => onChange(!checked)}
       className="relative w-12 h-6 rounded-full transition-colors flex-shrink-0 border"
       style={{
-        background: checked ? 'rgba(52,211,153,0.2)' : '#2d3748',
-        borderColor: checked ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.07)',
+        background: checked ? 'rgba(52,211,153,0.2)' : '#D5D6DA',
+        borderColor: checked ? 'rgba(52,211,153,0.4)' : '#ECECEA',
       }}
     >
       <span
         className="absolute top-[3px] w-[18px] h-[18px] rounded-full transition-all"
         style={{
           left: checked ? '22px' : '3px',
-          background: checked ? '#34d399' : '#8892b0',
+          background: checked ? '#34d399' : '#666A72',
         }}
       />
     </button>
@@ -194,48 +194,48 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
       <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl md:text-2xl font-bold tracking-tight">⚙️ Administration</h2>
-          <p className="text-sm text-[#8892b0] mt-1">Accès réservé — configuration technique.</p>
+          <p className="text-sm text-[#666A72] mt-1">Accès réservé — configuration technique.</p>
         </div>
         <button
           onClick={onClose}
-          className="px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-transparent text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors text-sm font-inherit cursor-pointer min-h-[40px]"
+          className="px-4 py-2 rounded-lg border border-[#ECECEA] bg-transparent text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors text-sm font-inherit cursor-pointer min-h-[40px]"
         >
           ← Retour
         </button>
       </div>
 
       {/* Avis de test */}
-      <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-xl p-5 mb-5">
+      <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-xl p-5 mb-5">
         <h3 className="font-semibold text-sm mb-1">🧪 Avis de test</h3>
-        <p className="text-xs text-[#8892b0] mb-3">Charger ou supprimer des avis fictifs pour tester l'interface.</p>
+        <p className="text-xs text-[#666A72] mb-3">Charger ou supprimer des avis fictifs pour tester l'interface.</p>
         <div className="flex gap-2 flex-wrap">
-          <button onClick={seedTestReviews} className="px-3 py-1.5 rounded-lg bg-[rgba(99,102,241,0.12)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-xs font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer">
+          <button onClick={seedTestReviews} className="px-3 py-1.5 rounded-lg bg-[rgba(228,87,46,0.10)] border border-[rgba(228,87,46,0.25)] text-[#C2481F] text-xs font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer">
             Charger 5 avis de test
           </button>
-          <button onClick={clearTestReviews} className="px-3 py-1.5 rounded-lg bg-[rgba(244,63,94,0.08)] border border-[rgba(244,63,94,0.2)] text-[#f43f5e] text-xs font-semibold hover:bg-[rgba(244,63,94,0.15)] transition-colors cursor-pointer">
+          <button onClick={clearTestReviews} className="px-3 py-1.5 rounded-lg bg-[rgba(244,63,94,0.08)] border border-[rgba(244,63,94,0.2)] text-[#E11D48] text-xs font-semibold hover:bg-[rgba(244,63,94,0.15)] transition-colors cursor-pointer">
             Supprimer les avis de test
           </button>
         </div>
-        {seedStatus && <p className="text-xs mt-2 text-[#8892b0]">{seedStatus}</p>}
+        {seedStatus && <p className="text-xs mt-2 text-[#666A72]">{seedStatus}</p>}
       </div>
 
       <div className="flex flex-col gap-3.5 max-w-[520px]">
         {/* Hotel name */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">🏨 Nom de l'établissement</h3>
-          <p className="text-xs text-[#8892b0] mb-3">Utilisé par l'IA dans les réponses aux avis.</p>
+          <p className="text-xs text-[#666A72] mb-3">Utilisé par l'IA dans les réponses aux avis.</p>
           <div className="flex gap-2">
             <input
               type="text"
               value={hotelName}
               onChange={(e) => setHotelName(e.target.value)}
               placeholder="Ex : Hôtel du Soleil"
-              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
+              className="flex-1 min-w-0 bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-3.5 py-2.5 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72]"
             />
             <button
               onClick={saveHotelName}
               disabled={saving}
-              className="px-4 py-2.5 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors disabled:opacity-50 cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
+              className="px-4 py-2.5 rounded-lg border border-[#E4572E] bg-[rgba(99,102,241,0.1)] text-[#C2481F] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors disabled:opacity-50 cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               Sauver
             </button>
@@ -243,37 +243,37 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
         </div>
 
         {/* Groq key */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(99,102,241,0.3)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[rgba(228,87,46,0.3)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">🔑 Clé API Groq</h3>
-          <p className="text-xs text-[#8892b0] mb-3">Moteur IA. Gratuit sur console.groq.com. Stockée côté serveur uniquement.</p>
+          <p className="text-xs text-[#666A72] mb-3">Moteur IA. Gratuit sur console.groq.com. Stockée côté serveur uniquement.</p>
           <div className="flex gap-2 mb-2">
             <input
               type="password"
               value={groqKey}
               onChange={(e) => setGroqKey(e.target.value)}
               placeholder="gsk_xxxx…"
-              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] font-mono"
+              className="flex-1 min-w-0 bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-3.5 py-2.5 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72] font-mono"
             />
             <button
               onClick={testGroqKey}
-              className="px-4 py-2.5 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
+              className="px-4 py-2.5 rounded-lg border border-[#E4572E] bg-[rgba(99,102,241,0.1)] text-[#C2481F] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               Tester
             </button>
           </div>
           {groqStatus && (
-            <p className={`text-xs mt-1 ${groqStatus.startsWith('✅') ? 'text-[#34d399]' : groqStatus.startsWith('⚠️') ? 'text-[#f59e0b]' : 'text-[#f87171]'}`}>
+            <p className={`text-xs mt-1 ${groqStatus.startsWith('✅') ? 'text-[#0E9F6E]' : groqStatus.startsWith('⚠️') ? 'text-[#B45309]' : 'text-[#f87171]'}`}>
               {groqStatus}
             </p>
           )}
         </div>
 
         {/* Google Sheets */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">📊 Google Sheets</h3>
-          <p className="text-xs text-[#8892b0] mb-3">Importez vos avis depuis un Google Sheet (colonnes: ID, Nom, Étoiles, Texte, Date).</p>
-          <div className="bg-[rgba(255,255,255,0.03)] rounded-lg px-3 py-2 mb-3 text-xs text-[#8892b0] break-all font-mono overflow-hidden">
-            ID : <span className="text-[#e8eaf6] break-all">{sheetId}</span>
+          <p className="text-xs text-[#666A72] mb-3">Importez vos avis depuis un Google Sheet (colonnes: ID, Nom, Étoiles, Texte, Date).</p>
+          <div className="bg-[rgba(0,0,0,0.03)] rounded-lg px-3 py-2 mb-3 text-xs text-[#666A72] break-all font-mono overflow-hidden">
+            ID : <span className="text-[#17181C] break-all">{sheetId}</span>
           </div>
           <div className="flex gap-2">
             <input
@@ -281,31 +281,31 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               value={sheetId}
               onChange={(e) => setSheetId(e.target.value)}
               placeholder="ID du Google Sheet"
-              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#34d399] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
+              className="flex-1 min-w-0 bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#34d399] rounded-lg px-3.5 py-2.5 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72]"
             />
             <button
               onClick={syncSheets}
-              className="px-4 py-2.5 rounded-lg border border-[#34d399] bg-[rgba(52,211,153,0.08)] text-[#34d399] text-sm font-semibold hover:bg-[rgba(52,211,153,0.15)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
+              className="px-4 py-2.5 rounded-lg border border-[#34d399] bg-[rgba(52,211,153,0.08)] text-[#0E9F6E] text-sm font-semibold hover:bg-[rgba(52,211,153,0.15)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               ↻ Sync
             </button>
           </div>
           {sheetStatus && (
-            <p className={`text-xs mt-2 ${sheetStatus.startsWith('✅') ? 'text-[#34d399]' : sheetStatus.startsWith('⏳') ? 'text-[#8892b0]' : 'text-[#f87171]'}`}>
+            <p className={`text-xs mt-2 ${sheetStatus.startsWith('✅') ? 'text-[#0E9F6E]' : sheetStatus.startsWith('⏳') ? 'text-[#666A72]' : 'text-[#f87171]'}`}>
               {sheetStatus}
             </p>
           )}
         </div>
 
         {/* Zapier */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-[0.95rem] font-bold">⚡ Zapier</h3>
-              <p className="text-xs text-[#8892b0] mt-0.5">Notifications et automatisations avancées.</p>
+              <p className="text-xs text-[#666A72] mt-0.5">Notifications et automatisations avancées.</p>
             </div>
             <span
-              className={`text-xs px-3 py-1 rounded-full font-semibold border ${zapierUrl.includes('hooks.zapier.com') ? 'bg-[rgba(52,211,153,0.12)] text-[#34d399] border-[rgba(52,211,153,0.25)]' : 'bg-[rgba(250,204,21,0.12)] text-[#facc15] border-[rgba(250,204,21,0.2)]'}`}
+              className={`text-xs px-3 py-1 rounded-full font-semibold border ${zapierUrl.includes('hooks.zapier.com') ? 'bg-[rgba(52,211,153,0.12)] text-[#0E9F6E] border-[rgba(52,211,153,0.25)]' : 'bg-[rgba(250,204,21,0.12)] text-[#A16207] border-[rgba(250,204,21,0.2)]'}`}
             >
               {zapierUrl.includes('hooks.zapier.com') ? '✓ Configuré' : '⚙️ Non configuré'}
             </span>
@@ -317,16 +317,16 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               value={zapierUrl}
               onChange={(e) => { setZapierUrl(e.target.value); }}
               placeholder="https://hooks.zapier.com/…"
-              className="flex-1 min-w-0 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-xs text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] font-mono"
+              className="flex-1 min-w-0 bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-3.5 py-2.5 text-xs text-[#17181C] outline-none transition-colors placeholder-[#666A72] font-mono"
             />
             <button
               onClick={testZapier}
-              className="px-4 py-2.5 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
+              className="px-4 py-2.5 rounded-lg border border-[#E4572E] bg-[rgba(99,102,241,0.1)] text-[#C2481F] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit whitespace-nowrap min-h-[44px]"
             >
               ▶ Tester
             </button>
           </div>
-          {zapierTestStatus && <p className="text-xs text-[#8892b0] mb-3">{zapierTestStatus}</p>}
+          {zapierTestStatus && <p className="text-xs text-[#666A72] mb-3">{zapierTestStatus}</p>}
 
           <div className="flex flex-col gap-1.5 mb-3">
             {[
@@ -334,13 +334,13 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
               { key: 'negative', label: '⚠️ Avis négatif (1-2★)' },
               { key: 'published', label: '✅ Réponse publiée' },
             ].map((t) => (
-              <label key={t.key} className="flex items-center justify-between bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2.5 cursor-pointer text-sm">
+              <label key={t.key} className="flex items-center justify-between bg-[rgba(0,0,0,0.02)] border border-[#ECECEA] rounded-lg px-3 py-2.5 cursor-pointer text-sm">
                 {t.label}
                 <input
                   type="checkbox"
                   checked={zapierTriggers[t.key as keyof typeof zapierTriggers]}
                   onChange={(e) => setZapierTriggers((p) => ({ ...p, [t.key]: e.target.checked }))}
-                  className="accent-[#6366f1]"
+                  className="accent-[#E4572E]"
                 />
               </label>
             ))}
@@ -348,12 +348,12 @@ function AdminPanel({ establishment, onClose }: { establishment: any; onClose: (
 
           <button
             onClick={saveZapierConfig}
-            className="w-full py-2 rounded-lg border border-[#6366f1] bg-[rgba(99,102,241,0.1)] text-[#818cf8] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit mb-3"
+            className="w-full py-2 rounded-lg border border-[#E4572E] bg-[rgba(99,102,241,0.1)] text-[#C2481F] text-sm font-semibold hover:bg-[rgba(99,102,241,0.2)] transition-colors cursor-pointer font-inherit mb-3"
           >
             Sauvegarder la config
           </button>
 
-          <div className="bg-[rgba(0,0,0,0.2)] rounded-lg p-2.5 min-h-[40px] max-h-[100px] overflow-y-auto font-mono text-xs text-[#8892b0] leading-[1.7]">
+          <div className="bg-[rgba(0,0,0,0.2)] rounded-lg p-2.5 min-h-[40px] max-h-[100px] overflow-y-auto font-mono text-xs text-[#666A72] leading-[1.7]">
             {zapierLog.length > 0 ? zapierLog.map((l, i) => <div key={i}>{l}</div>) : 'Aucun envoi pour l\'instant.'}
           </div>
         </div>
@@ -560,17 +560,17 @@ export default function SettingsPage() {
       {/* Confirmation modale — mode auto immédiat */}
       {showConfirmAutoImmediat && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
-          <div className="bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-2xl p-8 max-w-[420px] w-full shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
+          <div className="bg-white border border-[#E3E3E1] rounded-2xl p-8 max-w-[420px] w-full shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
             <div className="text-3xl mb-4">⚠️</div>
-            <h3 className="text-lg font-bold text-[#e8eaf6] mb-2">Publication immédiate</h3>
-            <p className="text-sm text-[#8892b0] leading-relaxed mb-6">
-              Tous les avis en attente de validation vont être <span className="text-[#f59e0b] font-semibold">publiés immédiatement</span>. Vous ne pourrez plus les vérifier avant publication.<br /><br />
+            <h3 className="text-lg font-bold text-[#17181C] mb-2">Publication immédiate</h3>
+            <p className="text-sm text-[#666A72] leading-relaxed mb-6">
+              Tous les avis en attente de validation vont être <span className="text-[#B45309] font-semibold">publiés immédiatement</span>. Vous ne pourrez plus les vérifier avant publication.<br /><br />
               Êtes-vous sûr de vouloir activer le mode automatique immédiat ?
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowConfirmAutoImmediat(false)}
-                className="flex-1 border border-[rgba(255,255,255,0.1)] text-[#8892b0] hover:text-[#e8eaf6] py-2.5 rounded-lg text-sm font-medium transition-colors"
+                className="flex-1 border border-[#E3E3E1] text-[#666A72] hover:text-[#17181C] py-2.5 rounded-lg text-sm font-medium transition-colors"
               >
                 Annuler
               </button>
@@ -579,7 +579,7 @@ export default function SettingsPage() {
                   setShowConfirmAutoImmediat(false)
                   await applyAutoMode(true)
                 }}
-                className="flex-1 bg-[rgba(244,63,94,0.15)] border border-[rgba(244,63,94,0.3)] text-[#f43f5e] hover:bg-[rgba(244,63,94,0.25)] py-2.5 rounded-lg text-sm font-bold transition-colors"
+                className="flex-1 bg-[rgba(244,63,94,0.15)] border border-[rgba(244,63,94,0.3)] text-[#E11D48] hover:bg-[rgba(244,63,94,0.25)] py-2.5 rounded-lg text-sm font-bold transition-colors"
               >
                 Oui, publier tout
               </button>
@@ -591,11 +591,11 @@ export default function SettingsPage() {
       <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl md:text-2xl font-bold tracking-tight">Paramètres</h2>
-          <p className="text-sm text-[#8892b0] mt-1">Personnalisez votre expérience StarReviews.</p>
+          <p className="text-sm text-[#666A72] mt-1">Personnalisez votre expérience StarReviews.</p>
         </div>
         <button
           onClick={() => setShowAdminPrompt(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[rgba(255,255,255,0.07)] bg-transparent text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] text-sm transition-colors cursor-pointer font-inherit min-h-[40px]"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#ECECEA] bg-transparent text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] text-sm transition-colors cursor-pointer font-inherit min-h-[40px]"
         >
           🔧 Accès admin
         </button>
@@ -604,23 +604,23 @@ export default function SettingsPage() {
       {/* Admin password prompt */}
       {showAdminPrompt && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center">
-          <div className="bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-[20px] p-10 w-full max-w-[400px] relative shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
-            <button onClick={() => setShowAdminPrompt(false)} className="absolute top-4 right-4 text-[#8892b0] hover:text-[#e8eaf6] bg-transparent border-none cursor-pointer text-xl">✕</button>
+          <div className="bg-white border border-[#E3E3E1] rounded-[20px] p-10 w-full max-w-[400px] relative shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
+            <button onClick={() => setShowAdminPrompt(false)} className="absolute top-4 right-4 text-[#666A72] hover:text-[#17181C] bg-transparent border-none cursor-pointer text-xl">✕</button>
             <h3 className="text-[1.2rem] font-bold mb-2">Accès administrateur</h3>
-            <p className="text-sm text-[#8892b0] mb-6">Entrez le mot de passe admin pour accéder à la configuration technique.</p>
+            <p className="text-sm text-[#666A72] mb-6">Entrez le mot de passe admin pour accéder à la configuration technique.</p>
             <input
               type="password"
               value={adminPassword}
               onChange={(e) => setAdminPassword(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && checkAdminPassword()}
               placeholder="Mot de passe admin"
-              className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-4 py-3 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] mb-2"
+              className="w-full bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-4 py-3 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72] mb-2"
             />
             {adminError && <p className="text-xs text-[#f87171] mb-3">{adminError}</p>}
             <button
               onClick={checkAdminPassword}
               className="w-full py-3 rounded-lg font-bold text-sm cursor-pointer font-inherit mt-2"
-              style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#0b0f1e', border: 'none' }}
+              style={{ background: '#E4572E', color: '#ffffff', border: 'none' }}
             >
               Accéder
             </button>
@@ -631,9 +631,9 @@ export default function SettingsPage() {
       <div className="flex flex-col gap-3.5 max-w-[520px]">
 
         {/* Tone */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">🎨 Ton des réponses</h3>
-          <p className="text-xs text-[#8892b0] mb-3.5">Comment l'IA s'exprime dans vos réponses.</p>
+          <p className="text-xs text-[#666A72] mb-3.5">Comment l'IA s'exprime dans vos réponses.</p>
           <div className="flex gap-2 flex-wrap">
             {TONES.map((t) => {
               const col = TONE_COLORS[t]
@@ -644,8 +644,8 @@ export default function SettingsPage() {
                   onClick={() => handleToneChange(t)}
                   className="px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all cursor-pointer font-inherit"
                   style={{
-                    borderColor: isActive ? col.border : 'rgba(255,255,255,0.07)',
-                    color: isActive ? col.text : '#8892b0',
+                    borderColor: isActive ? col.border : '#ECECEA',
+                    color: isActive ? col.text : '#666A72',
                     background: isActive ? col.bg : 'transparent',
                   }}
                 >
@@ -657,45 +657,45 @@ export default function SettingsPage() {
         </div>
 
         {/* Signature */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">✍️ Signature</h3>
-          <p className="text-xs text-[#8892b0] mb-3">Ajoutée automatiquement à la fin de chaque réponse.</p>
+          <p className="text-xs text-[#666A72] mb-3">Ajoutée automatiquement à la fin de chaque réponse.</p>
           <input
             type="text"
             value={signature}
             onChange={(e) => setSignature(e.target.value)}
             onBlur={handleSignatureBlur}
             placeholder="Ex : L'équipe Hôtel du Soleil"
-            className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
+            className="w-full bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-3.5 py-2.5 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72]"
           />
           {signature && (
-            <p className="text-xs text-[#8892b0] mt-2">Aperçu : <span className="text-[#e8eaf6]">…réponse\n— {signature}</span></p>
+            <p className="text-xs text-[#666A72] mt-2">Aperçu : <span className="text-[#17181C]">…réponse\n— {signature}</span></p>
           )}
         </div>
 
         {/* Auto mode */}
         <div
-          className="bg-[rgba(255,255,255,0.03)] border rounded-[14px] p-5 md:p-6 transition-colors"
-          style={{ borderColor: autoMode ? 'rgba(52,211,153,0.25)' : 'rgba(255,255,255,0.07)' }}
+          className="bg-[rgba(0,0,0,0.03)] border rounded-[14px] p-5 md:p-6 transition-colors"
+          style={{ borderColor: autoMode ? 'rgba(52,211,153,0.25)' : '#ECECEA' }}
         >
           <div className="flex justify-between items-start gap-4">
             <div>
               <h3 className="text-[0.95rem] font-bold mb-1.5">🤖 Mode automatique</h3>
-              <p className="text-xs text-[#8892b0] leading-relaxed">L'IA répond seule à chaque nouvel avis selon le délai configuré. Aucune action requise.</p>
+              <p className="text-xs text-[#666A72] leading-relaxed">L'IA répond seule à chaque nouvel avis selon le délai configuré. Aucune action requise.</p>
             </div>
             <ToggleSwitch checked={autoMode} onChange={handleAutoMode} />
           </div>
           {autoMode && (
-            <div className="mt-3 bg-[rgba(52,211,153,0.06)] border border-[rgba(52,211,153,0.18)] rounded-lg px-3 py-2.5 text-xs text-[#34d399]">
+            <div className="mt-3 bg-[rgba(52,211,153,0.06)] border border-[rgba(52,211,153,0.18)] rounded-lg px-3 py-2.5 text-xs text-[#0E9F6E]">
               ✅ Actif — les réponses sont publiées automatiquement selon le délai ci-dessous.
             </div>
           )}
         </div>
 
         {/* Delay */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(99,102,241,0.25)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[rgba(228,87,46,0.25)] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">⏱ Délai de publication</h3>
-          <p className="text-xs text-[#8892b0] leading-relaxed mb-4">Un délai de 30–60 min rend la réponse indiscernable d'une réponse humaine.</p>
+          <p className="text-xs text-[#666A72] leading-relaxed mb-4">Un délai de 30–60 min rend la réponse indiscernable d'une réponse humaine.</p>
           <div className="flex gap-2 flex-wrap mb-3 overflow-x-auto pb-1">
             {DELAY_OPTIONS.map((opt) => (
               <button
@@ -703,9 +703,9 @@ export default function SettingsPage() {
                 onClick={() => handleDelay(opt.seconds)}
                 className="px-4 py-1.5 rounded-full border text-xs font-medium transition-all cursor-pointer font-inherit whitespace-nowrap"
                 style={{
-                  borderColor: delaySec === opt.seconds && !showCustom ? '#6366f1' : 'rgba(255,255,255,0.07)',
-                  color: delaySec === opt.seconds && !showCustom ? '#818cf8' : '#8892b0',
-                  background: delaySec === opt.seconds && !showCustom ? 'rgba(99,102,241,0.12)' : 'transparent',
+                  borderColor: delaySec === opt.seconds && !showCustom ? '#E4572E' : '#ECECEA',
+                  color: delaySec === opt.seconds && !showCustom ? '#C2481F' : '#666A72',
+                  background: delaySec === opt.seconds && !showCustom ? 'rgba(228,87,46,0.10)' : 'transparent',
                 }}
               >
                 {opt.label}
@@ -715,9 +715,9 @@ export default function SettingsPage() {
               onClick={() => setShowCustom(!showCustom)}
               className="px-4 py-1.5 rounded-full border text-xs font-medium transition-all cursor-pointer font-inherit whitespace-nowrap"
               style={{
-                borderColor: showCustom ? '#6366f1' : 'rgba(255,255,255,0.07)',
-                color: showCustom ? '#818cf8' : '#8892b0',
-                background: showCustom ? 'rgba(99,102,241,0.12)' : 'transparent',
+                borderColor: showCustom ? '#E4572E' : '#ECECEA',
+                color: showCustom ? '#C2481F' : '#666A72',
+                background: showCustom ? 'rgba(228,87,46,0.10)' : 'transparent',
               }}
             >
               Personnalisé…
@@ -726,20 +726,20 @@ export default function SettingsPage() {
 
           {showCustom && (
             <div className="mb-3">
-              <div className="text-xs text-[#8892b0] mb-2 font-medium">Délai personnalisé :</div>
+              <div className="text-xs text-[#666A72] mb-2 font-medium">Délai personnalisé :</div>
               <div className="flex gap-2 items-center flex-wrap">
-                <div className="flex items-center gap-1.5 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2">
-                  <input type="number" min={0} max={23} value={customH} onChange={(e) => setCustomH(Number(e.target.value))} className="w-11 bg-transparent border-none text-[#e8eaf6] text-[1rem] font-bold outline-none text-center" />
-                  <span className="text-xs text-[#8892b0]">h</span>
+                <div className="flex items-center gap-1.5 bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] rounded-lg px-3 py-2">
+                  <input type="number" min={0} max={23} value={customH} onChange={(e) => setCustomH(Number(e.target.value))} className="w-11 bg-transparent border-none text-[#17181C] text-[1rem] font-bold outline-none text-center" />
+                  <span className="text-xs text-[#666A72]">h</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2">
-                  <input type="number" min={0} max={59} value={customM} onChange={(e) => setCustomM(Number(e.target.value))} className="w-11 bg-transparent border-none text-[#e8eaf6] text-[1rem] font-bold outline-none text-center" />
-                  <span className="text-xs text-[#8892b0]">min</span>
+                <div className="flex items-center gap-1.5 bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] rounded-lg px-3 py-2">
+                  <input type="number" min={0} max={59} value={customM} onChange={(e) => setCustomM(Number(e.target.value))} className="w-11 bg-transparent border-none text-[#17181C] text-[1rem] font-bold outline-none text-center" />
+                  <span className="text-xs text-[#666A72]">min</span>
                 </div>
                 <button
                   onClick={handleCustomDelay}
                   className="px-4 py-2 rounded-lg border-none font-bold text-sm cursor-pointer font-inherit"
-                  style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#fff' }}
+                  style={{ background: '#E4572E', color: '#fff' }}
                 >
                   Appliquer
                 </button>
@@ -747,26 +747,26 @@ export default function SettingsPage() {
             </div>
           )}
 
-          <div className="bg-[rgba(99,102,241,0.07)] border border-[rgba(99,102,241,0.2)] rounded-[10px] px-3.5 py-3 text-xs text-[#818cf8] leading-relaxed">
+          <div className="bg-[rgba(99,102,241,0.07)] border border-[rgba(99,102,241,0.2)] rounded-[10px] px-3.5 py-3 text-xs text-[#C2481F] leading-relaxed">
             ⚡ <strong>{delayLabel()}</strong>
             {delaySec === 0 ? ' — La réponse est publiée dès qu\'elle est générée.' : ` — La réponse sera publiée ${delayLabel()} après génération.`}
           </div>
         </div>
 
         {/* Add review manually */}
-        <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 md:p-6">
+        <div className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 md:p-6">
           <h3 className="text-[0.95rem] font-bold mb-1.5">➕ Ajouter un avis manuellement</h3>
-          <p className="text-xs text-[#8892b0] mb-4">L'IA générera automatiquement une réponse.</p>
+          <p className="text-xs text-[#666A72] mb-4">L'IA générera automatiquement une réponse.</p>
           <div className="flex flex-col gap-3">
             <input
               type="text"
               value={reviewerName}
               onChange={(e) => setReviewerName(e.target.value)}
               placeholder="Nom du client"
-              className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0]"
+              className="w-full bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-3.5 py-2.5 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72]"
             />
             <div>
-              <div className="text-xs text-[#8892b0] mb-1.5">Note</div>
+              <div className="text-xs text-[#666A72] mb-1.5">Note</div>
               <StarRating value={reviewStars} onChange={setReviewStars} />
             </div>
             <textarea
@@ -774,13 +774,13 @@ export default function SettingsPage() {
               onChange={(e) => setReviewText(e.target.value)}
               placeholder="Texte de l'avis…"
               rows={3}
-              className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] focus:border-[#6366f1] rounded-lg px-3.5 py-2.5 text-sm text-[#e8eaf6] outline-none transition-colors placeholder-[#8892b0] resize-none"
+              className="w-full bg-[rgba(0,0,0,0.04)] border border-[#ECECEA] focus:border-[#E4572E] rounded-lg px-3.5 py-2.5 text-sm text-[#17181C] outline-none transition-colors placeholder-[#666A72] resize-none"
             />
             <button
               onClick={handleAddReview}
               disabled={addingReview || !reviewerName.trim() || !reviewText.trim()}
               className="w-full py-2.5 rounded-lg font-bold text-sm cursor-pointer font-inherit disabled:opacity-50 transition-opacity"
-              style={{ background: 'linear-gradient(135deg,#6366f1,#7c3aed)', color: '#e8eaf6', border: 'none' }}
+              style={{ background: '#E4572E', color: '#fff', border: 'none' }}
             >
               {addingReview ? '⏳ Génération…' : '+ Ajouter cet avis'}
             </button>

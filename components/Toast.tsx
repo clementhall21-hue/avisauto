@@ -53,10 +53,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               'data-[state=open]:slide-in-from-bottom-4',
               'transition-all duration-300',
               toast.type === 'error'
-                ? 'bg-[#1a1015] border-[rgba(244,63,94,0.3)] text-[#f43f5e]'
+                ? 'bg-white border-[rgba(244,63,94,0.3)] text-[#E11D48]'
                 : toast.type === 'info'
-                  ? 'bg-[#111827] border-[rgba(99,102,241,0.3)] text-[#818cf8]'
-                  : 'bg-[#111827] border-[rgba(52,211,153,0.3)] text-[#34d399]'
+                  ? 'bg-white border-[rgba(228,87,46,0.3)] text-[#C2481F]'
+                  : 'bg-white border-[rgba(52,211,153,0.3)] text-[#0E9F6E]'
             )}
           >
             <span>{toast.type === 'error' ? '✕' : toast.type === 'info' ? 'ℹ' : '✓'}</span>

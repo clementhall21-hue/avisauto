@@ -146,7 +146,7 @@ export default function ReviewCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5 hover:border-[rgba(99,102,241,0.25)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all"
+      className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5 hover:border-[rgba(228,87,46,0.25)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)] transition-all"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3 flex-wrap gap-2">
@@ -159,8 +159,8 @@ export default function ReviewCard({
             {review.reviewer_initials}
           </div>
           <div>
-            <div className="font-semibold text-sm text-[#e8eaf6]">{review.reviewer_name}</div>
-            <div className="text-xs text-[#8892b0]">{review.review_date}</div>
+            <div className="font-semibold text-sm text-[#17181C]">{review.reviewer_name}</div>
+            <div className="text-xs text-[#666A72]">{review.review_date}</div>
           </div>
         </div>
 
@@ -176,18 +176,18 @@ export default function ReviewCard({
 
           {/* Status badge */}
           {review.status === 'published' && (
-            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(52,211,153,0.12)] text-[#34d399] border border-[rgba(52,211,153,0.25)]">
+            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(52,211,153,0.12)] text-[#0E9F6E] border border-[rgba(52,211,153,0.25)]">
               ✓ Publié
             </span>
           )}
           {review.status === 'scheduled' && (
-            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(99,102,241,0.12)] text-[#818cf8] border border-[rgba(99,102,241,0.25)] flex items-center gap-1">
+            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(228,87,46,0.10)] text-[#C2481F] border border-[rgba(228,87,46,0.25)] flex items-center gap-1">
               <Clock size={10} />
               Programmé
             </span>
           )}
           {review.status === 'pending' && (
-            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(245,158,11,0.12)] text-[#f59e0b] border border-[rgba(245,158,11,0.25)]">
+            <span className="text-[0.7rem] font-semibold px-2 py-0.5 rounded-md bg-[rgba(245,158,11,0.12)] text-[#B45309] border border-[rgba(245,158,11,0.25)]">
               ⏳ En attente
             </span>
           )}
@@ -201,26 +201,26 @@ export default function ReviewCard({
       </div>
 
       {/* Review text */}
-      <p className="text-sm text-[#8892b0] leading-relaxed mb-3.5 break-words">{review.review_text}</p>
+      <p className="text-sm text-[#666A72] leading-relaxed mb-3.5 break-words">{review.review_text}</p>
 
       {/* Scheduled countdown */}
       {review.status === 'scheduled' && review.scheduled_at && (
         <div className="mb-3 flex items-center gap-2 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-xs font-semibold px-3 py-1 rounded-full">
+          <span className="inline-flex items-center gap-1.5 bg-[rgba(99,102,241,0.1)] border border-[rgba(228,87,46,0.25)] text-[#C2481F] text-xs font-semibold px-3 py-1 rounded-full">
             <Clock size={11} />
             Publication dans {countdown}
           </span>
           <button
             onClick={handlePublishNow}
             disabled={!!actionLoading}
-            className="text-xs text-[#34d399] border border-[rgba(52,211,153,0.3)] px-2.5 py-1 rounded-full hover:bg-[rgba(52,211,153,0.08)] transition-colors disabled:opacity-50"
+            className="text-xs text-[#0E9F6E] border border-[rgba(52,211,153,0.3)] px-2.5 py-1 rounded-full hover:bg-[rgba(52,211,153,0.08)] transition-colors disabled:opacity-50"
           >
             Publier maintenant
           </button>
           <button
             onClick={handleCancelSchedule}
             disabled={!!actionLoading}
-            className="text-xs text-[#8892b0] border border-[rgba(255,255,255,0.07)] px-2.5 py-1 rounded-full hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-50"
+            className="text-xs text-[#666A72] border border-[#ECECEA] px-2.5 py-1 rounded-full hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors disabled:opacity-50"
           >
             Annuler
           </button>
@@ -229,8 +229,8 @@ export default function ReviewCard({
 
       {/* Published date */}
       {review.status === 'published' && review.published_at && (
-        <div className="text-xs text-[#8892b0] mb-3 flex items-center gap-1">
-          <Check size={11} className="text-[#34d399]" />
+        <div className="text-xs text-[#666A72] mb-3 flex items-center gap-1">
+          <Check size={11} className="text-[#0E9F6E]" />
           Publié le{' '}
           {new Date(review.published_at).toLocaleDateString('fr-FR', {
             day: 'numeric',
@@ -243,11 +243,11 @@ export default function ReviewCard({
       {/* AI Response block */}
       {isGenerating ? (
         <div className="bg-[rgba(52,211,153,0.05)] border border-[rgba(52,211,153,0.2)] rounded-[10px] px-4 py-3">
-          <div className="text-xs font-bold text-[#34d399] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <div className="text-xs font-bold text-[#0E9F6E] uppercase tracking-wider mb-2 flex items-center gap-1.5">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse-dot" />
             IA · {tone}
           </div>
-          <div className="flex items-center gap-1.5 text-[#34d399] text-sm">
+          <div className="flex items-center gap-1.5 text-[#0E9F6E] text-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block animate-[dotBounce_1.2s_infinite_ease-in-out]" />
             <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block animate-[dotBounce_1.2s_0.2s_infinite_ease-in-out]" />
             <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block animate-[dotBounce_1.2s_0.4s_infinite_ease-in-out]" />
@@ -266,11 +266,11 @@ export default function ReviewCard({
               ref={editRef}
               contentEditable
               suppressContentEditableWarning
-              className="text-sm text-[#e8eaf6] leading-relaxed outline-none border border-[#6366f1] rounded-lg px-3 py-2 min-h-[60px] whitespace-pre-wrap"
+              className="text-sm text-[#17181C] leading-relaxed outline-none border border-[#E4572E] rounded-lg px-3 py-2 min-h-[60px] whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: editText }}
             />
           ) : (
-            <p className="text-sm text-[#e8eaf6] leading-relaxed whitespace-pre-wrap break-words">{review.ai_reply}</p>
+            <p className="text-sm text-[#17181C] leading-relaxed whitespace-pre-wrap break-words">{review.ai_reply}</p>
           )}
         </div>
       ) : null}
@@ -282,7 +282,7 @@ export default function ReviewCard({
             <button
               onClick={handlePublish}
               disabled={!!actionLoading || !review.ai_reply}
-              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.25)] text-[#34d399] hover:bg-[rgba(52,211,153,0.18)] transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.25)] text-[#0E9F6E] hover:bg-[rgba(52,211,153,0.18)] transition-colors disabled:opacity-40"
             >
               {actionLoading === 'publish' ? <span className="animate-spin">⟳</span> : <Send size={11} />}
               Publier
@@ -290,7 +290,7 @@ export default function ReviewCard({
             <button
               onClick={async () => { setActionLoading('snooze'); await onSnooze(review.id); setActionLoading(null) }}
               disabled={!!actionLoading}
-              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(148,163,184,0.25)] text-[#94a3b8] hover:text-[#e8eaf6] hover:border-[rgba(148,163,184,0.4)] transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(148,163,184,0.25)] text-[#94a3b8] hover:text-[#17181C] hover:border-[rgba(148,163,184,0.4)] transition-colors disabled:opacity-40"
             >
               <BookmarkPlus size={11} />
               Plus tard
@@ -302,7 +302,7 @@ export default function ReviewCard({
           <button
             onClick={async () => { setActionLoading('unsnooze'); await onUnsnooze(review.id); setActionLoading(null) }}
             disabled={!!actionLoading}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] hover:bg-[rgba(99,102,241,0.18)] transition-colors disabled:opacity-40"
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold bg-[rgba(99,102,241,0.1)] border border-[rgba(228,87,46,0.25)] text-[#C2481F] hover:bg-[rgba(99,102,241,0.18)] transition-colors disabled:opacity-40"
           >
             <BookmarkX size={11} />
             Remettre en attente
@@ -313,7 +313,7 @@ export default function ReviewCard({
           <button
             onClick={async () => { setActionLoading('snooze'); await onSnooze(review.id); setActionLoading(null) }}
             disabled={!!actionLoading}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(148,163,184,0.25)] text-[#94a3b8] hover:text-[#e8eaf6] hover:border-[rgba(148,163,184,0.4)] transition-colors disabled:opacity-40"
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(148,163,184,0.25)] text-[#94a3b8] hover:text-[#17181C] hover:border-[rgba(148,163,184,0.4)] transition-colors disabled:opacity-40"
           >
             <BookmarkPlus size={11} />
             Plus tard
@@ -322,15 +322,15 @@ export default function ReviewCard({
 
         {(review.status === 'pending' || review.status === 'snoozed' || review.status === 'scheduled') && (
           <>
-            <div className="flex items-center gap-1 border border-[rgba(255,255,255,0.07)] rounded-[7px] p-0.5">
+            <div className="flex items-center gap-1 border border-[#ECECEA] rounded-[7px] p-0.5">
               {(['short', 'normal', 'detailed'] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => setReplyLength(l)}
                   className={`px-2.5 py-1 rounded-[5px] text-[0.65rem] font-semibold transition-all ${
                     replyLength === l
-                      ? 'bg-[rgba(99,102,241,0.2)] text-[#818cf8]'
-                      : 'text-[#8892b0] hover:text-[#e8eaf6]'
+                      ? 'bg-[rgba(99,102,241,0.2)] text-[#C2481F]'
+                      : 'text-[#666A72] hover:text-[#17181C]'
                   }`}
                 >
                   {l === 'short' ? 'Court' : l === 'normal' ? 'Normal' : 'Développé'}
@@ -340,7 +340,7 @@ export default function ReviewCard({
             <button
               onClick={handleRegenerate}
               disabled={!!actionLoading}
-              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors disabled:opacity-40"
             >
               {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
               Régénérer
@@ -350,15 +350,15 @@ export default function ReviewCard({
 
         {review.status === 'published' && (
           <>
-            <div className="flex items-center gap-1 border border-[rgba(255,255,255,0.07)] rounded-[7px] p-0.5">
+            <div className="flex items-center gap-1 border border-[#ECECEA] rounded-[7px] p-0.5">
               {(['short', 'normal', 'detailed'] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => setReplyLength(l)}
                   className={`px-2.5 py-1 rounded-[5px] text-[0.65rem] font-semibold transition-all ${
                     replyLength === l
-                      ? 'bg-[rgba(99,102,241,0.2)] text-[#818cf8]'
-                      : 'text-[#8892b0] hover:text-[#e8eaf6]'
+                      ? 'bg-[rgba(99,102,241,0.2)] text-[#C2481F]'
+                      : 'text-[#666A72] hover:text-[#17181C]'
                   }`}
                 >
                   {l === 'short' ? 'Court' : l === 'normal' ? 'Normal' : 'Développé'}
@@ -368,7 +368,7 @@ export default function ReviewCard({
             <button
               onClick={handleRegenerate}
               disabled={!!actionLoading}
-              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors disabled:opacity-40"
             >
               {actionLoading === 'regen' ? <span className="animate-spin text-xs">⟳</span> : <RotateCcw size={11} />}
               Régénérer
@@ -379,7 +379,7 @@ export default function ReviewCard({
         {isEditing ? (
           <button
             onClick={handleSaveEdit}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(99,102,241,0.5)] text-[#818cf8] bg-[rgba(99,102,241,0.1)] hover:bg-[rgba(99,102,241,0.2)] transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(99,102,241,0.5)] text-[#C2481F] bg-[rgba(99,102,241,0.1)] hover:bg-[rgba(99,102,241,0.2)] transition-colors"
           >
             <Check size={11} />
             Valider
@@ -388,7 +388,7 @@ export default function ReviewCard({
           <button
             onClick={handleEdit}
             disabled={!review.ai_reply}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors disabled:opacity-40"
           >
             <Edit2 size={11} />
             Modifier
@@ -398,7 +398,7 @@ export default function ReviewCard({
         <button
           onClick={handleCopy}
           disabled={!review.ai_reply}
-          className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors disabled:opacity-40"
+          className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors disabled:opacity-40"
           title="Copier la réponse"
         >
           <Copy size={11} />
@@ -408,7 +408,7 @@ export default function ReviewCard({
         {(review.status === 'published' || review.status === 'snoozed') && (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#f43f5e] hover:border-[rgba(244,63,94,0.3)] transition-colors ml-auto"
+            className="flex items-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-xs font-semibold border border-[#ECECEA] text-[#666A72] hover:text-[#E11D48] hover:border-[rgba(244,63,94,0.3)] transition-colors ml-auto"
             title="Supprimer"
           >
             <Trash2 size={11} />
@@ -419,18 +419,18 @@ export default function ReviewCard({
       {/* Delete confirmation */}
       {confirmDelete && (
         <div className="flex items-center gap-2 mt-2 pt-2 border-t border-[rgba(244,63,94,0.2)]">
-          <span className="text-xs text-[#f43f5e] font-medium flex-1">
+          <span className="text-xs text-[#E11D48] font-medium flex-1">
             {review.status === 'published' ? 'Supprimer la réponse publiée ?' : 'Supprimer cet avis définitivement ?'}
           </span>
           <button
             onClick={() => setConfirmDelete(false)}
-            className="px-3 py-1 rounded-[6px] text-xs font-semibold border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] transition-colors"
+            className="px-3 py-1 rounded-[6px] text-xs font-semibold border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] transition-colors"
           >
             Annuler
           </button>
           <button
             onClick={() => { onDelete(review.id); setConfirmDelete(false) }}
-            className="px-3 py-1 rounded-[6px] text-xs font-semibold bg-[rgba(244,63,94,0.12)] border border-[rgba(244,63,94,0.35)] text-[#f43f5e] hover:bg-[rgba(244,63,94,0.22)] transition-colors"
+            className="px-3 py-1 rounded-[6px] text-xs font-semibold bg-[rgba(244,63,94,0.12)] border border-[rgba(244,63,94,0.35)] text-[#E11D48] hover:bg-[rgba(244,63,94,0.22)] transition-colors"
           >
             Confirmer
           </button>

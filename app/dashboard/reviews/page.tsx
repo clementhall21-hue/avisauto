@@ -368,7 +368,7 @@ export default function ReviewsPage() {
   const pendingCount_ = reviews.filter((r) => r.status === 'pending').length
 
   const selectClass =
-    'bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#e8eaf6] px-3 py-2 rounded-lg font-[inherit] text-sm outline-none cursor-pointer'
+    'bg-white border border-[#ECECEA] text-[#17181C] px-3 py-2 rounded-lg font-[inherit] text-sm outline-none cursor-pointer'
 
   return (
     <div>
@@ -378,14 +378,14 @@ export default function ReviewsPage() {
       <div className="mb-6">
         <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#e8eaf6]">Avis reçus</h2>
-            <p className="text-sm text-[#8892b0] mt-1">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#17181C]">Avis reçus</h2>
+            <p className="text-sm text-[#666A72] mt-1">
               Tous vos avis Google, réponses IA générées automatiquement.
             </p>
             {/* Usage counter for Starter */}
             {!isPro && (
-              <div className="mt-2 text-xs text-[#8892b0] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5">
-                <span className="font-semibold text-[#e8eaf6]">{subscription?.ai_replies_count || 0}/30</span> réponses utilisées ce mois
+              <div className="mt-2 text-xs text-[#666A72] bg-white border border-[#ECECEA] rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5">
+                <span className="font-semibold text-[#17181C]">{subscription?.ai_replies_count || 0}/30</span> réponses utilisées ce mois
               </div>
             )}
           </div>
@@ -393,7 +393,7 @@ export default function ReviewsPage() {
           <div className="flex items-center gap-2 flex-wrap">
             {!hasGroqKey && (
               <div
-                className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-[rgba(245,158,11,0.15)] transition-colors flex items-center gap-1.5 min-h-[36px]"
+                className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#B45309] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-[rgba(245,158,11,0.15)] transition-colors flex items-center gap-1.5 min-h-[36px]"
                 onClick={() => (window.location.href = '/dashboard/settings')}
               >
                 <AlertTriangle size={12} />
@@ -401,14 +401,14 @@ export default function ReviewsPage() {
               </div>
             )}
             {establishment?.auto_mode && isPro && (
-              <div className="text-xs font-semibold bg-[rgba(52,211,153,0.12)] border border-[rgba(52,211,153,0.3)] text-[#34d399] px-3 py-1.5 rounded-full flex items-center gap-1">
+              <div className="text-xs font-semibold bg-[rgba(52,211,153,0.12)] border border-[rgba(52,211,153,0.3)] text-[#0E9F6E] px-3 py-1.5 rounded-full flex items-center gap-1">
                 <Zap size={11} />
                 Auto actif
               </div>
             )}
             {/* Auto mode banner for Starter */}
             {establishment?.auto_mode && !isPro && (
-              <div className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#f59e0b] px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+              <div className="text-xs bg-[rgba(245,158,11,0.1)] border border-[rgba(245,158,11,0.25)] text-[#B45309] px-3 py-1.5 rounded-lg flex items-center gap-1.5">
                 <AlertTriangle size={12} />
                 Mode auto Pro —{' '}
                 <CheckoutButton plan="pro" className="underline font-semibold hover:text-[#fbbf24] bg-transparent border-none p-0 text-inherit">
@@ -421,14 +421,14 @@ export default function ReviewsPage() {
 
         {/* Filters row — stacks on mobile */}
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] rounded-lg px-3 py-2 focus-within:border-[rgba(99,102,241,0.5)] transition-colors flex-1 min-w-0">
-            <Search size={14} className="text-[#8892b0] flex-shrink-0" />
+          <div className="flex items-center gap-2 bg-white border border-[#ECECEA] rounded-lg px-3 py-2 focus-within:border-[rgba(228,87,46,0.5)] transition-colors flex-1 min-w-0">
+            <Search size={14} className="text-[#666A72] flex-shrink-0" />
             <input
               type="text"
               placeholder="Rechercher un avis…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent border-none outline-none text-[#e8eaf6] text-sm placeholder-[#8892b0] w-full min-w-0"
+              className="bg-transparent border-none outline-none text-[#17181C] text-sm placeholder-[#666A72] w-full min-w-0"
             />
           </div>
           <div className="flex gap-2">
@@ -451,28 +451,28 @@ export default function ReviewsPage() {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         {[
-          { label: 'Note moy.', value: avgStars, delta: '⭐', color: 'rgba(99,102,241,0.3)' },
+          { label: 'Note moy.', value: avgStars, delta: '⭐', color: 'rgba(228,87,46,0.3)' },
           { label: 'Avis reçus', value: totalReviews || '—', delta: 'total', color: 'rgba(6,182,212,0.3)' },
           { label: 'Réponses', value: totalReviews ? `${responseRate}%` : '—', delta: `${publishedCount} publiés`, color: 'rgba(52,211,153,0.3)' },
           { label: 'En attente', value: pendingCount_ || '—', delta: 'à traiter', color: 'rgba(245,158,11,0.3)' },
         ].map((stat, i) => (
           <div
             key={i}
-            className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-xl p-3 md:p-4 min-w-0"
+            className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-xl p-3 md:p-4 min-w-0"
             style={{ borderTopColor: stat.color, borderTopWidth: 2 }}
           >
-            <div className="text-[0.65rem] md:text-xs text-[#8892b0] font-medium uppercase tracking-wider mb-1 truncate">
+            <div className="text-[0.65rem] md:text-xs text-[#666A72] font-medium uppercase tracking-wider mb-1 truncate">
               {stat.label}
             </div>
-            <div className="text-[1.4rem] md:text-[1.8rem] font-bold tracking-tight text-[#e8eaf6]">{stat.value}</div>
-            <div className="text-[0.65rem] md:text-xs text-[#8892b0] mt-0.5 truncate">{stat.delta}</div>
+            <div className="text-[1.4rem] md:text-[1.8rem] font-bold tracking-tight text-[#17181C]">{stat.value}</div>
+            <div className="text-[0.65rem] md:text-xs text-[#666A72] mt-0.5 truncate">{stat.delta}</div>
           </div>
         ))}
       </div>
 
       {/* Tone selector */}
       <div className="flex items-center gap-2 mb-5 flex-wrap">
-        <span className="text-xs text-[#8892b0] font-medium">Ton IA :</span>
+        <span className="text-xs text-[#666A72] font-medium">Ton IA :</span>
         {TONES.map((t) => {
           const col = TONE_COLORS[t]
           const isActive = tone === t
@@ -490,8 +490,8 @@ export default function ReviewsPage() {
               }}
               className="px-3.5 py-1.5 rounded-full border text-xs font-medium transition-all flex items-center gap-1.5"
               style={{
-                borderColor: isLocked ? 'rgba(255,255,255,0.05)' : isActive ? col.border : 'rgba(255,255,255,0.07)',
-                color: isLocked ? 'rgba(136,146,176,0.4)' : isActive ? col.text : '#8892b0',
+                borderColor: isLocked ? 'rgba(0,0,0,0.04)' : isActive ? col.border : '#ECECEA',
+                color: isLocked ? 'rgba(136,146,176,0.4)' : isActive ? col.text : '#666A72',
                 background: isLocked ? 'transparent' : isActive ? col.bg : 'transparent',
                 cursor: isLocked ? 'pointer' : 'pointer',
               }}
@@ -499,7 +499,7 @@ export default function ReviewsPage() {
               {isLocked && <Lock size={10} />}
               {t}
               {isLocked && (
-                <span className="bg-[rgba(99,102,241,0.2)] text-[#818cf8] text-[0.6rem] font-bold px-1 py-0.5 rounded">
+                <span className="bg-[rgba(99,102,241,0.2)] text-[#C2481F] text-[0.6rem] font-bold px-1 py-0.5 rounded">
                   Pro
                 </span>
               )}
@@ -529,7 +529,7 @@ export default function ReviewsPage() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[14px] p-5">
+            <div key={i} className="bg-[rgba(0,0,0,0.03)] border border-[#ECECEA] rounded-[14px] p-5">
               <div className="flex items-center gap-2.5 mb-3">
                 <div className="w-[38px] h-[38px] rounded-full shimmer" />
                 <div className="flex-1">
@@ -550,8 +550,8 @@ export default function ReviewsPage() {
       ) : reviews.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">🏨</div>
-          <h3 className="text-xl font-bold text-[#e8eaf6] mb-2">Bienvenue sur StarReviews !</h3>
-          <p className="text-[#8892b0] text-sm mb-6 max-w-[380px] mx-auto leading-relaxed">
+          <h3 className="text-xl font-bold text-[#17181C] mb-2">Bienvenue sur StarReviews !</h3>
+          <p className="text-[#666A72] text-sm mb-6 max-w-[380px] mx-auto leading-relaxed">
             Commencez par ajouter votre premier avis Google pour voir l&apos;IA générer une réponse automatiquement.
           </p>
           <a href="/dashboard/settings" className="btn-primary text-sm">
@@ -559,7 +559,7 @@ export default function ReviewsPage() {
           </a>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 text-[#8892b0]">
+        <div className="text-center py-20 text-[#666A72]">
           <div className="text-4xl mb-4">📭</div>
           <div className="font-medium">Aucun avis trouvé</div>
           <div className="text-sm mt-1">

@@ -47,10 +47,10 @@ export function formatCountdown(scheduledAt: string): string {
 }
 
 export const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> = {
-  Professionnel: { border: '#34d399', text: '#34d399', bg: 'rgba(52,211,153,0.1)' },
-  Chaleureux: { border: '#f59e0b', text: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-  Empathique: { border: '#a78bfa', text: '#a78bfa', bg: 'rgba(167,139,250,0.1)' },
-  Décontracté: { border: '#06b6d4', text: '#06b6d4', bg: 'rgba(6,182,212,0.1)' },
+  Professionnel: { border: '#34d399', text: '#0E9F6E', bg: 'rgba(52,211,153,0.1)' },
+  Chaleureux: { border: '#f59e0b', text: '#B45309', bg: 'rgba(245,158,11,0.1)' },
+  Empathique: { border: '#a78bfa', text: '#7C3AED', bg: 'rgba(167,139,250,0.1)' },
+  Décontracté: { border: '#06b6d4', text: '#0E7490', bg: 'rgba(6,182,212,0.1)' },
 }
 
 export const STATIC_REPLIES: Record<string, Record<number, string>> = {

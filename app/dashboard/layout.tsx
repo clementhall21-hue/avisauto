@@ -126,7 +126,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
     <>
       {/* Hotel name */}
       {establishment?.name && (
-        <div className="text-xs font-semibold text-[#8892b0] px-3.5 pb-3.5 border-b border-[rgba(255,255,255,0.07)] mb-2 truncate">
+        <div className="text-xs font-semibold text-[#666A72] px-3.5 pb-3.5 border-b border-[#ECECEA] mb-2 truncate">
           {establishment.name}
         </div>
       )}
@@ -142,8 +142,8 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
             className={cn(
               'flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all mb-1',
               isActive
-                ? 'bg-[rgba(99,102,241,0.12)] text-[#818cf8] border-l-2 border-[#6366f1]'
-                : 'text-[#8892b0] hover:bg-[rgba(255,255,255,0.03)] hover:text-[#e8eaf6]'
+                ? 'bg-[rgba(228,87,46,0.10)] text-[#C2481F] border-l-2 border-[#E4572E]'
+                : 'text-[#666A72] hover:bg-[rgba(0,0,0,0.03)] hover:text-[#17181C]'
             )}
           >
             <item.icon size={16} />
@@ -161,34 +161,34 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       <div className="mt-auto pt-6">
         {subscription?.status === 'trialing' && trialDaysLeft !== null ? (
           <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
-            <div className="text-[#f59e0b] font-semibold mb-1 text-xs">⏳ Essai gratuit</div>
-            <div className="text-[#8892b0] text-xs">{trialDaysLeft} jour{trialDaysLeft !== 1 ? 's' : ''} restant{trialDaysLeft !== 1 ? 's' : ''}</div>
+            <div className="text-[#B45309] font-semibold mb-1 text-xs">⏳ Essai gratuit</div>
+            <div className="text-[#666A72] text-xs">{trialDaysLeft} jour{trialDaysLeft !== 1 ? 's' : ''} restant{trialDaysLeft !== 1 ? 's' : ''}</div>
             <CheckoutButton
               plan="pro"
-              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors bg-transparent border-none w-full"
+              className="mt-2 block text-center text-xs font-semibold text-[#E4572E] hover:text-[#C2481F] transition-colors bg-transparent border-none w-full"
             >
               Passer au plan payant →
             </CheckoutButton>
           </div>
         ) : subscription?.plan === 'starter' ? (
           <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
-            <div className="text-[#f59e0b] font-semibold mb-1 flex items-center gap-1 text-xs">
+            <div className="text-[#B45309] font-semibold mb-1 flex items-center gap-1 text-xs">
               <CheckCircle size={12} /> Plan Starter
             </div>
-            <div className="text-[#8892b0] text-xs">49€/mois · {subscription.ai_replies_count || 0}/30 réponses</div>
+            <div className="text-[#666A72] text-xs">49€/mois · {subscription.ai_replies_count || 0}/30 réponses</div>
             <CheckoutButton
               plan="pro"
-              className="mt-2 block text-center text-xs font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors bg-transparent border-none w-full"
+              className="mt-2 block text-center text-xs font-semibold text-[#E4572E] hover:text-[#C2481F] transition-colors bg-transparent border-none w-full"
             >
               Passer au Pro →
             </CheckoutButton>
           </div>
         ) : (
           <div className="bg-[rgba(52,211,153,0.08)] border border-[rgba(52,211,153,0.2)] rounded-xl p-3.5 text-sm">
-            <div className="text-[#34d399] font-semibold mb-1 flex items-center gap-1 text-xs">
+            <div className="text-[#0E9F6E] font-semibold mb-1 flex items-center gap-1 text-xs">
               <CheckCircle size={12} /> Plan Pro
             </div>
-            <div className="text-[#8892b0] text-xs">79€/mois · Illimité</div>
+            <div className="text-[#666A72] text-xs">79€/mois · Illimité</div>
           </div>
         )}
       </div>
@@ -197,28 +197,28 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <EstablishmentContext.Provider value={{ establishment, setEstablishment, pendingCount, setPendingCount, subscription }}>
-      <div className="min-h-screen bg-[#0b0f1e] flex flex-col overflow-x-hidden">
+      <div className="min-h-screen bg-[#FAFAF8] flex flex-col overflow-x-hidden">
         {/* Top nav */}
-        <nav className="flex items-center justify-between pl-4 pr-6 md:px-9 h-[60px] border-b border-[rgba(255,255,255,0.07)] bg-[rgba(15,30,60,0.96)] sticky top-0 z-50">
+        <nav className="flex items-center justify-between pl-4 pr-6 md:px-9 h-[60px] border-b border-[#ECECEA] bg-[rgba(255,255,255,0.96)] sticky top-0 z-50">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden text-[#8892b0] hover:text-[#e8eaf6] transition-colors p-1"
+              className="md:hidden text-[#666A72] hover:text-[#17181C] transition-colors p-1"
             >
               <Menu size={20} />
             </button>
             <Link href="/" className="font-extrabold text-[1.25rem] tracking-[-0.03em]">
-              <span className="gradient-text-logo">StarReviews</span>
+              <span className="text-[#17181C]">StarReviews</span>
             </Link>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="hidden sm:block text-sm text-[#8892b0]">
-              Bonjour, <span className="text-[#e8eaf6] font-medium">{userName}</span>
+            <span className="hidden sm:block text-sm text-[#666A72]">
+              Bonjour, <span className="text-[#17181C] font-medium">{userName}</span>
             </span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 border border-[rgba(255,255,255,0.07)] text-[#8892b0] hover:text-[#e8eaf6] hover:border-[rgba(255,255,255,0.2)] px-3 py-1.5 rounded-lg text-sm transition-colors"
+              className="flex items-center gap-1.5 border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] px-3 py-1.5 rounded-lg text-sm transition-colors"
             >
               <LogOut size={14} />
               <span className="hidden sm:inline">Déconnexion</span>
@@ -238,7 +238,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
           onClick={() => setMobileOpen(false)}
         >
           <div
-            className="absolute top-0 left-0 bottom-0 w-[240px] bg-[#111827] border-r border-[rgba(255,255,255,0.07)] p-4 flex flex-col gap-1"
+            className="absolute top-0 left-0 bottom-0 w-[240px] bg-white border-r border-[#ECECEA] p-4 flex flex-col gap-1"
             style={{
               transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
               transition: 'transform 0.28s cubic-bezier(0.32, 0, 0.12, 1)',
@@ -246,11 +246,11 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-5 pb-4 border-b border-[rgba(255,255,255,0.07)]">
-              <span className="font-extrabold text-lg gradient-text-logo">StarReviews.</span>
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-[#ECECEA]">
+              <span className="font-extrabold text-lg text-[#17181C]">StarReviews.</span>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="text-[#8892b0] hover:text-[#e8eaf6]"
+                className="text-[#666A72] hover:text-[#17181C]"
               >
                 <X size={18} />
               </button>
@@ -262,7 +262,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
         {/* Main layout */}
         <div className="flex flex-1">
           {/* Sidebar (desktop) */}
-          <aside className="hidden md:flex flex-col w-[220px] border-r border-[rgba(255,255,255,0.07)] p-4 min-h-[calc(100vh-60px)] sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto">
+          <aside className="hidden md:flex flex-col w-[220px] border-r border-[#ECECEA] p-4 min-h-[calc(100vh-60px)] sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto">
             {sidebarContent}
           </aside>
 

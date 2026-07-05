@@ -16,9 +16,9 @@ interface Feedback {
 }
 
 const STATUS_STYLES: Record<Feedback['status'], { label: string; className: string }> = {
-  nouveau: { label: 'Nouveau', className: 'bg-[rgba(244,63,94,0.12)] text-[#f43f5e] border-[rgba(244,63,94,0.25)]' },
-  lu: { label: 'Lu', className: 'bg-[rgba(245,158,11,0.12)] text-[#f59e0b] border-[rgba(245,158,11,0.25)]' },
-  'traité': { label: 'Traité', className: 'bg-[rgba(52,211,153,0.12)] text-[#34d399] border-[rgba(52,211,153,0.25)]' },
+  nouveau: { label: 'Nouveau', className: 'bg-[rgba(244,63,94,0.12)] text-[#E11D48] border-[rgba(244,63,94,0.25)]' },
+  lu: { label: 'Lu', className: 'bg-[rgba(245,158,11,0.12)] text-[#B45309] border-[rgba(245,158,11,0.25)]' },
+  'traité': { label: 'Traité', className: 'bg-[rgba(52,211,153,0.12)] text-[#0E9F6E] border-[rgba(52,211,153,0.25)]' },
 }
 
 export default function CollectPage() {
@@ -163,14 +163,14 @@ export default function CollectPage() {
   return (
     <div className="max-w-4xl">
       <h1 className="text-xl md:text-2xl font-extrabold mb-1">Collecter des avis</h1>
-      <p className="text-sm text-[#8892b0] mb-7">
+      <p className="text-sm text-[#666A72] mb-7">
         Posez ce QR code sur vos tables : vos clients notent leur visite, les satisfaits partent sur
         Google, les déçus vous écrivent en privé.
       </p>
 
       <div className="grid md:grid-cols-2 gap-5 mb-8">
         {/* QR code */}
-        <div className="bg-[rgba(15,30,60,0.5)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-6 flex flex-col items-center gap-4">
+        <div className="bg-[#FFFFFF] border border-[#ECECEA] rounded-2xl p-6 flex flex-col items-center gap-4">
           {qrDataUrl ? (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -179,78 +179,78 @@ export default function CollectPage() {
                 href={`/r/${slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs text-[#818cf8] hover:text-[#a5b4fc] transition-colors"
+                className="flex items-center gap-1.5 text-xs text-[#C2481F] hover:text-[#A93F1B] transition-colors"
               >
                 <Eye size={13} /> Voir la page publique
               </a>
               <div className="flex gap-2.5 w-full">
                 <button
                   onClick={downloadPng}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#6366f1] hover:bg-[#818cf8] text-white text-sm font-semibold py-2.5 rounded-lg transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#E4572E] hover:bg-[#C2481F] text-white text-sm font-semibold py-2.5 rounded-lg transition-colors"
                 >
                   <Download size={15} /> PNG
                 </button>
                 <button
                   onClick={downloadPdf}
-                  className="flex-1 flex items-center justify-center gap-2 border border-[rgba(255,255,255,0.15)] text-[#e8eaf6] hover:border-[rgba(255,255,255,0.35)] text-sm font-semibold py-2.5 rounded-lg transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 border border-[#D9D9D7] text-[#17181C] hover:border-[#B9B9B7] text-sm font-semibold py-2.5 rounded-lg transition-colors"
                 >
                   <FileText size={15} /> PDF à imprimer
                 </button>
               </div>
             </>
           ) : (
-            <p className="text-sm text-[#8892b0] py-16 text-center">
+            <p className="text-sm text-[#666A72] py-16 text-center">
               Définissez un lien personnalisé pour générer votre QR code.
             </p>
           )}
         </div>
 
         {/* Réglages */}
-        <div className="bg-[rgba(15,30,60,0.5)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-6 flex flex-col gap-4">
+        <div className="bg-[#FFFFFF] border border-[#ECECEA] rounded-2xl p-6 flex flex-col gap-4">
           <div>
-            <label className="block text-xs font-semibold text-[#8892b0] mb-1.5">Lien personnalisé</label>
-            <div className="flex items-center gap-0 bg-[#0b0f1e] border border-[rgba(255,255,255,0.1)] rounded-lg overflow-hidden">
-              <span className="text-xs text-[#8892b0] pl-3 pr-0.5 select-none whitespace-nowrap">…/r/</span>
+            <label className="block text-xs font-semibold text-[#666A72] mb-1.5">Lien personnalisé</label>
+            <div className="flex items-center gap-0 bg-[#FAFAF8] border border-[#E3E3E1] rounded-lg overflow-hidden">
+              <span className="text-xs text-[#666A72] pl-3 pr-0.5 select-none whitespace-nowrap">…/r/</span>
               <input
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="mon-restaurant"
-                className="flex-1 bg-transparent text-sm text-[#e8eaf6] py-2.5 pr-3 focus:outline-none min-w-0"
+                className="flex-1 bg-transparent text-sm text-[#17181C] py-2.5 pr-3 focus:outline-none min-w-0"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#8892b0] mb-1.5">Lien d&apos;avis Google</label>
+            <label className="block text-xs font-semibold text-[#666A72] mb-1.5">Lien d&apos;avis Google</label>
             <input
               value={googleUrl}
               onChange={(e) => setGoogleUrl(e.target.value)}
               placeholder="https://g.page/r/…/review"
-              className="w-full bg-[#0b0f1e] border border-[rgba(255,255,255,0.1)] rounded-lg text-sm text-[#e8eaf6] py-2.5 px-3 focus:outline-none focus:border-[#6366f1]"
+              className="w-full bg-[#FAFAF8] border border-[#E3E3E1] rounded-lg text-sm text-[#17181C] py-2.5 px-3 focus:outline-none focus:border-[#E4572E]"
             />
-            <p className="text-[0.7rem] text-[#8892b0] mt-1.5 leading-relaxed">
+            <p className="text-[0.7rem] text-[#666A72] mt-1.5 leading-relaxed">
               Sur Google Maps : votre fiche → « Demander des avis » → copiez le lien.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#8892b0] mb-1.5">Couleur de votre page</label>
+            <label className="block text-xs font-semibold text-[#666A72] mb-1.5">Couleur de votre page</label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
                 value={accent}
                 onChange={(e) => setAccent(e.target.value)}
-                className="w-10 h-10 rounded-lg border border-[rgba(255,255,255,0.1)] bg-transparent cursor-pointer p-0.5"
+                className="w-10 h-10 rounded-lg border border-[#E3E3E1] bg-transparent cursor-pointer p-0.5"
               />
-              <span className="text-sm text-[#e8eaf6] font-mono">{accent}</span>
+              <span className="text-sm text-[#17181C] font-mono">{accent}</span>
             </div>
-            <p className="text-[0.7rem] text-[#8892b0] mt-1.5">Utilisée sur la page que vos clients scannent (logo, boutons).</p>
+            <p className="text-[0.7rem] text-[#666A72] mt-1.5">Utilisée sur la page que vos clients scannent (logo, boutons).</p>
           </div>
 
           <button
             onClick={saveSettings}
             disabled={saving}
-            className="mt-auto flex items-center justify-center gap-2 bg-[#6366f1] hover:bg-[#818cf8] text-white text-sm font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60"
+            className="mt-auto flex items-center justify-center gap-2 bg-[#E4572E] hover:bg-[#C2481F] text-white text-sm font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60"
           >
             <Save size={15} /> {saving ? 'Sauvegarde…' : 'Sauvegarder'}
           </button>
@@ -260,7 +260,7 @@ export default function CollectPage() {
       {/* Feedbacks privés — seuls ceux avec un commentaire sont listés,
           les notes seules (4-5★ sans message) sont résumées en statistique */}
       <h2 className="text-base font-bold mb-3 flex items-center gap-2">
-        <MessageSquare size={16} className="text-[#818cf8]" />
+        <MessageSquare size={16} className="text-[#C2481F]" />
         Retours privés
         {commented.filter((f) => f.status === 'nouveau').length > 0 && (
           <span className="bg-[#f43f5e] text-white text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full leading-none">
@@ -270,16 +270,16 @@ export default function CollectPage() {
       </h2>
 
       {ratingOnly.length > 0 && (
-        <p className="text-xs text-[#8892b0] mb-3">
+        <p className="text-xs text-[#666A72] mb-3">
           ⭐ {ratingOnly.length} note{ratingOnly.length > 1 ? 's' : ''} laissée{ratingOnly.length > 1 ? 's' : ''} via le QR code sans commentaire
           (moyenne {(ratingOnly.reduce((s, f) => s + f.rating, 0) / ratingOnly.length).toFixed(1)}/5)
         </p>
       )}
 
       {loadingFeedbacks ? (
-        <p className="text-sm text-[#8892b0]">Chargement…</p>
+        <p className="text-sm text-[#666A72]">Chargement…</p>
       ) : commented.length === 0 ? (
-        <div className="bg-[rgba(15,30,60,0.5)] border border-[rgba(255,255,255,0.07)] rounded-2xl p-8 text-center text-sm text-[#8892b0]">
+        <div className="bg-[#FFFFFF] border border-[#ECECEA] rounded-2xl p-8 text-center text-sm text-[#666A72]">
           Aucun retour pour le moment. Ils apparaîtront ici dès qu&apos;un client scannera votre QR code.
         </div>
       ) : (
@@ -287,34 +287,34 @@ export default function CollectPage() {
           {commented.map((f) => (
             <div
               key={f.id}
-              className="bg-[rgba(15,30,60,0.5)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4 flex flex-col gap-2"
+              className="bg-[#FFFFFF] border border-[#ECECEA] rounded-xl p-4 flex flex-col gap-2"
             >
               <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-[#f59e0b] text-sm tracking-wide">
+                <span className="text-[#B45309] text-sm tracking-wide">
                   {'★'.repeat(f.rating)}
                   <span className="text-[rgba(245,158,11,0.25)]">{'★'.repeat(5 - f.rating)}</span>
                 </span>
-                <span className="text-xs text-[#8892b0]">
+                <span className="text-xs text-[#666A72]">
                   {new Date(f.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                 </span>
                 <span className={`ml-auto text-[0.65rem] font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLES[f.status].className}`}>
                   {STATUS_STYLES[f.status].label}
                 </span>
               </div>
-              {f.comment && <p className="text-sm text-[#e8eaf6] leading-relaxed">{f.comment}</p>}
+              {f.comment && <p className="text-sm text-[#17181C] leading-relaxed">{f.comment}</p>}
               {f.status !== 'traité' && (
                 <div className="flex gap-2 mt-1">
                   {f.status === 'nouveau' && (
                     <button
                       onClick={() => updateFeedbackStatus(f.id, 'lu')}
-                      className="text-xs text-[#8892b0] hover:text-[#e8eaf6] border border-[rgba(255,255,255,0.1)] px-2.5 py-1 rounded-md transition-colors"
+                      className="text-xs text-[#666A72] hover:text-[#17181C] border border-[#E3E3E1] px-2.5 py-1 rounded-md transition-colors"
                     >
                       Marquer comme lu
                     </button>
                   )}
                   <button
                     onClick={() => updateFeedbackStatus(f.id, 'traité')}
-                    className="flex items-center gap-1 text-xs text-[#34d399] border border-[rgba(52,211,153,0.25)] px-2.5 py-1 rounded-md hover:bg-[rgba(52,211,153,0.08)] transition-colors"
+                    className="flex items-center gap-1 text-xs text-[#0E9F6E] border border-[rgba(52,211,153,0.25)] px-2.5 py-1 rounded-md hover:bg-[rgba(52,211,153,0.08)] transition-colors"
                   >
                     <CheckCircle2 size={12} /> Traité
                   </button>
