@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface Props {
   establishmentId: string
@@ -24,11 +24,17 @@ export default function RatingFlow({ establishmentId, name, logoUrl, googleRevie
   const [error, setError] = useState('')
 
   const isNegative = rating >= 1 && rating <= 3
+  // Une seule trace "note seule" par visite, même si le client corrige sa note
+  const autoLogged = useRef(false)
 
   const submitRating = async (n: number) => {
     setRating(n)
+    // Changer de note ré-ouvre le parcours (feedback, erreurs)
+    setFeedbackSent(false)
+    setError('')
     // Les notes 4-5 sont enregistrées immédiatement (pas de champ commentaire).
-    if (n >= 4) {
+    if (n >= 4 && !autoLogged.current) {
+      autoLogged.current = true
       fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,34 +90,31 @@ export default function RatingFlow({ establishmentId, name, logoUrl, googleRevie
         )}
         <h1 className="text-2xl font-extrabold text-center tracking-tight">{name}</h1>
 
-        {rating === 0 ? (
-          <>
-            <p className="text-lg text-slate-500 text-center">Comment s&apos;est passée votre visite ?</p>
-            {/* Étoiles — gros boutons tactiles */}
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  aria-label={`${n} étoile${n > 1 ? 's' : ''}`}
-                  onClick={() => submitRating(n)}
-                  onMouseEnter={() => setHover(n)}
-                  onMouseLeave={() => setHover(0)}
-                  className="text-5xl leading-none p-1.5 active:scale-90 transition-transform"
-                  style={{ color: n <= hover ? '#f59e0b' : '#cbd5e1' }}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-          </>
-        ) : (
+        <p className="text-lg text-slate-500 text-center">
+          {rating === 0 ? 'Comment s’est passée votre visite ?' : 'Touchez une étoile pour modifier votre note'}
+        </p>
+
+        {/* Étoiles — toujours affichées et cliquables, la note reste modifiable */}
+        <div className="flex gap-2">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button
+              key={n}
+              type="button"
+              aria-label={`${n} étoile${n > 1 ? 's' : ''}`}
+              aria-pressed={rating >= n}
+              onClick={() => submitRating(n)}
+              onMouseEnter={() => setHover(n)}
+              onMouseLeave={() => setHover(0)}
+              className="text-5xl leading-none p-1.5 active:scale-90 transition-transform"
+              style={{ color: n <= (hover || rating) ? '#f59e0b' : '#cbd5e1' }}
+            >
+              ★
+            </button>
+          ))}
+        </div>
+
+        {rating > 0 && (
           <div className="w-full flex flex-col gap-5 items-center">
-            {/* Rappel de la note choisie */}
-            <div className="text-3xl" aria-hidden>
-              {'★'.repeat(rating)}
-              <span className="text-slate-300">{'★'.repeat(5 - rating)}</span>
-            </div>
 
             {isNegative && !feedbackSent && (
               <div className="w-full bg-white rounded-2xl shadow-md p-5 flex flex-col gap-3">
