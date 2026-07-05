@@ -12,22 +12,34 @@ export async function GET(request: NextRequest) {
 
     if (data.user) {
       const userId = data.user.id
-      const businessName = data.user.user_metadata?.business_name || ''
-      const fullName = data.user.user_metadata?.full_name || ''
+      const meta = data.user.user_metadata ?? {}
+      const businessName = meta.business_name || meta.full_name || meta.name || ''
+      const fullName = meta.full_name || meta.name || ''
 
       // Create establishment if it doesn't exist yet
-      const { data: existingEst } = await supabase
+      const { data: existing } = await supabase
         .from('establishments')
         .select('id')
         .eq('user_id', userId)
         .maybeSingle()
 
-      if (!existingEst && businessName) {
+      if (!existing) {
+        const baseSlug = businessName
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+        const slug = baseSlug
+          ? `${baseSlug}-${userId.slice(0, 4)}`
+          : `etablissement-${userId.slice(0, 8)}`
+
         await supabase.from('establishments').insert({
           user_id: userId,
           name: businessName,
           signature: fullName,
           tone: 'Professionnel',
+          slug,
         })
       }
 
