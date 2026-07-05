@@ -40,6 +40,7 @@ const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> 
 }
 
 const FEATURES = [
+  { icon: '📱', title: 'Collecte d\'avis par QR code', desc: 'Un QR code à poser sur vos tables : les clients satisfaits publient sur Google, les mécontents vous parlent en privé. PDF prêt à imprimer inclus.', color: 'rgba(52,211,153,0.15)', glow: '52,211,153' },
   { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)', glow: '99,102,241' },
   { icon: '✍️', title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble.", color: 'rgba(6,182,212,0.15)', glow: '6,182,212' },
   { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)', glow: '167,139,250' },
@@ -138,7 +139,7 @@ export default function LandingPage() {
             </button>
             <button
               onClick={() => setModalType('signup')}
-              style={{ fontSize: '0.72rem', padding: '5px 11px', borderRadius: '0', background: '#312e81', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
+              style={{ fontSize: '0.72rem', padding: '6px 12px', borderRadius: '8px', background: '#34d399', color: '#0b0f1e', border: 'none', cursor: 'pointer', fontWeight: 700, whiteSpace: 'nowrap' }}
             >
               Essai gratuit
             </button>
@@ -231,7 +232,7 @@ export default function LandingPage() {
           className="inline-flex items-center gap-2 bg-[rgba(99,102,241,0.1)] border border-[rgba(99,102,241,0.25)] text-[#818cf8] text-[0.75rem] font-semibold px-3.5 py-1.5 rounded-full mb-8 tracking-[0.05em] uppercase"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-[pulseDot_2s_infinite]" />
-          Pour tout établissement qui reçoit des avis Google
+          Pour les restaurants et hôtels
         </motion.div>
 
         <motion.h1
@@ -240,8 +241,7 @@ export default function LandingPage() {
           transition={{ duration: 0.55, delay: 0.05 }}
           className="text-[clamp(2rem,8vw,4.5rem)] font-black tracking-[-0.04em] leading-[1.06] max-w-[820px] mx-auto mb-6"
         >
-          Répondez à vos<br />
-          avis Google{' '}
+          Faites grimper votre{' '}
           <em
             className="not-italic"
             style={{
@@ -251,7 +251,7 @@ export default function LandingPage() {
               backgroundClip: 'text',
             }}
           >
-            en un clic
+            note Google
           </em>
         </motion.h1>
 
@@ -261,7 +261,9 @@ export default function LandingPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-[0.95rem] md:text-[1.1rem] text-[#8892b0] max-w-[520px] mx-auto mb-8 md:mb-11 leading-[1.6] px-2"
         >
-          Votre IA rédige une réponse personnalisée à chaque avis, avec le ton de votre marque, et la publie à votre place. Zéro effort, image parfaite.
+          Un QR code sur vos tables récolte plus d&apos;avis positifs et capte les clients
+          mécontents en privé, avant qu&apos;ils publient. Et l&apos;IA répond à chaque avis
+          à votre place, dans votre ton. Le cercle complet, zéro effort.
         </motion.p>
 
         <motion.div
@@ -346,9 +348,9 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
           {[
-            { n: '1', title: 'Un avis arrive sur Google', desc: 'Un client laisse un avis sur votre fiche Google My Business — positif, négatif ou mitigé.' },
-            { n: '2', title: 'L\'IA rédige la réponse', desc: 'StarReviews analyse l\'avis et génère une réponse adaptée avec votre ton et votre signature.' },
-            { n: '3', title: 'Vous publiez d\'un clic — ou l\'IA le fait pour vous', desc: 'Relisez la réponse et publiez d\'un clic. Ou activez le mode automatique : l\'IA publie à l\'heure que vous choisissez, sans aucune intervention de votre part.' },
+            { n: '1', title: 'Vos clients scannent le QR code à table', desc: 'Les clients satisfaits sont dirigés vers votre fiche Google. Les déçus vous écrivent en privé — leur critique n\'apparaît jamais publiquement.' },
+            { n: '2', title: 'Votre note Google grimpe', desc: 'Plus d\'avis positifs publiés, moins d\'avis négatifs : votre note moyenne monte, et votre établissement ressort dans les recherches.' },
+            { n: '3', title: 'L\'IA répond à chaque avis pour vous', desc: 'Chaque avis reçoit une réponse personnalisée, dans votre ton et avec votre signature. Relisez avant publication, ou laissez le mode automatique tout gérer.' },
           ].map((step, i) => (
             <FadeUp key={i} delay={i * 0.1}>
               <div className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.07)] rounded-[16px] p-7">

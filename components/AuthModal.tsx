@@ -225,7 +225,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-br from-[#6366f1] to-[#7c3aed] text-[#0b0f1e] font-bold py-[13px] rounded-[9px] text-[0.95rem] mt-2 hover:from-[#818cf8] hover:to-[#6366f1] hover:shadow-[0_6px_20px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full bg-[#34d399] text-[#0b0f1e] font-bold py-[13px] rounded-[10px] text-[0.95rem] mt-2 hover:bg-[#6ee7b7] hover:shadow-[0_6px_20px_rgba(52,211,153,0.35)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : null}
                 Se connecter
@@ -326,7 +326,7 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-br from-[#6366f1] to-[#7c3aed] text-[#0b0f1e] font-bold py-[13px] rounded-[9px] text-[0.95rem] mt-2 hover:from-[#818cf8] hover:to-[#6366f1] hover:shadow-[0_6px_20px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full bg-[#34d399] text-[#0b0f1e] font-bold py-[13px] rounded-[10px] text-[0.95rem] mt-2 hover:bg-[#6ee7b7] hover:shadow-[0_6px_20px_rgba(52,211,153,0.35)] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : null}
                 Démarrer gratuitement →
