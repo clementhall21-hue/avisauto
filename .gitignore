@@ -30,3 +30,6 @@ next-env.d.ts
 # misc
 .DS_Store
 *.pem
+
+# outreach — données prospects (jamais committer)
+outreach/prospects.csv
