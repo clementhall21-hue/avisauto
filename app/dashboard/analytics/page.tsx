@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { Loader2, TrendingUp, AlertCircle, Award } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { isTrialActive } from '@/lib/utils'
 import { useEstablishment, useSubscription } from '../layout'
 import CheckoutButton from '@/components/CheckoutButton'
 
@@ -20,7 +20,8 @@ interface Review {
   ai_reply: string | null
 }
 
-const STAR_COLORS = ['#f43f5e', '#f59e0b', '#f59e0b', '#34d399', '#E4572E']
+// Index [5 - étoiles] : 5★ vert, 4★ vert clair, 3★ jaune, 2★ orange, 1★ rouge
+const STAR_COLORS = ['#22C55E', '#4ADE80', '#FACC15', '#FB923C', '#EF4444']
 
 function DonutChart({ percentage }: { percentage: number }) {
   const radius = 38
@@ -50,7 +51,11 @@ function DonutChart({ percentage }: { percentage: number }) {
 export default function AnalyticsPage() {
   const { establishment } = useEstablishment()
   const subscription = useSubscription()
-  const isPro = !subscription || subscription.plan === 'pro' || subscription.status === 'trialing'
+  // Accès Pro : abonnement payant actif plan Pro, ou essai gratuit non expiré
+  const isPro =
+    !subscription ||
+    (subscription.status === 'active' && subscription.plan === 'pro') ||
+    isTrialActive(subscription)
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [analyzing, setAnalyzing] = useState(false)
@@ -86,8 +91,6 @@ export default function AnalyticsPage() {
     }
   })
 
-  // Chart data
-  const chartData = starDist.map((d) => ({ name: `${d.star}★`, count: d.count, pct: d.pct }))
 
   // Insights
   const negCount = reviews.filter((r) => r.stars <= 2).length
@@ -183,44 +186,25 @@ export default function AnalyticsPage() {
           {totalReviews === 0 ? (
             <div className="text-[#666A72] text-sm text-center py-8">Aucune donnée disponible</div>
           ) : (
-            <>
-              <ResponsiveContainer width="100%" height={160}>
-                <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 30, bottom: 0, left: 20 }}>
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="name" tick={{ fill: '#666A72', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ background: '#FFFFFF', border: '1px solid #E3E3E1', borderRadius: 8, color: '#17181C', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', fontSize: 12 }}
-                    formatter={(value: number, name: string, props) => [`${value} avis (${props.payload.pct}%)`, '']}
-                  />
-                  <Bar dataKey="count" radius={4} maxBarSize={20}>
-                    {chartData.map((entry, index) => (
-                      <Cell key={index} fill={STAR_COLORS[index]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-
-              {/* Detailed breakdown */}
-              <div className="mt-4 space-y-2">
-                {starDist.map((d) => (
-                  <div key={d.star} className="flex items-center gap-3">
-                    <span className="text-xs text-[#666A72] w-8">{d.star}★</span>
-                    <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-700"
-                        style={{
-                          width: `${d.pct}%`,
-                          background: STAR_COLORS[5 - d.star],
-                        }}
-                      />
-                    </div>
-                    <span className="text-xs text-[#666A72] w-12 text-right">
-                      {d.count} ({d.pct}%)
-                    </span>
+            <div className="space-y-3 py-1">
+              {starDist.map((d) => (
+                <div key={d.star} className="flex items-center gap-3">
+                  <span className="text-xs text-[#666A72] w-8">{d.star}★</span>
+                  <div className="flex-1 h-2.5 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${d.pct}%`,
+                        background: STAR_COLORS[5 - d.star],
+                      }}
+                    />
                   </div>
-                ))}
-              </div>
-            </>
+                  <span className="text-xs text-[#666A72] w-16 text-right">
+                    {d.count} ({d.pct}%)
+                  </span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 

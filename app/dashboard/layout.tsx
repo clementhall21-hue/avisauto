@@ -160,16 +160,29 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       {/* Plan status */}
       <div className="mt-auto pt-6">
         {subscription?.status === 'trialing' && trialDaysLeft !== null ? (
-          <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
-            <div className="text-[#B45309] font-semibold mb-1 text-xs">⏳ Essai gratuit</div>
-            <div className="text-[#666A72] text-xs">{trialDaysLeft} jour{trialDaysLeft !== 1 ? 's' : ''} restant{trialDaysLeft !== 1 ? 's' : ''}</div>
-            <CheckoutButton
-              plan="pro"
-              className="mt-2 block text-center text-xs font-semibold text-[#E4572E] hover:text-[#C2481F] transition-colors bg-transparent border-none w-full"
-            >
-              Passer au plan payant →
-            </CheckoutButton>
-          </div>
+          trialDaysLeft > 0 ? (
+            <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
+              <div className="text-[#B45309] font-semibold mb-1 text-xs">⏳ Essai gratuit</div>
+              <div className="text-[#666A72] text-xs">{trialDaysLeft} jour{trialDaysLeft !== 1 ? 's' : ''} restant{trialDaysLeft !== 1 ? 's' : ''}</div>
+              <CheckoutButton
+                plan="pro"
+                className="mt-2 block text-center text-xs font-semibold text-[#E4572E] hover:text-[#C2481F] transition-colors bg-transparent border-none w-full"
+              >
+                Passer au plan payant →
+              </CheckoutButton>
+            </div>
+          ) : (
+            <div className="bg-[rgba(244,63,94,0.06)] border border-[rgba(244,63,94,0.25)] rounded-xl p-3.5 text-sm">
+              <div className="text-[#E11D48] font-semibold mb-1 text-xs">⛔ Essai terminé</div>
+              <div className="text-[#666A72] text-xs">Passez au plan payant pour continuer à utiliser StarReviews.</div>
+              <CheckoutButton
+                plan="pro"
+                className="mt-2.5 block text-center text-xs font-bold text-white bg-[#E4572E] hover:bg-[#C2481F] transition-colors rounded-lg py-2 w-full"
+              >
+                Réactiver mon compte →
+              </CheckoutButton>
+            </div>
+          )
         ) : subscription?.plan === 'starter' ? (
           <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.2)] rounded-xl p-3.5 text-sm">
             <div className="text-[#B45309] font-semibold mb-1 flex items-center gap-1 text-xs">

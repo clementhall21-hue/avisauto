@@ -6,7 +6,7 @@ import { AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { useEstablishment, useSubscription } from '../layout'
 import ReviewCard, { type Review } from '@/components/ReviewCard'
-import { getInitials, getAvatarColor, TONE_COLORS, STATIC_REPLIES } from '@/lib/utils'
+import { getInitials, getAvatarColor, TONE_COLORS, STATIC_REPLIES, isTrialActive } from '@/lib/utils'
 import { useToast } from '@/components/Toast'
 import UpgradeModal from '@/components/UpgradeModal'
 import CheckoutButton from '@/components/CheckoutButton'
@@ -79,7 +79,11 @@ const SAMPLE_REVIEWS = [
 export default function ReviewsPage() {
   const { establishment, setPendingCount } = useEstablishment()
   const subscription = useSubscription()
-  const isPro = !subscription || subscription.plan === 'pro' || subscription.status === 'trialing'
+  // Accès Pro : abonnement payant actif plan Pro, ou essai gratuit non expiré
+  const isPro =
+    !subscription ||
+    (subscription.status === 'active' && subscription.plan === 'pro') ||
+    isTrialActive(subscription)
   const [reviews, setReviews] = useState<Review[]>([])
   const [generatingIds, setGeneratingIds] = useState<Set<string>>(new Set())
   const [tone, setTone] = useState<string>('Professionnel')

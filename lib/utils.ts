@@ -5,6 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Essai gratuit encore valide (statut trialing ET date de fin non dépassée)
+export function isTrialActive(sub: { status: string; trial_ends_at: string | null }): boolean {
+  return (
+    sub.status === 'trialing' &&
+    (!sub.trial_ends_at || new Date(sub.trial_ends_at).getTime() > Date.now())
+  )
+}
+
 export const AVATAR_COLORS = [
   { bg: '#dbeafe', text: '#1e40af' },
   { bg: '#fef3c7', text: '#92400e' },
