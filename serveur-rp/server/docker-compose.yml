@@ -1,0 +1,36 @@
+# Base de données du serveur FiveM (MariaDB + interface d'admin).
+# Le FXServer lui-même tourne en natif via txAdmin (voir README racine) —
+# c'est le setup standard et le plus simple à opérer.
+#
+#   cp .env.example .env   # éditer les mots de passe
+#   docker compose up -d
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: rp-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "127.0.0.1:3306:3306"   # accessible uniquement en local
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: rp-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+    ports:
+      - "127.0.0.1:8081:80"     # accès via tunnel SSH uniquement, jamais exposé
+    depends_on:
+      - mariadb
+
+volumes:
+  db_data:
