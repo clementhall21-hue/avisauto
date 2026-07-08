@@ -3,7 +3,7 @@
 import { useEffect, useState, createContext, useContext } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut, CheckCircle, QrCode } from 'lucide-react'
+import { LayoutDashboard, BarChart2, Settings, Menu, X, LogOut, CheckCircle, QrCode, Swords } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { ToastProvider, useToast } from '@/components/Toast'
 import { cn } from '@/lib/utils'
@@ -114,6 +114,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
       badge: pendingCount > 0 ? pendingCount : null,
     },
     { href: '/dashboard/collect', label: 'Collecter des avis', icon: QrCode, badge: null },
+    { href: '/dashboard/competitors', label: 'Mes concurrents', icon: Swords, badge: null },
     { href: '/dashboard/analytics', label: 'Analytiques', icon: BarChart2, badge: null },
     { href: '/dashboard/settings', label: 'Paramètres', icon: Settings, badge: null },
   ]
