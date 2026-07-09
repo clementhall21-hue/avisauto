@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Loader2, Plus, Trash2, Sparkles, Store } from 'lucide-react'
+import { Loader2, Plus, Trash2, Sparkles, Store, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useEstablishment } from '../layout'
 import { useToast } from '@/components/Toast'
@@ -39,6 +39,29 @@ export default function CompetitorsPage() {
   const [addingSelf, setAddingSelf] = useState(false)
   const [insight, setInsight] = useState('')
   const [analyzing, setAnalyzing] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const refreshData = async () => {
+    setRefreshing(true)
+    try {
+      const res = await fetch('/api/competitors/refresh', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) {
+        showToast(data.error || 'Erreur', 'error')
+        return
+      }
+      if (data.errors?.length) {
+        showToast(data.errors[0], 'error')
+      } else {
+        showToast(`${data.updated} fiche${data.updated > 1 ? 's' : ''} actualisée${data.updated > 1 ? 's' : ''}`)
+      }
+      await load()
+    } catch {
+      showToast('Erreur réseau', 'error')
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   const load = async () => {
     if (!establishment) return
@@ -102,19 +125,22 @@ export default function CompetitorsPage() {
     }
   }
 
-  // Lignes du tableau : dernier snapshot + delta depuis le précédent
+  // Lignes du tableau : dernier snapshot avec données + delta depuis le précédent.
+  // Postgres renvoie les numeric en texte → Number() systématique.
   const rows = useMemo(() => {
     return competitors.map((c) => {
-      const snaps = sortSnaps(c.competitor_snapshots || [])
+      const snaps = sortSnaps(c.competitor_snapshots || []).filter(
+        (s) => s.rating != null || s.review_count != null
+      )
       const last = snaps[snaps.length - 1]
       const prev = snaps[snaps.length - 2]
       return {
         id: c.id,
         name: c.name,
         isSelf: c.is_self,
-        rating: last?.rating ?? null,
-        reviews: last?.review_count ?? null,
-        gained: last && prev ? (last.review_count ?? 0) - (prev.review_count ?? 0) : null,
+        rating: last?.rating != null ? Number(last.rating) : null,
+        reviews: last?.review_count != null ? Number(last.review_count) : null,
+        gained: last && prev ? Number(last.review_count ?? 0) - Number(prev.review_count ?? 0) : null,
       }
     }).sort((a, b) => (b.isSelf ? 1 : 0) - (a.isSelf ? 1 : 0))
   }, [competitors])
@@ -135,8 +161,8 @@ export default function CompetitorsPage() {
       for (const s of c.competitor_snapshots || []) {
         const day = new Date(s.captured_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })
         byDate[day] = byDate[day] || { date: day, _ts: new Date(s.captured_at).getTime() }
-        if (s.review_count != null) byDate[day][`avis_${c.name}`] = s.review_count
-        if (s.rating != null) byDate[day][`note_${c.name}`] = s.rating
+        if (s.review_count != null) byDate[day][`avis_${c.name}`] = Number(s.review_count)
+        if (s.rating != null) byDate[day][`note_${c.name}`] = Number(s.rating)
       }
     }
     return Object.values(byDate).sort((a, b) => (a._ts as number) - (b._ts as number))
@@ -224,7 +250,17 @@ export default function CompetitorsPage() {
       {rows.length > 0 && (
         <div className="bg-white border border-[#ECECEA] rounded-2xl p-5 mb-5 overflow-x-auto">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <div className="font-bold text-sm">Comparatif</div>
+            <div className="flex items-center gap-3">
+              <div className="font-bold text-sm">Comparatif</div>
+              <button
+                onClick={refreshData}
+                disabled={refreshing}
+                className="flex items-center gap-1.5 text-xs text-[#666A72] hover:text-[#C2481F] border border-[#E3E3E1] hover:border-[rgba(228,87,46,0.4)] px-2.5 py-1 rounded-md transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
+                {refreshing ? 'Actualisation…' : 'Actualiser les données'}
+              </button>
+            </div>
             {aboveAverage !== null && (
               <span
                 className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${

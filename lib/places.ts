@@ -19,14 +19,23 @@ function apiKey(): string {
   return key
 }
 
+function toNum(v: unknown): number | null {
+  if (typeof v === 'number' && !isNaN(v)) return v
+  if (typeof v === 'string') {
+    const n = parseFloat(v.replace(/\s/g, '').replace(',', '.'))
+    return isNaN(n) ? null : n
+  }
+  return null
+}
+
 function parsePlaceResult(r: Record<string, unknown>): PlaceInfo | null {
   const placeId = (r.place_id as string) || ''
   if (!placeId) return null
   return {
     placeId,
     name: (r.title as string) || '',
-    rating: typeof r.rating === 'number' ? r.rating : null,
-    reviewCount: typeof r.reviews === 'number' ? r.reviews : null,
+    rating: toNum(r.rating),
+    reviewCount: toNum(r.reviews) ?? toNum(r.user_ratings_total) ?? toNum(r.reviews_count),
   }
 }
 
@@ -39,8 +48,9 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceInfo | null
     api_key: apiKey(),
   })
   const res = await fetch(`${SERPAPI_BASE}?${params}`, { signal: AbortSignal.timeout(20000) })
+  const data = await res.json().catch(() => ({}))
+  if (data.error) throw new Error(`SerpAPI: ${data.error}`)
   if (!res.ok) return null
-  const data = await res.json()
   if (data.place_results) return parsePlaceResult(data.place_results)
   return null
 }
@@ -55,11 +65,17 @@ export async function searchPlace(query: string): Promise<PlaceInfo | null> {
     api_key: apiKey(),
   })
   const res = await fetch(`${SERPAPI_BASE}?${params}`, { signal: AbortSignal.timeout(20000) })
+  const data = await res.json().catch(() => ({}))
+  if (data.error) throw new Error(`SerpAPI: ${data.error}`)
   if (!res.ok) return null
-  const data = await res.json()
   if (data.place_results) return parsePlaceResult(data.place_results)
-  const first = Array.isArray(data.local_results) ? data.local_results[0] : null
-  return first ? parsePlaceResult(first) : null
+  if (Array.isArray(data.local_results)) {
+    // Préfère le premier résultat qui a une note (évite les entrées sponsorisées vides)
+    const withRating = data.local_results.find((r: Record<string, unknown>) => r.rating != null)
+    const candidate = withRating || data.local_results[0]
+    if (candidate) return parsePlaceResult(candidate)
+  }
+  return null
 }
 
 // Résout l'entrée du gérant : Place ID brut, URL Google Maps, ou nom à chercher
