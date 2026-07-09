@@ -275,15 +275,14 @@ export default function CompetitorsPage() {
                     )}
                   </td>
                   <td className="py-2.5 text-right">
-                    {!r.isSelf && (
-                      <button
-                        onClick={() => removeCompetitor(r.id)}
-                        className="text-[#666A72] hover:text-[#E11D48] transition-colors p-1"
-                        aria-label={`Supprimer ${r.name}`}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    )}
+                    <button
+                      onClick={() => removeCompetitor(r.id)}
+                      className="text-[#666A72] hover:text-[#E11D48] transition-colors p-1"
+                      aria-label={`Supprimer ${r.name}`}
+                      title={r.isSelf ? 'Supprimer pour choisir une autre fiche' : `Supprimer ${r.name}`}
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </td>
                 </tr>
               ))}
