@@ -103,6 +103,35 @@ export async function POST() {
       }
     })
 
+    // ── Statistiques calculées côté serveur (le modèle ne calcule pas, il commente) ──
+    const me = summary.find((s) => s.nom.includes('(MOI)'))
+    const others = summary.filter((s) => !s.nom.includes('(MOI)') && s.note != null)
+
+    const avgRivalRating = others.length
+      ? others.reduce((acc, s) => acc + (s.note ?? 0), 0) / others.length
+      : null
+    const avgRivalReviews = others.length
+      ? Math.round(others.reduce((acc, s) => acc + (s.avis ?? 0), 0) / others.length)
+      : null
+
+    // Vitesse d'acquisition (avis / 30 jours), extrapolée depuis la période observée
+    const velocity = (s: { avis_gagnes: number; periode_jours: number }) =>
+      s.periode_jours > 0 ? Math.round((s.avis_gagnes / s.periode_jours) * 30) : null
+
+    // Nombre d'avis 5★ nécessaires pour atteindre la note cible :
+    // n = avis × (cible − note) / (5 − cible)
+    let fiveStarsNeeded: number | null = null
+    if (me?.note != null && me?.avis != null && avgRivalRating != null && me.note < avgRivalRating && avgRivalRating < 5) {
+      fiveStarsNeeded = Math.ceil((me.avis * (avgRivalRating - me.note)) / (5 - avgRivalRating))
+    }
+
+    const stats = {
+      etablissements: summary.map((s) => ({ ...s, avis_par_mois_estime: velocity(s) })),
+      moyenne_concurrents: { note: avgRivalRating ? Number(avgRivalRating.toFixed(2)) : null, avis: avgRivalReviews },
+      ecart_note: me?.note != null && avgRivalRating != null ? Number((me.note - avgRivalRating).toFixed(2)) : null,
+      avis_5_etoiles_necessaires_pour_rattraper_moyenne: fiveStarsNeeded,
+    }
+
     const apiKey = process.env.GROQ_API_KEY
     if (!apiKey) {
       return NextResponse.json({
@@ -118,21 +147,32 @@ export async function POST() {
       messages: [
         {
           role: 'system',
-          content: `Tu es un consultant en réputation locale pour restaurants et hôtels.
-On te donne les données Google (note moyenne, nombre d'avis, avis gagnés sur la période) d'un établissement (marqué MOI) et de ses concurrents directs.
-Rédige UN SEUL paragraphe en français (4 phrases max), concret et actionnable :
-- situe l'établissement par rapport à la moyenne des concurrents (note et volume)
-- signale le concurrent le plus dynamique si pertinent
-- termine par UNE recommandation concrète (ex: intensifier la collecte d'avis par QR code)
-Pas de titre, pas de liste, pas de flatterie inutile.`,
+          content: `Tu es un consultant senior en réputation locale pour restaurants et hôtels.
+On te donne des statistiques Google pré-calculées : l'établissement du client est marqué (MOI), avec la moyenne de ses concurrents, l'écart de note, la vitesse d'acquisition d'avis estimée, et le nombre d'avis 5★ nécessaires pour rattraper la moyenne.
+L'établissement utilise StarReviews, qui propose : collecte d'avis par QR code posé sur les tables (les clients mécontents sont captés en privé avant de publier sur Google), et réponse automatique IA à chaque avis Google.
+
+Réponds en français, en texte brut structuré EXACTEMENT ainsi (pas de markdown, pas de gras) :
+
+📊 CONSTAT
+2 phrases max : position vs concurrents, chiffres clés (écart de note, volumes). Cite le concurrent le plus menaçant.
+
+🎯 PRIORITÉ
+1 phrase : LE levier n°1 à actionner, avec l'objectif chiffré (utilise le nombre d'avis 5★ nécessaires si fourni).
+
+✅ PLAN D'ACTION
+1. [action concrète, chiffrée, réalisable cette semaine — mentionne le QR code StarReviews si pertinent]
+2. [action concrète sur les avis existants — mentionne les réponses IA si pertinent]
+3. [action concrète de fond, mesurable au prochain relevé hebdo]
+
+Règles : chiffres issus des données uniquement, pas d'invention. Actions spécifiques (où, combien, quand), jamais de généralités type "améliorer la qualité". Si les avis gagnés sont à 0 sur une période courte, dis que la dynamique sera mesurable dès les prochains relevés hebdomadaires, sans en tirer de conclusion.`,
         },
         {
           role: 'user',
-          content: `Données: ${JSON.stringify(summary)}`,
+          content: `Statistiques: ${JSON.stringify(stats)}`,
         },
       ],
       temperature: 0.4,
-      max_tokens: 300,
+      max_tokens: 700,
     })
 
     const insight = completion.choices[0]?.message?.content?.trim() || 'Analyse non disponible.'

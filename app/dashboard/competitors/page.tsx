@@ -388,7 +388,7 @@ export default function CompetitorsPage() {
             </button>
           </div>
           {insight ? (
-            <p className="text-sm text-[#17181C] leading-relaxed bg-[rgba(0,0,0,0.02)] rounded-xl p-4">{insight}</p>
+            <p className="text-sm text-[#17181C] leading-relaxed bg-[rgba(0,0,0,0.02)] rounded-xl p-4 whitespace-pre-line">{insight}</p>
           ) : (
             <p className="text-sm text-[#666A72]">
               L&apos;IA résume votre position face à vos concurrents et vous dit quoi faire pour creuser l&apos;écart.
