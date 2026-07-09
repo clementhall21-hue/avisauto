@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { Loader2, Plus, Trash2, Sparkles, Store, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -40,6 +40,7 @@ export default function CompetitorsPage() {
   const [insight, setInsight] = useState('')
   const [analyzing, setAnalyzing] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const autoHealed = useRef(false)
 
   const refreshData = async () => {
     setRefreshing(true)
@@ -70,8 +71,19 @@ export default function CompetitorsPage() {
       .select('id, name, is_self, competitor_snapshots ( rating, review_count, captured_at )')
       .eq('establishment_id', establishment.id)
       .order('created_at', { ascending: true })
-    setCompetitors((data as Competitor[]) || [])
+    const list = (data as Competitor[]) || []
+    setCompetitors(list)
     setLoading(false)
+
+    // Auto-réparation : des lieux suivis mais aucun relevé exploitable
+    // → on relance la récupération une seule fois, sans intervention
+    const noUsableData =
+      list.length > 0 &&
+      list.every((c) => !(c.competitor_snapshots || []).some((s) => s.rating != null || s.review_count != null))
+    if (noUsableData && !autoHealed.current) {
+      autoHealed.current = true
+      refreshData()
+    }
   }
 
   useEffect(() => {
