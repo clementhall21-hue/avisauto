@@ -1,9 +1,25 @@
 import { NextResponse } from 'next/server'
 import Groq from 'groq-sdk'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
+import { getPlaceDetails } from '@/lib/places'
+
+export const maxDuration = 60
+
+interface CompetitorWithSnaps {
+  id: string
+  name: string
+  is_self: boolean
+  google_place_id: string
+  competitor_snapshots: { rating: number | null; review_count: number | null; captured_at: string }[]
+}
+
+const hasUsableSnap = (c: CompetitorWithSnaps) =>
+  (c.competitor_snapshots || []).some((s) => s.rating != null || s.review_count != null)
 
 // Résumé IA de la situation concurrentielle, à partir des snapshots.
 // Authentifié par session Supabase — chaque gérant n'analyse que ses données.
+// Auto-réparation : si aucun relevé exploitable, on va chercher les données
+// Google immédiatement avant d'analyser.
 export async function POST() {
   try {
     const supabase = await createClient()
@@ -17,13 +33,48 @@ export async function POST() {
       .maybeSingle()
     if (!establishment) return NextResponse.json({ error: 'Établissement introuvable' }, { status: 404 })
 
-    const { data: competitors } = await supabase
-      .from('competitors')
-      .select('id, name, is_self, competitor_snapshots ( rating, review_count, captured_at )')
-      .eq('establishment_id', establishment.id)
+    const selectCompetitors = () =>
+      supabase
+        .from('competitors')
+        .select('id, name, is_self, google_place_id, competitor_snapshots ( rating, review_count, captured_at )')
+        .eq('establishment_id', establishment.id)
+
+    let { data: competitors } = await selectCompetitors() as { data: CompetitorWithSnaps[] | null }
 
     if (!competitors || competitors.length === 0) {
       return NextResponse.json({ insight: 'Ajoutez d’abord des concurrents pour obtenir une analyse.' })
+    }
+
+    // Aucune donnée exploitable → on récupère depuis Google maintenant
+    if (!competitors.some(hasUsableSnap)) {
+      const service = await createServiceClient()
+      const fetchErrors: string[] = []
+      for (const c of competitors) {
+        try {
+          const place = await getPlaceDetails(c.google_place_id)
+          if (place && (place.rating != null || place.reviewCount != null)) {
+            await service.from('competitor_snapshots').insert({
+              competitor_id: c.id,
+              rating: place.rating,
+              review_count: place.reviewCount,
+            })
+          } else {
+            fetchErrors.push(`${c.name}: fiche Google sans note exploitable`)
+          }
+        } catch (e) {
+          fetchErrors.push(`${c.name}: ${e instanceof Error ? e.message : 'erreur'}`)
+        }
+        await new Promise((r) => setTimeout(r, 400))
+      }
+
+      const requery = await selectCompetitors() as { data: CompetitorWithSnaps[] | null }
+      competitors = requery.data || competitors
+
+      if (!competitors.some(hasUsableSnap)) {
+        return NextResponse.json({
+          insight: `Impossible de récupérer les données Google pour le moment. Détail technique : ${fetchErrors[0] || 'aucune donnée renvoyée'}`,
+        })
+      }
     }
 
     // Compacte les données pour le prompt : dernier snapshot + plus ancien
