@@ -28,7 +28,9 @@ export async function POST() {
 
     // Compacte les données pour le prompt : dernier snapshot + plus ancien
     const summary = competitors.map((c) => {
-      const snaps = (c.competitor_snapshots || []).sort(
+      const snaps = (c.competitor_snapshots || [])
+        .filter((s: { rating: number | null; review_count: number | null }) => s.rating != null || s.review_count != null)
+        .sort(
         (a: { captured_at: string }, b: { captured_at: string }) =>
           new Date(a.captured_at).getTime() - new Date(b.captured_at).getTime()
       )
@@ -37,11 +39,12 @@ export async function POST() {
       const days = first && last
         ? Math.max(1, Math.round((new Date(last.captured_at).getTime() - new Date(first.captured_at).getTime()) / 86400000))
         : 0
-      const gained = first && last ? (last.review_count ?? 0) - (first.review_count ?? 0) : 0
+      // Postgres renvoie les numeric en texte → Number() systématique
+      const gained = first && last ? Number(last.review_count ?? 0) - Number(first.review_count ?? 0) : 0
       return {
         nom: c.is_self ? `${c.name} (MOI)` : c.name,
-        note: last?.rating ?? null,
-        avis: last?.review_count ?? null,
+        note: last?.rating != null ? Number(last.rating) : null,
+        avis: last?.review_count != null ? Number(last.review_count) : null,
         avis_gagnes: gained,
         periode_jours: days,
       }
