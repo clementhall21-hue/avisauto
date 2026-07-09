@@ -9,15 +9,14 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Connectez-vous d’abord' }, { status: 401 })
 
-  const q = request.nextUrl.searchParams.get('q') || 'Une table au sud Marseille'
   const key = process.env.SERPAPI_KEY
-
   if (!key) return NextResponse.json({ diagnostic: 'SERPAPI_KEY absente des variables Vercel' })
 
+  // Teste le chemin "détails par Place ID" (celui du bouton Actualiser et du cron)
+  const placeId = request.nextUrl.searchParams.get('place_id') || 'ChIJ2wT_Z7_AyRIReYAJPtAsN58'
   const params = new URLSearchParams({
     engine: 'google_maps',
-    q,
-    type: 'search',
+    place_id: placeId,
     hl: 'fr',
     api_key: key,
   })
