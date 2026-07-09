@@ -53,11 +53,12 @@ export async function POST() {
         try {
           const place = await getPlaceDetails(c.google_place_id)
           if (place && (place.rating != null || place.reviewCount != null)) {
-            await service.from('competitor_snapshots').insert({
+            const { error: insertError } = await service.from('competitor_snapshots').insert({
               competitor_id: c.id,
               rating: place.rating,
               review_count: place.reviewCount,
             })
+            if (insertError) fetchErrors.push(`${c.name}: DB ${insertError.message}`)
           } else {
             fetchErrors.push(`${c.name}: fiche Google sans note exploitable`)
           }
@@ -67,7 +68,8 @@ export async function POST() {
         await new Promise((r) => setTimeout(r, 400))
       }
 
-      const requery = await selectCompetitors() as { data: CompetitorWithSnaps[] | null }
+      const requery = await selectCompetitors() as { data: CompetitorWithSnaps[] | null; error: { message: string } | null }
+      if (requery.error) fetchErrors.push(`Relecture DB: ${requery.error.message}`)
       competitors = requery.data || competitors
 
       if (!competitors.some(hasUsableSnap)) {
