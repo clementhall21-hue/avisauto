@@ -74,9 +74,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ competitor, snapshot: { rating: place.rating, review_count: place.reviewCount } })
   } catch (e) {
     console.error('competitors POST error:', e)
-    const msg = e instanceof Error && e.message.includes('SERPAPI_KEY')
-      ? 'Clé SerpAPI non configurée côté serveur'
-      : 'Erreur serveur'
+    let msg = 'Erreur serveur'
+    if (e instanceof Error) {
+      if (e.message.includes('SERPAPI_KEY')) msg = 'Clé SerpAPI non configurée côté serveur'
+      else if (e.message.startsWith('SerpAPI:')) msg = e.message
+    }
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
