@@ -26,25 +26,20 @@ export async function createClient() {
   )
 }
 
+// Client service role PUR : ne lit JAMAIS les cookies de session.
+// Si on transmet les cookies, la session de l'utilisateur connecté prend le
+// dessus sur la clé service → les requêtes repassent sous RLS et échouent.
 export async function createServiceClient() {
-  const cookieStore = await cookies()
-
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
       cookies: {
         getAll() {
-          return cookieStore.getAll()
+          return []
         },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // ignore
-          }
+        setAll() {
+          // no-op : pas de session à persister pour le service role
         },
       },
     }
