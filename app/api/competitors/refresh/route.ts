@@ -29,6 +29,14 @@ export async function POST() {
       return NextResponse.json({ ok: true, updated: 0 })
     }
 
+    // Purge les relevés vides (créés avant le durcissement du parsing)
+    await service
+      .from('competitor_snapshots')
+      .delete()
+      .in('competitor_id', competitors.map((c) => c.id))
+      .is('rating', null)
+      .is('review_count', null)
+
     let updated = 0
     const errors: string[] = []
     for (const c of competitors) {
