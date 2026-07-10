@@ -44,10 +44,21 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
     setError('')
     try {
       const supabase = createClient()
-      await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo: `${window.location.origin}/auth/callback` },
       })
+      // signInWithOAuth renvoie l'erreur dans l'objet (pas via throw) :
+      // si Google n'est pas activé dans Supabase, on l'affiche clairement.
+      if (error) {
+        setError(
+          /not enabled|unsupported/i.test(error.message)
+            ? 'La connexion Google n’est pas encore activée. Réessaie dans un instant.'
+            : `Google : ${error.message}`
+        )
+        setLoading(false)
+      }
+      // Sinon : redirection vers Google, rien d'autre à faire ici.
     } catch {
       setError('Une erreur est survenue. Réessayez.')
       setLoading(false)
