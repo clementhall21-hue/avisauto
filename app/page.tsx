@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, QrCode, Bot, PenLine, Palette, Zap, LifeBuoy, LayoutDashboard, ShieldCheck, Sparkles } from 'lucide-react'
 import AuthModal from '@/components/AuthModal'
 
 const TONE_RESPONSES: Record<string, { court: string; normal: string; developpe: string; signature: string }> = {
@@ -40,14 +40,14 @@ const TONE_COLORS: Record<string, { border: string; text: string; bg: string }> 
 }
 
 const FEATURES = [
-  { icon: '📱', title: 'Collecte d\'avis par QR code', desc: 'Un QR code à poser sur vos tables : vos clients laissent un avis Google en 10 secondes, et peuvent aussi vous glisser un commentaire privé. PDF prêt à imprimer inclus.', color: 'rgba(228,87,46,0.15)', glow: '52,211,153' },
-  { icon: '🤖', title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.', color: 'rgba(99,102,241,0.15)', glow: '99,102,241' },
-  { icon: '✍️', title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble.", color: 'rgba(6,182,212,0.15)', glow: '6,182,212' },
-  { icon: '🎨', title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style.", color: 'rgba(167,139,250,0.15)', glow: '167,139,250' },
-  { icon: '⚡', title: 'Rapport IA sur vos points faibles', desc: "En un clic, l'IA analyse tous vos avis négatifs et vous génère un rapport clair : ce que vos clients reprochent, les problèmes récurrents, et les actions concrètes à mener pour améliorer votre réputation.", color: 'rgba(244,63,94,0.15)', glow: '244,63,94' },
-  { icon: '🛟', title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.', color: 'rgba(228,87,46,0.15)', glow: '52,211,153' },
-  { icon: '📊', title: 'Tableau de bord unifié', desc: 'Suivez votre note moyenne, le volume d\'avis et votre taux de réponse.', color: 'rgba(245,158,11,0.15)', glow: '245,158,11' },
-  { icon: '🔒', title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.', color: 'rgba(244,63,94,0.15)', glow: '244,63,94' },
+  { Icon: QrCode, title: 'Collecte d\'avis par QR code', desc: 'Un QR code à poser sur vos tables : vos clients laissent un avis Google en 10 secondes, et peuvent aussi vous glisser un commentaire privé. PDF prêt à imprimer inclus.' },
+  { Icon: Bot, title: 'Réponses IA personnalisées', desc: '30 réponses/mois en Starter, illimitées en Pro. Chaque réponse est unique et adaptée à votre établissement.' },
+  { Icon: PenLine, title: 'Signature personnalisée', desc: "Définissez le nom sous lequel l'IA signe chaque réponse — votre prénom, le nom de l'établissement, ou tout autre signature qui vous ressemble." },
+  { Icon: Palette, title: 'Personnalisation du ton', desc: "Professionnel, chaleureux, empathique — l'IA adopte exactement votre style." },
+  { Icon: Zap, title: 'Rapport IA sur vos points faibles', desc: "En un clic, l'IA analyse tous vos avis négatifs et vous génère un rapport clair : ce que vos clients reprochent, les problèmes récurrents, et les actions concrètes à mener pour améliorer votre réputation." },
+  { Icon: LifeBuoy, title: 'Support prioritaire 7j/7', desc: 'Notre équipe est disponible tous les jours pour vous aider.' },
+  { Icon: LayoutDashboard, title: 'Tableau de bord unifié', desc: 'Suivez votre note moyenne, le volume d\'avis et votre taux de réponse.' },
+  { Icon: ShieldCheck, title: 'Validation avant publication', desc: 'Chaque réponse peut être relue et modifiée avant publication.' },
 ]
 
 
@@ -91,12 +91,12 @@ function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   )
 }
 
-// Ligne épaisse bleu mer entre les sections
+// Bande épaisse bleu mer entre les sections (même hauteur que la barre du haut)
 function WaveDivider() {
   return (
     <div
-      className="w-full h-[6px]"
-      style={{ background: 'linear-gradient(90deg,#0C5C6B 0%,#17A2B8 50%,#0C5C6B 100%)' }}
+      className="w-full h-[56px] md:h-[64px]"
+      style={{ background: 'linear-gradient(90deg,#0C5C6B 0%,#0E6E7C 50%,#0C5C6B 100%)' }}
       aria-hidden
     />
   )
@@ -122,8 +122,8 @@ export default function LandingPage() {
     <div className="overflow-x-hidden max-w-[100vw] pt-[56px] md:pt-[64px]">
       {/* ── NAV ── */}
       <nav className={`flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] fixed top-0 left-0 right-0 z-[100] transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_24px_rgba(12,92,107,0.25)]' : ''}`} style={{ background: 'linear-gradient(90deg,#0C5C6B 0%,#0E6E7C 100%)' }}>
-        <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em] text-white flex items-center gap-1.5">
-          <span className="text-[#FFB020]">★</span> StarReviews
+        <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em] text-white">
+          StarReviews
         </div>
         <ul className="hidden md:flex items-center gap-8 list-none">
           {navLinks.map(([href, label]) => (
@@ -316,7 +316,9 @@ export default function LandingPage() {
         >
           <motion.div
             animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
+            className="transform-gpu"
+            style={{ willChange: 'transform' }}
           >
           <div
             style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center', background: 'linear-gradient(160deg,#8FD4DA 0%,#CDEAE6 45%,#FBEAD9 100%)' }}
@@ -346,10 +348,12 @@ export default function LandingPage() {
               }}
             />
             {/* Carte IA flottante */}
-            <div className="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-[320px] bg-white/95 backdrop-blur rounded-2xl border border-[#ECECEA] shadow-[0_16px_40px_rgba(0,0,0,0.18)] p-4 text-left">
+            <div className="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-[320px] bg-white rounded-2xl border border-[#ECECEA] shadow-[0_16px_40px_rgba(0,0,0,0.18)] p-4 text-left">
               <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-6 h-6 rounded-full bg-[#E4572E] text-white flex items-center justify-center text-[0.7rem] flex-shrink-0">✨</div>
-                <span className="text-[0.72rem] font-semibold text-[#C2481F]">Réponse générée par l&apos;IA</span>
+                <div className="w-6 h-6 rounded-full bg-[#0E6E7C] text-white flex items-center justify-center flex-shrink-0">
+                  <Sparkles size={13} strokeWidth={2.2} />
+                </div>
+                <span className="text-[0.72rem] font-semibold text-[#0E6E7C]">Réponse générée par l&apos;IA</span>
               </div>
               <p className="text-[0.82rem] text-[#17181C] leading-[1.45]">
                 «&nbsp;Merci Julie pour ce retour chaleureux&nbsp;! Toute l&apos;équipe est ravie que la terrasse vous ait plu, à très vite&nbsp;!&nbsp;»
@@ -435,7 +439,7 @@ export default function LandingPage() {
 
         <FadeUp>
           <div className="bg-white border border-[#ECECEA] rounded-[16px] p-5 mb-5">
-            <div className="text-[0.72rem] font-semibold text-[#666A72] uppercase tracking-[0.08em] mb-2">💬 L'avis du client</div>
+            <div className="text-[0.72rem] font-semibold text-[#666A72] uppercase tracking-[0.08em] mb-2">L&apos;avis du client</div>
             <div className="text-[0.95rem] text-[#17181C] italic">"Bon séjour dans l'ensemble, mais la chambre était un peu bruyante le soir."</div>
             <div className="mt-2 flex items-center gap-2">
               <span className="text-[#f59e0b]">★★★★☆</span>
@@ -493,7 +497,7 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.22 }}
-              className="bg-white border border-[#ECECEA] rounded-[14px] p-6"
+              className="bg-white border border-[#ECECEA] rounded-[14px] p-6 md:min-h-[260px]"
             >
               <div className="flex items-center gap-2 mb-4 flex-wrap">
                 <span
@@ -534,16 +538,16 @@ export default function LandingPage() {
           {FEATURES.map((f, i) => (
             <FadeUp key={i} delay={i * 0.06}>
               <motion.div
-                className="bg-white border border-[#ECECEA] rounded-[14px] p-7"
+                className="bg-white border border-[#ECECEA] rounded-[14px] p-7 h-full"
                 whileHover={{
                   y: -5,
-                  borderColor: `rgba(${f.glow},0.45)`,
-                  boxShadow: `0 12px 32px rgba(0,0,0,0.3), 0 0 28px rgba(${f.glow},0.12)`,
+                  borderColor: 'rgba(14,140,158,0.45)',
+                  boxShadow: '0 12px 32px rgba(12,92,107,0.12)',
                 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="w-11 h-11 rounded-[10px] flex items-center justify-center text-[1.3rem] mb-4.5" style={{ background: f.color }}>
-                  {f.icon}
+                <div className="w-11 h-11 rounded-[12px] flex items-center justify-center mb-5 bg-[#E6F4F6] text-[#0E6E7C]">
+                  <f.Icon size={20} strokeWidth={2} />
                 </div>
                 <h3 className="text-[1rem] font-semibold mb-2">{f.title}</h3>
                 <p className="text-[0.88rem] text-[#666A72] leading-[1.6]">{f.desc}</p>
