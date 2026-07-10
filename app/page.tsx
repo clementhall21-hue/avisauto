@@ -333,11 +333,18 @@ export default function LandingPage() {
               src="/hero-mer.jpg"
               alt="Terrasse de restaurant avec vue sur la mer"
               className="w-full h-[300px] md:h-[420px] object-cover block"
+              data-idx="0"
               onError={(e) => {
+                // Cascade : ta photo locale → photo choisie → mer de secours → dégradé
+                const sources = [
+                  'https://tlcdenia.com/wp-content/uploads/2025/06/meilleurs-restaurants-denia.jpg',
+                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1100&q=80',
+                ]
                 const el = e.currentTarget
-                if (!el.dataset.fallback) {
-                  el.dataset.fallback = '1'
-                  el.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1100&q=80'
+                const i = Number(el.dataset.idx || '0')
+                if (i < sources.length) {
+                  el.dataset.idx = String(i + 1)
+                  el.src = sources[i]
                 } else {
                   el.style.display = 'none'
                 }
