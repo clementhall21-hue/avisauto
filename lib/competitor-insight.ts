@@ -66,17 +66,25 @@ export async function generateCompetitorInsight(
   const velocity = (s: { avis_gagnes: number; periode_jours: number }) =>
     s.periode_jours > 0 ? Math.round((s.avis_gagnes / s.periode_jours) * 30) : null
 
-  // Avis 5★ nécessaires pour atteindre la note cible : n = avis × (cible − note) / (5 − cible)
-  let fiveStarsNeeded: number | null = null
-  if (me?.note != null && me?.avis != null && avgRivalRating != null && me.note < avgRivalRating && avgRivalRating < 5) {
-    fiveStarsNeeded = Math.ceil((me.avis * (avgRivalRating - me.note)) / (5 - avgRivalRating))
+  // Paliers RÉALISTES : avis 5★ nécessaires pour gagner +0,1 puis +0,2 de note
+  // (formule : n = avis × (cible − note) / (5 − cible)), avec durée estimée
+  // à un rythme de collecte atteignable via QR code (~25 avis 5★/mois).
+  const round1 = (x: number) => Math.round(x * 10) / 10
+  const PACE = 25
+  let paliers: { note_cible: number; avis_5_etoiles: number; mois_estimes: number }[] = []
+  if (me?.note != null && me?.avis != null && me.note < 4.8) {
+    paliers = [round1(me.note + 0.1), round1(me.note + 0.2)]
+      .filter((t) => t < 5)
+      .map((t) => {
+        const n = Math.ceil((me.avis! * (t - me.note!)) / (5 - t))
+        return { note_cible: t, avis_5_etoiles: n, mois_estimes: Math.max(1, Math.ceil(n / PACE)) }
+      })
   }
 
   const stats = {
     etablissements: summary.map((s) => ({ ...s, avis_par_mois_estime: velocity(s) })),
-    moyenne_concurrents: { note: avgRivalRating ? Number(avgRivalRating.toFixed(2)) : null, avis: avgRivalReviews },
-    ecart_note: me?.note != null && avgRivalRating != null ? Number((me.note - avgRivalRating).toFixed(2)) : null,
-    avis_5_etoiles_necessaires_pour_rattraper_moyenne: fiveStarsNeeded,
+    moyenne_concurrents: { note: avgRivalRating ? Number(avgRivalRating.toFixed(1)) : null, avis: avgRivalReviews },
+    paliers_realistes: paliers,
   }
 
   const apiKey = process.env.GROQ_API_KEY
@@ -88,24 +96,24 @@ export async function generateCompetitorInsight(
     messages: [
       {
         role: 'system',
-        content: `Tu es un consultant senior en réputation locale pour restaurants et hôtels.
-On te donne des statistiques Google pré-calculées : l'établissement du client est marqué (MOI), avec la moyenne de ses concurrents, l'écart de note, la vitesse d'acquisition d'avis estimée, et le nombre d'avis 5★ nécessaires pour rattraper la moyenne.
+        content: `Tu es un consultant senior en réputation locale pour restaurants et hôtels. Tu parles à un gérant pressé, pas à un analyste.
+On te donne des statistiques Google pré-calculées : l'établissement du client est marqué (MOI), la moyenne de ses concurrents, la vitesse d'acquisition d'avis estimée, et des "paliers_realistes" (nombre d'avis 5★ et durée pour gagner +0,1 puis +0,2 de note).
 L'établissement utilise StarReviews, qui propose : collecte d'avis par QR code posé sur les tables (les clients mécontents sont captés en privé avant de publier sur Google), et réponse automatique IA à chaque avis Google.
 
 Réponds en français, en texte brut structuré EXACTEMENT ainsi (pas de markdown, pas de gras) :
 
 📊 CONSTAT
-2 phrases max : position vs concurrents, chiffres clés (écart de note, volumes). Cite le concurrent le plus menaçant.
+2 phrases max, langage simple. Compare les notes en les citant telles quelles (ex: "3,6 contre 4,6 de moyenne chez vos concurrents, soit un point de retard"). INTERDIT : nombres signés type "-1,03" ou vocabulaire statistique. Cite le concurrent le plus menaçant.
 
 🎯 PRIORITÉ
-1 phrase : LE levier n°1 à actionner, avec l'objectif chiffré (utilise le nombre d'avis 5★ nécessaires si fourni).
+1 phrase : le levier n°1, avec le PREMIER palier réaliste (ex: "passer de 3,6 à 3,7 = environ 120 avis 5★, soit ~5 mois de collecte au QR code"). INTERDIT de proposer de rattraper toute la moyenne d'un coup — si l'écart est grand, dis explicitement que la stratégie est de progresser palier par palier tout en stoppant les avis négatifs grâce à l'interception QR.
 
 ✅ PLAN D'ACTION
 1. [action concrète, chiffrée, réalisable cette semaine — mentionne le QR code StarReviews si pertinent]
 2. [action concrète sur les avis existants — mentionne les réponses IA si pertinent]
 3. [action concrète de fond, mesurable au prochain relevé hebdo]
 
-Règles : chiffres issus des données uniquement, pas d'invention. Actions spécifiques (où, combien, quand), jamais de généralités type "améliorer la qualité". Si les avis gagnés sont à 0 sur une période courte, dis que la dynamique sera mesurable dès les prochains relevés hebdomadaires, sans en tirer de conclusion.`,
+Règles : chiffres issus des données uniquement, pas d'invention. Chaque objectif doit être atteignable en moins de 6 mois. Actions spécifiques (où, combien, quand), jamais de généralités type "améliorer la qualité". Si les avis gagnés sont à 0 sur une période courte, dis que la dynamique sera mesurable dès les prochains relevés hebdomadaires, sans en tirer de conclusion.`,
       },
       {
         role: 'user',
