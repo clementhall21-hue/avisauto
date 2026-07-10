@@ -91,18 +91,14 @@ function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   )
 }
 
-// Séparateur « vaguelette » bleu mer entre les sections
+// Ligne épaisse bleu mer entre les sections
 function WaveDivider() {
   return (
-    <div className="max-w-[1100px] mx-auto px-6 py-2" aria-hidden>
-      <div className="flex items-center gap-3 justify-center">
-        <span className="h-px flex-1 bg-gradient-to-r from-transparent via-[#BFE7EC] to-[#7FD4DD]" />
-        <svg width="54" height="12" viewBox="0 0 54 12" fill="none" className="flex-shrink-0">
-          <path d="M1 6 Q 7.5 -1, 14 6 T 27 6 T 40 6 T 53 6" stroke="#0E8C9E" strokeWidth="2" fill="none" strokeLinecap="round" />
-        </svg>
-        <span className="h-px flex-1 bg-gradient-to-l from-transparent via-[#BFE7EC] to-[#7FD4DD]" />
-      </div>
-    </div>
+    <div
+      className="w-full h-[6px]"
+      style={{ background: 'linear-gradient(90deg,#0C5C6B 0%,#17A2B8 50%,#0C5C6B 100%)' }}
+      aria-hidden
+    />
   )
 }
 
@@ -125,14 +121,14 @@ export default function LandingPage() {
   return (
     <div className="overflow-x-hidden max-w-[100vw] pt-[56px] md:pt-[64px]">
       {/* ── NAV ── */}
-      <nav className={`flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] border-b border-[#ECECEA] bg-[#17181C] backdrop-blur-[24px] fixed top-0 left-0 right-0 z-[100] transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_24px_rgba(0,0,0,0.06)]' : ''}`}>
-        <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em]">
-          <span className="gradient-text-logo">StarReviews</span>
+      <nav className={`flex items-center justify-between px-4 md:px-12 h-[56px] md:h-[64px] fixed top-0 left-0 right-0 z-[100] transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_24px_rgba(12,92,107,0.25)]' : ''}`} style={{ background: 'linear-gradient(90deg,#0C5C6B 0%,#0E6E7C 100%)' }}>
+        <div className="font-extrabold text-[1.05rem] md:text-[1.35rem] tracking-[-0.03em] text-white flex items-center gap-1.5">
+          <span className="text-[#FFB020]">★</span> StarReviews
         </div>
         <ul className="hidden md:flex items-center gap-8 list-none">
           {navLinks.map(([href, label]) => (
             <li key={href}>
-              <a href={href} className="text-[#17181C] hover:text-[#C2481F] text-[0.9rem] font-medium transition-colors no-underline">
+              <a href={href} className="text-white/90 hover:text-[#FFD9A8] text-[0.9rem] font-medium transition-colors no-underline">
                 {label}
               </a>
             </li>
@@ -141,14 +137,14 @@ export default function LandingPage() {
         <div className="flex items-center gap-2">
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-2">
-            <button onClick={() => setModalType('login')} className="btn-outline">Connexion</button>
+            <button onClick={() => setModalType('login')} className="text-white/90 hover:text-white border border-white/40 hover:border-white/70 px-5 py-2 rounded-lg text-[0.88rem] font-medium transition-colors bg-transparent">Connexion</button>
             <button onClick={() => setModalType('signup')} className="btn-primary">Essai gratuit</button>
           </div>
           {/* Mobile */}
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={() => setModalType('login')}
-              style={{ fontSize: '0.78rem', background: 'none', border: 'none', color: '#666A72', cursor: 'pointer', padding: '4px 2px', whiteSpace: 'nowrap' }}
+              style={{ fontSize: '0.78rem', background: 'none', border: 'none', color: 'rgba(255,255,255,0.9)', cursor: 'pointer', padding: '4px 2px', whiteSpace: 'nowrap' }}
             >
               Connexion
             </button>
@@ -162,7 +158,7 @@ export default function LandingPage() {
           {/* Hamburger — mobile only */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden p-1.5 text-[#666A72] hover:text-[#17181C] transition-colors"
+            className="md:hidden p-1.5 text-white/90 hover:text-white transition-colors"
             aria-label="Menu"
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -330,15 +326,14 @@ export default function LandingPage() {
                 si tu la déposes dans public/), puis une photo Unsplash, puis dégradé. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/hero-mer.jpg"
+              src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80"
               alt="Terrasse de restaurant avec vue sur la mer"
               className="w-full h-[300px] md:h-[420px] object-cover block"
               data-idx="0"
               onError={(e) => {
-                // Cascade : ta photo locale → photo choisie → mer de secours → dégradé
                 const sources = [
-                  'https://tlcdenia.com/wp-content/uploads/2025/06/meilleurs-restaurants-denia.jpg',
-                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1100&q=80',
+                  '/hero-mer.jpg',
+                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
                 ]
                 const el = e.currentTarget
                 const i = Number(el.dataset.idx || '0')
