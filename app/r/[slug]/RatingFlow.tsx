@@ -10,28 +10,29 @@ interface Props {
   accentColor: string
 }
 
-// Direction « Signal » : blanc franc, gros titres, une couleur d'accent
-// pleine par établissement. Parcours : étoiles → résultat, la note reste
-// modifiable à tout moment. Aucune police ni image externe (rapide en 4G).
+// Page publique de collecte (direction « Signal »).
+// Conforme aux règles Google : AUCUN filtrage selon la note.
+// Tout le monde voit le même bouton « Avis Google » en avant, et tout le
+// monde peut, en option, laisser un commentaire privé au gérant.
+// Aucune police ni image externe (rapide en 4G).
 
 export default function RatingFlow({ establishmentId, name, logoUrl, googleReviewUrl, accentColor }: Props) {
   const [rating, setRating] = useState(0)
   const [hover, setHover] = useState(0)
   const [comment, setComment] = useState('')
+  const [showComment, setShowComment] = useState(false)
   const [sending, setSending] = useState(false)
   const [feedbackSent, setFeedbackSent] = useState(false)
   const [error, setError] = useState('')
   const [focused, setFocused] = useState(false)
 
-  const isNegative = rating >= 1 && rating <= 3
   // Une seule trace « note seule » par visite, même si le client corrige sa note
   const autoLogged = useRef(false)
 
   const submitRating = (n: number) => {
     setRating(n)
-    setFeedbackSent(false)
     setError('')
-    if (n >= 4 && !autoLogged.current) {
+    if (!autoLogged.current) {
       autoLogged.current = true
       fetch('/api/feedback', {
         method: 'POST',
@@ -117,60 +118,62 @@ export default function RatingFlow({ establishmentId, name, logoUrl, googleRevie
         </div>
 
         {rating > 0 && (
-          <div key={isNegative ? 'neg' : 'pos'} className="rise w-full flex flex-col gap-4 mt-7">
-            {isNegative && !feedbackSent && (
-              <div className="w-full bg-[#F7F7F5] rounded-[20px] p-5 flex flex-col gap-3">
-                <p className="font-bold">Dites-nous ce qui n&apos;a pas été</p>
-                <p className="text-sm text-[#55585F] leading-relaxed -mt-1.5">
-                  Votre message part directement au gérant, pour améliorer votre prochaine visite.
-                </p>
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  onFocus={() => setFocused(true)}
-                  onBlur={() => setFocused(false)}
-                  rows={4}
-                  placeholder="Racontez-nous…"
-                  className="w-full rounded-[14px] p-3 text-base bg-white resize-none focus:outline-none transition-colors"
-                  style={{ border: `2px solid ${focused ? accentColor : '#E8E8EA'}` }}
-                />
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <button
-                  onClick={submitFeedback}
-                  disabled={sending || comment.trim().length === 0}
-                  className="w-full text-white font-bold py-[15px] rounded-[14px] text-[0.95rem] disabled:opacity-40 active:scale-[0.98] transition-transform"
-                  style={{ background: accentColor }}
-                >
-                  {sending ? 'Envoi…' : 'Envoyer au gérant'}
-                </button>
-              </div>
-            )}
+          <div className="rise w-full flex flex-col gap-4 mt-7">
+            <p className="text-[#55585F] text-center">Merci pour votre note ! 🙏</p>
 
-            {isNegative && feedbackSent && (
-              <div className="rise w-full bg-[#F7F7F5] rounded-[20px] p-6 text-center">
-                <p className="font-bold text-lg">Merci pour votre retour 🙏</p>
-                <p className="text-sm text-[#55585F] mt-1">Le gérant en prendra connaissance rapidement.</p>
-              </div>
-            )}
-
-            {rating >= 4 && (
-              <p className="text-[#55585F] text-center">Merci ! Un avis Google nous aide énormément 🙏</p>
-            )}
-
-            {/* Lien Google — toujours visible, quelle que soit la note */}
+            {/* Bouton Google — identique pour toutes les notes, mis en avant */}
             {googleReviewUrl && (
               <a
                 href={googleReviewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={
-                  rating >= 4
-                    ? 'block w-full text-center bg-[#17181C] text-white font-bold text-base py-[17px] rounded-2xl active:scale-[0.98] transition-transform'
-                    : 'block w-full text-center text-[#71747E] font-semibold text-sm py-2 underline underline-offset-4 decoration-[#D5D6DA]'
-                }
+                className="block w-full text-center bg-[#17181C] text-white font-bold text-base py-[17px] rounded-2xl active:scale-[0.98] transition-transform"
               >
                 Laisser un avis sur Google →
               </a>
+            )}
+
+            {/* Commentaire privé — proposé à tous, en option, en secondaire */}
+            {!feedbackSent ? (
+              !showComment ? (
+                <button
+                  onClick={() => setShowComment(true)}
+                  className="text-sm text-[#71747E] underline underline-offset-4 decoration-[#D5D6DA] py-1"
+                >
+                  Laisser un mot au gérant (privé)
+                </button>
+              ) : (
+                <div className="w-full bg-[#F7F7F5] rounded-[20px] p-5 flex flex-col gap-3">
+                  <p className="font-bold">Un mot pour le gérant</p>
+                  <p className="text-sm text-[#55585F] leading-relaxed -mt-1.5">
+                    Ce message est privé — il aide l&apos;équipe à s&apos;améliorer et n&apos;est pas publié.
+                  </p>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    rows={4}
+                    placeholder="Votre message…"
+                    className="w-full rounded-[14px] p-3 text-base bg-white resize-none focus:outline-none transition-colors"
+                    style={{ border: `2px solid ${focused ? accentColor : '#E8E8EA'}` }}
+                  />
+                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  <button
+                    onClick={submitFeedback}
+                    disabled={sending || comment.trim().length === 0}
+                    className="w-full text-white font-bold py-[15px] rounded-[14px] text-[0.95rem] disabled:opacity-40 active:scale-[0.98] transition-transform"
+                    style={{ background: accentColor }}
+                  >
+                    {sending ? 'Envoi…' : 'Envoyer au gérant'}
+                  </button>
+                </div>
+              )
+            ) : (
+              <div className="rise w-full bg-[#F7F7F5] rounded-[20px] p-6 text-center">
+                <p className="font-bold text-lg">Merci pour votre retour 🙏</p>
+                <p className="text-sm text-[#55585F] mt-1">Le gérant en prendra connaissance rapidement.</p>
+              </div>
             )}
           </div>
         )}

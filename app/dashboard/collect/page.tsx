@@ -164,8 +164,8 @@ export default function CollectPage() {
     <div className="max-w-4xl">
       <h1 className="text-xl md:text-2xl font-extrabold mb-1">Collecter des avis</h1>
       <p className="text-sm text-[#666A72] mb-7">
-        Posez ce QR code sur vos tables : vos clients notent leur visite, les satisfaits partent sur
-        Google, les déçus vous écrivent en privé.
+        Posez ce QR code sur vos tables : vos clients laissent un avis Google en quelques secondes,
+        et peuvent aussi vous adresser un commentaire privé.
       </p>
 
       <div className="grid md:grid-cols-2 gap-5 mb-8">
