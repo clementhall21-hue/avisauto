@@ -216,12 +216,12 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <section className="text-center px-4 md:px-6 pt-16 md:pt-24 pb-16 md:pb-20 relative">
-        {/* Background glow */}
+        {/* Ambiance bord de mer : lumière du soleil + reflets d'eau turquoise */}
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[860px] h-[460px] pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse at 40% 50%, rgba(228,87,46,0.08) 0%, transparent 55%), radial-gradient(ellipse at 70% 30%, rgba(255,176,32,0.08) 0%, transparent 50%)',
+              'radial-gradient(ellipse at 28% 42%, rgba(20,157,176,0.12) 0%, transparent 58%), radial-gradient(ellipse at 74% 28%, rgba(255,176,32,0.12) 0%, transparent 52%), radial-gradient(ellipse at 55% 80%, rgba(228,87,46,0.06) 0%, transparent 60%)',
           }}
         />
 
@@ -308,16 +308,25 @@ export default function LandingPage() {
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
           >
           <div
-            style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center', background: 'linear-gradient(135deg,#FFE7D6,#FFD9C2)' }}
-            className="relative rounded-2xl overflow-hidden border border-[#ECECEA] shadow-[0_32px_64px_rgba(0,0,0,0.12)]"
+            style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center', background: 'linear-gradient(160deg,#8FD4DA 0%,#CDEAE6 45%,#FBEAD9 100%)' }}
+            className="relative rounded-2xl overflow-hidden border border-white shadow-[0_32px_64px_rgba(20,120,140,0.14)]"
           >
-            {/* Photo d'ambiance (chargée depuis Unsplash ; fallback dégradé si indisponible) */}
+            {/* Photo d'ambiance vue mer. Essaie d'abord /hero-mer.jpg (ta propre photo
+                si tu la déposes dans public/), puis une photo Unsplash, puis dégradé. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=80"
-              alt="Terrasse de restaurant"
-              className="w-full h-[280px] md:h-[380px] object-cover block"
-              onError={(e) => { e.currentTarget.style.display = 'none' }}
+              src="/hero-mer.jpg"
+              alt="Terrasse de restaurant avec vue sur la mer"
+              className="w-full h-[300px] md:h-[420px] object-cover block"
+              onError={(e) => {
+                const el = e.currentTarget
+                if (!el.dataset.fallback) {
+                  el.dataset.fallback = '1'
+                  el.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1100&q=80'
+                } else {
+                  el.style.display = 'none'
+                }
+              }}
             />
             {/* Carte IA flottante */}
             <div className="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-[320px] bg-white/95 backdrop-blur rounded-2xl border border-[#ECECEA] shadow-[0_16px_40px_rgba(0,0,0,0.18)] p-4 text-left">

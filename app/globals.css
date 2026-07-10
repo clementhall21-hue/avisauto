@@ -34,7 +34,9 @@ html {
 
 body {
   font-family: 'Inter', 'DM Sans', sans-serif;
-  background: #FAFAF8;
+  /* Fond chaud « sable » avec un léger voile turquoise en haut (ambiance bord de mer) */
+  background: linear-gradient(180deg, #F3FAFB 0%, #FBF7F0 340px), #FBF7F0;
+  background-attachment: fixed;
   color: #17181C;
   min-height: 100vh;
   overflow-x: hidden;
