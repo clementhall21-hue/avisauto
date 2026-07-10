@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { getPlaceDetails } from '@/lib/places'
+import { generateAndStoreInsight } from '@/lib/competitor-insight'
 
 export const maxDuration = 60
 
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createServiceClient()
   const { data: competitors } = await supabase
     .from('competitors')
-    .select('id, google_place_id, name')
+    .select('id, google_place_id, name, establishment_id')
 
   if (!competitors || competitors.length === 0) {
     return NextResponse.json({ ok: true, snapshots: 0 })
@@ -43,5 +44,18 @@ export async function GET(request: NextRequest) {
     await new Promise((r) => setTimeout(r, 500))
   }
 
-  return NextResponse.json({ ok: true, snapshots: ok, failed })
+  // Briefing hebdo automatique : une analyse IA par établissement,
+  // prête avant que le gérant n'ouvre son dashboard.
+  const establishmentIds = Array.from(new Set(competitors.map((c) => c.establishment_id)))
+  let insights = 0
+  for (const id of establishmentIds) {
+    try {
+      const insight = await generateAndStoreInsight(supabase, id)
+      if (insight) insights++
+    } catch {
+      // le briefing hebdo est best-effort, on ne fait pas échouer le cron
+    }
+  }
+
+  return NextResponse.json({ ok: true, snapshots: ok, failed, insights })
 }
