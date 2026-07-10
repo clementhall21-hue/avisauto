@@ -25,8 +25,16 @@ export default function AuthModal({ open, onClose, defaultMode = 'login' }: Auth
       setMode(defaultMode)
       setError('')
       setEmailSent(false)
+      setLoading(false) // évite le rond bloqué si on revient depuis Google
     }
   }, [open, defaultMode])
+
+  // Retour arrière depuis Google (page restaurée du cache) → on débloque le bouton
+  useEffect(() => {
+    const reset = () => setLoading(false)
+    window.addEventListener('pageshow', reset)
+    return () => window.removeEventListener('pageshow', reset)
+  }, [])
   const { showToast } = useToast()
 
   // Login fields
