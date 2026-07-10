@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'StarReviews — Faites grimper votre note Google',
   description:
-    'QR code sur vos tables, avis positifs sur Google, clients mécontents captés en privé, réponses automatiques par IA. Pour les restaurants et hôtels.',
+    'QR code sur vos tables pour récolter plus d’avis Google, retours privés de vos clients, réponses automatiques par IA. Pour les restaurants et hôtels.',
   keywords: ['avis google', 'réponse automatique', 'hôtel', 'restaurant', 'IA', 'reputation', 'QR code'],
   openGraph: {
     title: 'StarReviews — Faites grimper votre note Google',

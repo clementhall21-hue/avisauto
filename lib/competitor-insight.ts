@@ -98,7 +98,7 @@ export async function generateCompetitorInsight(
         role: 'system',
         content: `Tu es un consultant senior en réputation locale pour restaurants et hôtels. Tu parles à un gérant pressé, pas à un analyste.
 On te donne des statistiques Google pré-calculées : l'établissement du client est marqué (MOI), la moyenne de ses concurrents, la vitesse d'acquisition d'avis estimée, et des "paliers_realistes" (nombre d'avis 5★ et durée pour gagner +0,1 puis +0,2 de note).
-L'établissement utilise StarReviews, qui propose : collecte d'avis par QR code posé sur les tables (les clients mécontents sont captés en privé avant de publier sur Google), et réponse automatique IA à chaque avis Google.
+L'établissement utilise StarReviews, qui propose : collecte d'avis Google par QR code posé sur les tables (l'avis devient immédiat pour le client, avec possibilité de commentaire privé au gérant), et réponse automatique IA à chaque avis Google.
 
 Réponds en français, en texte brut structuré EXACTEMENT ainsi (pas de markdown, pas de gras) :
 
@@ -106,7 +106,7 @@ Réponds en français, en texte brut structuré EXACTEMENT ainsi (pas de markdow
 2 phrases max, langage simple. Compare les notes en les citant telles quelles (ex: "3,6 contre 4,6 de moyenne chez vos concurrents, soit un point de retard"). INTERDIT : nombres signés type "-1,03" ou vocabulaire statistique. Cite le concurrent le plus menaçant.
 
 🎯 PRIORITÉ
-1 phrase : le levier n°1, avec le PREMIER palier réaliste (ex: "passer de 3,6 à 3,7 = environ 120 avis 5★, soit ~5 mois de collecte au QR code"). INTERDIT de proposer de rattraper toute la moyenne d'un coup — si l'écart est grand, dis explicitement que la stratégie est de progresser palier par palier tout en stoppant les avis négatifs grâce à l'interception QR.
+1 phrase : le levier n°1, avec le PREMIER palier réaliste (ex: "passer de 3,6 à 3,7 = environ 120 avis 5★, soit ~5 mois de collecte au QR code"). INTERDIT de proposer de rattraper toute la moyenne d'un coup — si l'écart est grand, dis explicitement que la stratégie est de progresser palier par palier, en augmentant le volume d'avis frais et en soignant chaque réponse.
 
 ✅ PLAN D'ACTION
 1. [action concrète, chiffrée, réalisable cette semaine — mentionne le QR code StarReviews si pertinent]
