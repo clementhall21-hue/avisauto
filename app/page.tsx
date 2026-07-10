@@ -231,7 +231,7 @@ export default function LandingPage() {
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 bg-[rgba(228,87,46,0.08)] border border-[rgba(228,87,46,0.25)] text-[#C2481F] text-[0.75rem] font-semibold px-3.5 py-1.5 rounded-full mb-8 tracking-[0.05em] uppercase"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E4572E] animate-[pulseDot_2s_infinite]" />
+          <span className="text-[#f59e0b] text-[0.72rem] tracking-tight leading-none" aria-hidden>★★★★★</span>
           Pour les restaurants et hôtels
         </motion.div>
 
@@ -308,30 +308,26 @@ export default function LandingPage() {
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
           >
           <div
-            style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center' }}
-            className="bg-white border border-[#ECECEA] rounded-2xl overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.10)]"
+            style={{ transform: 'rotateX(4deg)', transformOrigin: 'top center', background: 'linear-gradient(135deg,#FFE7D6,#FFD9C2)' }}
+            className="relative rounded-2xl overflow-hidden border border-[#ECECEA] shadow-[0_32px_64px_rgba(0,0,0,0.12)]"
           >
-            <div className="bg-[#F3F3F1] px-4 py-2.5 flex items-center border-b border-[#ECECEA]">
-              <span className="text-[0.78rem] text-[#666A72]">StarReviews · Dashboard</span>
-            </div>
-            <div className="p-6 space-y-3">
-              {[
-                { initials: 'ML', bg: '#dbeafe', color: '#1e40af', name: 'Marie L.', stars: 5, text: 'Service impeccable, équipe très professionnelle. Je reviendrai sans hésiter !', reply: 'Merci infiniment Marie pour ce témoignage chaleureux ! Toute l\'équipe est ravie de vous avoir accueillie et votre satisfaction est notre plus belle récompense. Nous serons ravis de vous retrouver très bientôt.', tag: 'Professionnel' },
-                { initials: 'TD', bg: '#fef3c7', color: '#92400e', name: 'Thomas D.', stars: 4, text: 'Très bon restaurant, le service était un peu lent mais la cuisine était excellente.', reply: 'Merci Thomas pour ce retour sincère et bienveillant. Nous sommes ravis que la cuisine vous ait séduit ! Votre remarque sur les délais de service est notée — nous travaillons à fluidifier le rythme de salle. Au plaisir de vous accueillir à nouveau.', tag: 'Empathique' },
-              ].map((r, i) => (
-                <div key={i} className="flex gap-3.5 p-3.5 bg-white border border-[#ECECEA] rounded-[10px]">
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[0.85rem] flex-shrink-0" style={{ background: r.bg, color: r.color }}>{r.initials}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[0.82rem] font-semibold text-[#17181C] mb-0.5">{r.name}</div>
-                    <div className="text-[0.75rem] text-[#f59e0b] mb-1">{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</div>
-                    <div className="text-[0.8rem] text-[#666A72] mb-2">{r.text}</div>
-                    <div className="border-l-2 border-[#E4572E] pl-2">
-                      <span className="inline-block text-[0.65rem] bg-[rgba(228,87,46,0.12)] text-[#C2481F] px-1.5 py-0.5 rounded font-semibold mb-1">IA · {r.tag}</span>
-                      <div className="text-[0.78rem] text-[#C2481F] leading-[1.4]">{r.reply}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {/* Photo d'ambiance (chargée depuis Unsplash ; fallback dégradé si indisponible) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=80"
+              alt="Terrasse de restaurant"
+              className="w-full h-[280px] md:h-[380px] object-cover block"
+              onError={(e) => { e.currentTarget.style.display = 'none' }}
+            />
+            {/* Carte IA flottante */}
+            <div className="absolute bottom-4 left-4 right-4 md:right-auto md:max-w-[320px] bg-white/95 backdrop-blur rounded-2xl border border-[#ECECEA] shadow-[0_16px_40px_rgba(0,0,0,0.18)] p-4 text-left">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-6 h-6 rounded-full bg-[#E4572E] text-white flex items-center justify-center text-[0.7rem] flex-shrink-0">✨</div>
+                <span className="text-[0.72rem] font-semibold text-[#C2481F]">Réponse générée par l&apos;IA</span>
+              </div>
+              <p className="text-[0.82rem] text-[#17181C] leading-[1.45]">
+                «&nbsp;Merci Julie pour ce retour chaleureux&nbsp;! Toute l&apos;équipe est ravie que la terrasse vous ait plu, à très vite&nbsp;!&nbsp;»
+              </p>
             </div>
           </div>
           </motion.div>
