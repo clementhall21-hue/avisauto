@@ -38,6 +38,7 @@ export default function CompetitorsPage() {
   const [adding, setAdding] = useState(false)
   const [addingSelf, setAddingSelf] = useState(false)
   const [insight, setInsight] = useState('')
+  const [insightDate, setInsightDate] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const autoHealed = useRef(false)
@@ -66,13 +67,27 @@ export default function CompetitorsPage() {
 
   const load = async () => {
     if (!establishment) return
-    const { data } = await supabase
-      .from('competitors')
-      .select('id, name, is_self, competitor_snapshots ( rating, review_count, captured_at )')
-      .eq('establishment_id', establishment.id)
-      .order('created_at', { ascending: true })
+    const [{ data }, { data: lastInsight }] = await Promise.all([
+      supabase
+        .from('competitors')
+        .select('id, name, is_self, competitor_snapshots ( rating, review_count, captured_at )')
+        .eq('establishment_id', establishment.id)
+        .order('created_at', { ascending: true }),
+      supabase
+        .from('competitor_insights')
+        .select('insight, created_at')
+        .eq('establishment_id', establishment.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ])
     const list = (data as Competitor[]) || []
     setCompetitors(list)
+    // Briefing déjà généré (cron du lundi ou analyse précédente) : affiché direct
+    if (lastInsight?.insight) {
+      setInsight(lastInsight.insight)
+      setInsightDate(lastInsight.created_at)
+    }
     setLoading(false)
 
     // Auto-réparation : des lieux suivis mais aucun relevé exploitable
@@ -88,6 +103,8 @@ export default function CompetitorsPage() {
 
   useEffect(() => {
     load()
+    // Pré-remplit le champ "ma fiche" avec le nom déjà connu — zéro saisie
+    if (establishment?.name && !selfInput) setSelfInput(establishment.name)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [establishment?.id])
 
@@ -130,6 +147,7 @@ export default function CompetitorsPage() {
       const res = await fetch('/api/competitor-insight', { method: 'POST' })
       const data = await res.json()
       setInsight(data.insight || data.error || 'Analyse non disponible.')
+      setInsightDate(new Date().toISOString())
     } catch {
       setInsight('Erreur lors de l’analyse.')
     } finally {
@@ -376,22 +394,28 @@ export default function CompetitorsPage() {
       {rows.length > 0 && (
         <div className="bg-white border border-[#ECECEA] rounded-2xl p-5">
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-            <div className="font-bold text-sm flex items-center gap-2">
-              <Sparkles size={15} className="text-[#C2481F]" /> Analyse IA
+            <div>
+              <div className="font-bold text-sm flex items-center gap-2">
+                <Sparkles size={15} className="text-[#C2481F]" /> Votre briefing concurrentiel
+              </div>
+              <p className="text-xs text-[#666A72] mt-0.5">
+                Généré automatiquement chaque lundi après le relevé des données
+                {insightDate && ` · dernier : ${new Date(insightDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`}
+              </p>
             </div>
             <button
               onClick={runInsight}
               disabled={analyzing}
-              className="flex items-center gap-2 bg-[#E4572E] hover:bg-[#C2481F] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-60"
+              className="flex items-center gap-1.5 text-xs text-[#666A72] hover:text-[#C2481F] border border-[#E3E3E1] hover:border-[rgba(228,87,46,0.4)] px-2.5 py-1.5 rounded-md transition-colors disabled:opacity-50"
             >
-              {analyzing ? (<><Loader2 size={14} className="animate-spin" /> Analyse…</>) : 'Analyser ma position'}
+              {analyzing ? (<><Loader2 size={12} className="animate-spin" /> Analyse…</>) : 'Régénérer'}
             </button>
           </div>
           {insight ? (
             <p className="text-sm text-[#17181C] leading-relaxed bg-[rgba(0,0,0,0.02)] rounded-xl p-4 whitespace-pre-line">{insight}</p>
           ) : (
             <p className="text-sm text-[#666A72]">
-              L&apos;IA résume votre position face à vos concurrents et vous dit quoi faire pour creuser l&apos;écart.
+              Votre premier briefing sera généré automatiquement lundi matin — ou cliquez sur «&nbsp;Régénérer&nbsp;» pour l&apos;obtenir tout de suite.
             </p>
           )}
         </div>
