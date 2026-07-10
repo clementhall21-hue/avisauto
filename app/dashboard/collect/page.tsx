@@ -125,14 +125,14 @@ export default function CollectPage() {
     doc.rect(0, 0, 105, 148, 'F')
 
     doc.setFont('helvetica', 'bold')
-    doc.setFontSize(17)
+    doc.setFontSize(16)
     doc.setTextColor(11, 15, 30)
-    doc.text('Votre avis compte !', 52.5, 24, { align: 'center' })
+    doc.text('Votre avis compte pour nous', 52.5, 23, { align: 'center' })
 
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(11)
+    doc.setFontSize(10.5)
     doc.setTextColor(90, 100, 120)
-    doc.text('Scannez-moi', 52.5, 33, { align: 'center' })
+    doc.text('Partagez votre expérience en quelques secondes', 52.5, 32, { align: 'center' })
 
     doc.addImage(qr, 'PNG', 22.5, 42, 60, 60)
 
