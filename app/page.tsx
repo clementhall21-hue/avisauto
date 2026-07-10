@@ -364,8 +364,6 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      <WaveDivider />
-
       {/* ── COMMENT ÇA MARCHE ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="how">
         <FadeUp>
@@ -426,8 +424,6 @@ export default function LandingPage() {
           </FadeUp>
         </div>
       </section>
-
-      <WaveDivider />
 
       {/* ── TONS ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 pb-16 md:pb-24">
@@ -633,8 +629,6 @@ export default function LandingPage() {
           </div>
         </FadeUp>
       </section>
-
-      <WaveDivider />
 
       {/* ── FAQ ── */}
       <section className="max-w-[680px] mx-auto px-4 md:px-6 py-12 md:py-16" id="faq">
