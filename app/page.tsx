@@ -91,6 +91,21 @@ function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   )
 }
 
+// Séparateur « vaguelette » bleu mer entre les sections
+function WaveDivider() {
+  return (
+    <div className="max-w-[1100px] mx-auto px-6 py-2" aria-hidden>
+      <div className="flex items-center gap-3 justify-center">
+        <span className="h-px flex-1 bg-gradient-to-r from-transparent via-[#BFE7EC] to-[#7FD4DD]" />
+        <svg width="54" height="12" viewBox="0 0 54 12" fill="none" className="flex-shrink-0">
+          <path d="M1 6 Q 7.5 -1, 14 6 T 27 6 T 40 6 T 53 6" stroke="#0E8C9E" strokeWidth="2" fill="none" strokeLinecap="round" />
+        </svg>
+        <span className="h-px flex-1 bg-gradient-to-l from-transparent via-[#BFE7EC] to-[#7FD4DD]" />
+      </div>
+    </div>
+  )
+}
+
 export default function LandingPage() {
   const [modalType, setModalType] = useState<'login' | 'signup' | null>(null)
   const [activeTone, setActiveTone] = useState('Professionnel')
@@ -343,6 +358,8 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
+      <WaveDivider />
+
       {/* ── COMMENT ÇA MARCHE ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="how">
         <FadeUp>
@@ -404,10 +421,12 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <WaveDivider />
+
       {/* ── TONS ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 pb-16 md:pb-24">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#C2481F] mb-3">Votre voix, votre style</div>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#0E8C9E] mb-3">Votre voix, votre style</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">L'IA parle comme vous</h2>
           <p className="text-[#666A72] text-[1rem] max-w-[520px] leading-[1.6] mb-10">Choisissez le ton et la longueur qui correspondent à l'image de votre établissement. Cliquez pour voir la réponse s'adapter en temps réel.</p>
         </FadeUp>
@@ -500,10 +519,12 @@ export default function LandingPage() {
         </FadeUp>
       </section>
 
+      <WaveDivider />
+
       {/* ── FEATURES ── */}
       <section className="max-w-[1100px] mx-auto px-4 md:px-6 py-16 md:py-24" id="features">
         <FadeUp>
-          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#C2481F] mb-3">Ce que vous gagnez</div>
+          <div className="text-[0.75rem] font-semibold tracking-[0.1em] uppercase text-[#0E8C9E] mb-3">Ce que vous gagnez</div>
           <h2 className="text-[clamp(1.8rem,4vw,2.8rem)] font-bold tracking-[-0.025em] mb-4">Tout ce qu'il faut<br />pour briller sur Google</h2>
           <p className="text-[#666A72] text-[1rem] max-w-[480px] leading-[1.6] mb-14">Conçu pour tout établissement avec des avis Google — hôtels, restaurants, commerces, cliniques, garages et bien d&apos;autres.</p>
         </FadeUp>
@@ -530,6 +551,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+
+      <WaveDivider />
 
       {/* ── PRICING ── */}
       <section className="text-center px-4 md:px-6 py-14 md:py-20" id="pricing">
@@ -604,6 +627,8 @@ export default function LandingPage() {
           </div>
         </FadeUp>
       </section>
+
+      <WaveDivider />
 
       {/* ── FAQ ── */}
       <section className="max-w-[680px] mx-auto px-4 md:px-6 py-12 md:py-16" id="faq">
