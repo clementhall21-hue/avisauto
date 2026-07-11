@@ -143,7 +143,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
             className={cn(
               'flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all mb-1',
               isActive
-                ? 'bg-[rgba(228,87,46,0.10)] text-[#C2481F] border-l-2 border-[#E4572E]'
+                ? 'bg-[rgba(14,110,124,0.10)] text-[#0E6E7C] border-l-2 border-[#0E6E7C]'
                 : 'text-[#666A72] hover:bg-[rgba(0,0,0,0.03)] hover:text-[#17181C]'
             )}
           >
@@ -212,27 +212,27 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
   return (
     <EstablishmentContext.Provider value={{ establishment, setEstablishment, pendingCount, setPendingCount, subscription }}>
       <div className="min-h-screen bg-[#FAFAF8] flex flex-col overflow-x-hidden">
-        {/* Top nav */}
-        <nav className="flex items-center justify-between pl-4 pr-6 md:px-9 h-[60px] border-b border-[#ECECEA] bg-[rgba(255,255,255,0.96)] sticky top-0 z-50">
+        {/* Top nav — bleu mer, cohérent avec le site */}
+        <nav className="flex items-center justify-between pl-4 pr-6 md:px-9 h-[60px] sticky top-0 z-50" style={{ background: 'linear-gradient(90deg,#0C5C6B 0%,#0E6E7C 100%)' }}>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
-              className="md:hidden text-[#666A72] hover:text-[#17181C] transition-colors p-1"
+              className="md:hidden text-white/90 hover:text-white transition-colors p-1"
             >
               <Menu size={20} />
             </button>
             <Link href="/" className="font-extrabold text-[1.25rem] tracking-[-0.03em]">
-              <span className="text-[#17181C]">StarReviews</span>
+              <span className="text-white">StarReviews</span>
             </Link>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="hidden sm:block text-sm text-[#666A72]">
-              Bonjour, <span className="text-[#17181C] font-medium">{userName}</span>
+            <span className="hidden sm:block text-sm text-white/80">
+              Bonjour, <span className="text-white font-medium">{userName}</span>
             </span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 border border-[#ECECEA] text-[#666A72] hover:text-[#17181C] hover:border-[#D0D0CE] px-3 py-1.5 rounded-lg text-sm transition-colors"
+              className="flex items-center gap-1.5 border border-white/40 text-white/90 hover:text-white hover:border-white/70 px-3 py-1.5 rounded-lg text-sm transition-colors"
             >
               <LogOut size={14} />
               <span className="hidden sm:inline">Déconnexion</span>
