@@ -127,12 +127,13 @@ export default function CollectPage() {
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(16)
     doc.setTextColor(11, 15, 30)
-    doc.text('Votre avis compte pour nous', 52.5, 23, { align: 'center' })
+    doc.text('Votre avis fait toute la différence', 52.5, 22, { align: 'center' })
 
     doc.setFont('helvetica', 'normal')
-    doc.setFontSize(10.5)
+    doc.setFontSize(10)
     doc.setTextColor(90, 100, 120)
-    doc.text('Partagez votre expérience en quelques secondes', 52.5, 32, { align: 'center' })
+    doc.text('Quelques mots suffisent — et ça fait chaud', 52.5, 30, { align: 'center' })
+    doc.text('au cœur de toute notre équipe', 52.5, 35, { align: 'center' })
 
     doc.addImage(qr, 'PNG', 22.5, 42, 60, 60)
 
