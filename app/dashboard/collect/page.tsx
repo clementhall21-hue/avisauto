@@ -26,6 +26,7 @@ export default function CollectPage() {
   const { showToast } = useToast()
   const supabase = createClient()
 
+  const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [googleUrl, setGoogleUrl] = useState('')
   const [accent, setAccent] = useState('#E4572E')
@@ -44,6 +45,7 @@ export default function CollectPage() {
 
   useEffect(() => {
     if (!est) return
+    setName(est.name || '')
     setSlug(est.slug || '')
     setGoogleUrl(est.google_review_url || '')
     setAccent(est.accent_color || '#E4572E')
@@ -84,11 +86,12 @@ export default function CollectPage() {
       .replace(/^-+|-+$/g, '')
 
     if (!cleanSlug) { showToast('Le lien ne peut pas être vide'); return }
+    if (!name.trim()) { showToast('Le nom ne peut pas être vide'); return }
 
     setSaving(true)
     const { data, error } = await supabase
       .from('establishments')
-      .update({ slug: cleanSlug, google_review_url: googleUrl.trim() || null, accent_color: accent })
+      .update({ name: name.trim(), slug: cleanSlug, google_review_url: googleUrl.trim() || null, accent_color: accent })
       .eq('id', est.id)
       .select()
       .single()
@@ -140,7 +143,8 @@ export default function CollectPage() {
     doc.setFontSize(10)
     doc.setTextColor(11, 15, 30)
     doc.setFont('helvetica', 'bold')
-    const displayName = est.name.length > 40 ? est.name.slice(0, 40) + '…' : est.name
+    const posterName = (name.trim() || est.name || '')
+    const displayName = posterName.length > 40 ? posterName.slice(0, 40) + '…' : posterName
     doc.text(displayName, 52.5, 113, { align: 'center' })
 
     doc.setFont('helvetica', 'normal')
@@ -208,6 +212,17 @@ export default function CollectPage() {
 
         {/* Réglages */}
         <div className="bg-[#FFFFFF] border border-[#ECECEA] rounded-2xl p-6 flex flex-col gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-[#666A72] mb-1.5">Nom de l&apos;établissement</label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex : Le Petit Nice"
+              className="w-full bg-[#FAFAF8] border border-[#E3E3E1] rounded-lg text-sm text-[#17181C] py-2.5 px-3 focus:outline-none focus:border-[#E4572E]"
+            />
+            <p className="text-[0.7rem] text-[#666A72] mt-1.5">Affiché sur l&apos;affiche PDF et sur la page que vos clients scannent.</p>
+          </div>
+
           <div>
             <label className="block text-xs font-semibold text-[#666A72] mb-1.5">Lien personnalisé</label>
             <div className="flex items-center gap-0 bg-[#FAFAF8] border border-[#E3E3E1] rounded-lg overflow-hidden">
