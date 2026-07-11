@@ -132,8 +132,8 @@ export default function CollectPage() {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(10)
     doc.setTextColor(90, 100, 120)
-    doc.text('Quelques mots suffisent — et ça fait chaud', 52.5, 30, { align: 'center' })
-    doc.text('au cœur de toute notre équipe', 52.5, 35, { align: 'center' })
+    doc.text('Bon ou moins bon, chaque retour compte', 52.5, 30, { align: 'center' })
+    doc.text('vraiment pour nous', 52.5, 35, { align: 'center' })
 
     doc.addImage(qr, 'PNG', 22.5, 42, 60, 60)
 
